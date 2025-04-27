@@ -1,0 +1,24 @@
+services:
+  db:
+    image:          mysql:9.0
+    container_name: db-mysql-videohub
+    restart:        always
+    environment:
+      MYSQL_DATABASE:      "videohub"
+      MYSQL_USER:          "niharika" # NO permission. Need to grant required permissions
+      MYSQL_PASSWORD:      "pwniharika"
+      MYSQL_ROOT_PASSWORD: "pwroot" # username: root
+    ports:
+      - "3307:3306" # [host_port : container_port] for tcp protocol
+    volumes:
+      - ./.mysql-data:/var/lib/mysql
+    networks:
+      - default_network
+
+networks:
+  default_network:
+    name:   backend_network
+    driver: bridge
+
+# https://hub.docker.com/_/mysql
+# https://docs.docker.com/reference/compose-file/networks/

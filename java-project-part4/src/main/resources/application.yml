@@ -1,0 +1,25 @@
+server:
+  port: 4044
+
+spring:
+  application:
+    name: Spring Boot Java Project (Email Service)
+  main:
+    banner-mode: off
+  jpa:
+    hibernate:
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: localhost:9093 # 3.140.188.132:9093
+
+# Reduce logging level
+logging:
+  level:
+    root: warn
+
+custom:
+  email: "dniharika16@gmail.com"
+
+
+# java -jar -Dspring.config.location=./target/application.yml  ./target/email-service-0.0.1-SNAPSHOT.jar
+# java -jar ./target/email-service-0.0.1-SNAPSHOT.jar --spring.config.location=./target/application.yml
