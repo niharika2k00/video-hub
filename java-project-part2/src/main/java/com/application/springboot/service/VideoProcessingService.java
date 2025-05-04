@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 public class VideoProcessingService implements MediaProcessingService<VideoPayload> {
 
   private final VideoTranscoderService videoTranscoderService;
+  private final MasterManifestGeneratorService masterManifestGeneratorService;
 
   @Autowired
-  public VideoProcessingService(VideoTranscoderService videoTranscoderService) {
+  public VideoProcessingService(VideoTranscoderService videoTranscoderService, MasterManifestGeneratorService masterManifestGeneratorService) {
     this.videoTranscoderService = videoTranscoderService;
+    this.masterManifestGeneratorService = masterManifestGeneratorService;
   }
 
   @Override
@@ -26,6 +28,7 @@ public class VideoProcessingService implements MediaProcessingService<VideoPaylo
     // video transcoding to HLS/ABR variants
     videoTranscoderService.transcodeToHlsVariants(sourceVideoPath, resolutionProfile, segmentDuration);
 
-    //  generateMasterManifest()
+    // generate master manifest file
+    masterManifestGeneratorService.generateMasterManifest(sourceVideoPath);
   }
 }

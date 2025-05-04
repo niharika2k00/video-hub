@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e0d6a024-6aca-406d-8939-37818f3d24dd" name="Changes" comment="update application.yml" />
+    <list default="true" id="e0d6a024-6aca-406d-8939-37818f3d24dd" name="Changes" comment="basic structure of working project">
+      <change beforePath="$PROJECT_DIR$/837213_image.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/902306_image.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java-project-part2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/java-project-part2/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java-project-part2/src/main/java/com/application/springboot/service/VideoTranscoderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/java-project-part2/src/main/java/com/application/springboot/service/VideoTranscoderService.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -37,6 +42,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "code.cleanup.on.save": "true",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "/Users/niharika/Workspace/Personal/IntellijProjects/project-videohub",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
@@ -61,7 +67,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744059292378</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="basic structure of working project">
+      <option name="closed" value="true" />
+      <created>1745769484351</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1745769484351</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -69,6 +83,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update application.yml" />
-    <option name="LAST_COMMIT_MESSAGE" value="update application.yml" />
+    <MESSAGE value="basic structure of working project" />
+    <option name="LAST_COMMIT_MESSAGE" value="basic structure of working project" />
   </component>
 </project>
