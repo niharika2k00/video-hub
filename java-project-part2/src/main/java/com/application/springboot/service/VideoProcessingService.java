@@ -10,11 +10,13 @@ public class VideoProcessingService implements MediaProcessingService<VideoPaylo
 
   private final VideoTranscoderService videoTranscoderService;
   private final MasterManifestGeneratorService masterManifestGeneratorService;
+  private final ThumbnailGeneratorService thumbnailGeneratorService;
 
   @Autowired
-  public VideoProcessingService(VideoTranscoderService videoTranscoderService, MasterManifestGeneratorService masterManifestGeneratorService) {
+  public VideoProcessingService(VideoTranscoderService videoTranscoderService, MasterManifestGeneratorService masterManifestGeneratorService, ThumbnailGeneratorService thumbnailGeneratorService) {
     this.videoTranscoderService = videoTranscoderService;
     this.masterManifestGeneratorService = masterManifestGeneratorService;
+    this.thumbnailGeneratorService = thumbnailGeneratorService;
   }
 
   @Override
@@ -30,5 +32,6 @@ public class VideoProcessingService implements MediaProcessingService<VideoPaylo
 
     // generate master manifest file
     masterManifestGeneratorService.generateMasterManifest(sourceVideoPath);
+    thumbnailGeneratorService.generateThumbnail(sourceVideoPath);
   }
 }
