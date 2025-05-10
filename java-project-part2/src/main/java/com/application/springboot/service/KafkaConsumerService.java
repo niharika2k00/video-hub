@@ -1,5 +1,9 @@
 package com.application.springboot.service;
 
+import com.application.sharedlibrary.entity.User;
+import com.application.sharedlibrary.service.ResourceLoaderService;
+import com.application.sharedlibrary.service.UserService;
+import com.application.sharedlibrary.util.EmailTemplateProcessor;
 import com.application.springboot.dto.ResolutionFactory;
 import com.application.springboot.dto.VideoPayload;
 import org.json.simple.JSONObject;
@@ -8,17 +12,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class KafkaConsumerService implements MessageBrokerConsumer {
 
   @Qualifier("VideoProcessingService")
   private final MediaProcessingService mediaProcessingService;
+  private final KafkaTemplate<String, String> kafkaTemplate;
+  private final UserService userService;
+  private final EmailTemplateProcessor emailTemplateProcessor;
+  private final ResourceLoaderService resourceLoaderService;
 
   @Autowired
-  public KafkaConsumerService(MediaProcessingService mediaProcessingService) {
+  public KafkaConsumerService(MediaProcessingService mediaProcessingService, KafkaTemplate<String, String> kafkaTemplate, UserService userService, EmailTemplateProcessor emailTemplateProcessor, ResourceLoaderService resourceLoaderService) {
     this.mediaProcessingService = mediaProcessingService;
+    this.kafkaTemplate = kafkaTemplate;
+    this.userService = userService;
+    this.emailTemplateProcessor = emailTemplateProcessor;
+    this.resourceLoaderService = resourceLoaderService;
   }
 
   @Value("${custom.target-resolution-count}")
@@ -66,5 +81,26 @@ public class KafkaConsumerService implements MessageBrokerConsumer {
       System.out.println("Error in processing video: " + e.getMessage());
       throw new RuntimeException(e);
     }
+
+    // Notify(via mail) user when processing is fully complete
+    User authenticatedUser = new User();
+    authenticatedUser = userService.findById(userId);
+
+    // Mapping placeholders for replacement
+    Map<String, String> replacements = Map.of(
+      "{{username}}", authenticatedUser.getName().toUpperCase()
+    );
+
+    String mailBodyMd = resourceLoaderService.readFileFromResources("video_process_success_email.md");
+    String mailBodyHtml = emailTemplateProcessor.processContent(mailBodyMd, replacements);
+
+    JSONObject jsonPayload = new JSONObject();
+    jsonPayload.put("subject", "Your Video Has Been Successfully Processed!");
+    jsonPayload.put("body", mailBodyHtml);
+    jsonPayload.put("receiverEmail", authenticatedUser.getEmail());
+
+    // producer publishes message to a kafka topic 2 for sending emails
+    System.out.println("Message published to 2nd topic...Sending mail...");
+    kafkaTemplate.send("email-notification", jsonPayload.toJSONString());
   }
 }

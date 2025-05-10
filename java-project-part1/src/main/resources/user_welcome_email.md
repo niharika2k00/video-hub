@@ -1,6 +1,6 @@
 Hey **{{username}}**,
 
-We are delighted to welcome you to our platform **Image Hub**. Your account has
+We are delighted to welcome you to our platform **Video Hub**. Your account has
 been successfully created, and you are now part of our growing community.
 
 If you have any concerns or need further assistance, feel free to reach out to
@@ -10,4 +10,4 @@ our support team at support@example.com.
 
 Best regards,  
 Niharika Dutta  
-Team Image Hub
+Team Video Hub

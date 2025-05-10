@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     if (optionalUser.isPresent()) {
       userData = optionalUser.get();
     } else {
-      throw new InvalidRequestException("User with the specified ID (" + id + ") was not found. Please verify the ID and try again.");
+      throw new InvalidRequestException("User not found with ID (" + id + "). Please verify the ID and try again.");
     }
 
     return userData;

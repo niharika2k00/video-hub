@@ -1,5 +1,11 @@
 package com.application.springboot.service;
 
+import com.application.sharedlibrary.entity.VideoVariant;
+import com.application.sharedlibrary.entity.VideoVariantId;
+import com.application.sharedlibrary.enums.VideoResolution;
+import com.application.sharedlibrary.enums.VideoStatus;
+import com.application.sharedlibrary.exception.InvalidRequestException;
+import com.application.sharedlibrary.service.VideoVariantService;
 import com.application.springboot.dto.Resolution;
 import jakarta.annotation.PostConstruct;
 import net.bramp.ffmpeg.FFmpeg;
@@ -8,6 +14,7 @@ import net.bramp.ffmpeg.FFmpegUtils;
 import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.job.FFmpegJob;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +37,9 @@ public class VideoTranscoderService {
   private FFmpeg ffmpeg;
   private FFprobe ffprobe;
 
+  @Autowired
+  private VideoVariantService videoVariantService;
+
   @PostConstruct
   // After calling the constructor and injecting all @Value or @Autowired fields
   public void init() throws IOException {
@@ -38,13 +48,37 @@ public class VideoTranscoderService {
     this.executor = new FFmpegExecutor(ffmpeg, ffprobe);
   }
 
-  public void transcodeToHlsVariants(String sourceVideoPath, Resolution resolutionProfile, int segmentDuration) throws IOException {
+  public void transcodeToHlsVariants(int videoId, String sourceVideoPath, Resolution resolutionProfile, int segmentDuration) throws IOException, InvalidRequestException {
     System.out.println("source video path: " + sourceVideoPath);
+    String enumName = "P" + resolutionProfile.getName().replace("p", "").toUpperCase(); // "360p" to "P360"
+    VideoVariantId variantId = new VideoVariantId(videoId, VideoResolution.fromLabel(enumName)); // composite key
 
-    transcodeResolution(sourceVideoPath, resolutionProfile, segmentDuration);
-    //generateMasterManifest(baseOutputPath, resolutionProfile);
+    // store in variant db
+    createVideoVariant(variantId, resolutionProfile);
+
+    // main transcoding process
+    transcodeResolution(sourceVideoPath, resolutionProfile, segmentDuration, variantId);
+
+    // status update
+    updateStatus(variantId, VideoStatus.AVAILABLE);
 
     System.out.println("✅ HLS conversion completed.");
+  }
+
+  public void createVideoVariant(VideoVariantId id, Resolution resolutionProfile) {
+    VideoVariant item = VideoVariant.builder()
+      .id(id)
+      .height(resolutionProfile.getHeight())
+      .width(resolutionProfile.getWidth())
+      .status(VideoStatus.PROCESSING)
+      .build();
+
+    videoVariantService.saveOrUpdate(item);
+  }
+
+  private void updateStatus(VideoVariantId id, VideoStatus status) throws InvalidRequestException {
+    VideoVariant item = videoVariantService.findById(id);
+    item.setStatus(status);
   }
 
   public void createDirectoriesIfNotExists(Path path) throws IOException {
@@ -53,8 +87,7 @@ public class VideoTranscoderService {
     }
   }
 
-  public void transcodeResolution(String sourceVideoPath, Resolution resolutionProfile, int segmentDuration) throws IOException {
-
+  public void transcodeResolution(String sourceVideoPath, Resolution resolutionProfile, int segmentDuration, VideoVariantId variantId) throws IOException, InvalidRequestException {
     // Create output directory structure
     Path videoFolderPath = Paths.get(sourceVideoPath).getParent(); // or sourceVideoPath.substring(0, sourceVideoPath.lastIndexOf("/"))  "videos/userid/videoid"
     Path manifestsFolderPath = videoFolderPath.resolve("manifests");
@@ -68,45 +101,43 @@ public class VideoTranscoderService {
     String segmentPattern = resolutionFolderPath.resolve("%05d.ts").toString();
     String outputManifestFilePath = videoFolderPath.resolve("manifests").resolve("rendition_" + resolutionProfile.getName() + ".m3u8").toString();
 
-    // https://github.com/bramp/ffmpeg-cli-wrapper
-    FFmpegBuilder builder = new FFmpegBuilder()
-      .setInput(sourceVideoPath)
-      .overrideOutputFiles(true)
-      .addOutput(outputManifestFilePath)
-      .setFormat("hls") // hence .ts is generated otherwise .mp4
-      .setAudioBitRate(128_000) // in bps
-      .setVideoBitRate(resolutionProfile.getBitrate())
-      .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
-      .setVideoResolution(resolutionProfile.getWidth(), resolutionProfile.getHeight())
-      .setVideoCodec("libx264")
-      .setAudioCodec("aac") // compression algorithm (codec) to use while video encoding
-      .addExtraArgs(
-        "-profile:v", "main",
-        "-level", "3.1",
-        "-hls_time", String.valueOf(segmentDuration),
-        "-hls_playlist_type", "vod",
-        "-hls_segment_filename", segmentPattern,
-        "-start_number", "1",
-        "-hls_list_size", "0"
-      )
-      .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL) // allow FFmpeg to use experimental specs
-      .done();
-
-    //executor.createJob(builder).run();
-    System.out.println("⏳ Starting conversion: " + resolutionProfile.getName());
-
     try {
+      // https://github.com/bramp/ffmpeg-cli-wrapper
+      FFmpegBuilder builder = new FFmpegBuilder()
+        .setInput(sourceVideoPath)
+        .overrideOutputFiles(true)
+        .addOutput(outputManifestFilePath)
+        .setFormat("hls") // hence .ts is generated otherwise .mp4
+        .setAudioBitRate(128_000) // in bps
+        .setVideoBitRate(resolutionProfile.getBitrate())
+        .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
+        .setVideoResolution(resolutionProfile.getWidth(), resolutionProfile.getHeight())
+        .setVideoCodec("libx264")
+        .setAudioCodec("aac") // compression algorithm (codec) to use while video encoding
+        .addExtraArgs(
+          "-profile:v", "main",
+          "-level", "3.1",
+          "-hls_time", String.valueOf(segmentDuration),
+          "-hls_playlist_type", "vod",
+          "-hls_segment_filename", segmentPattern,
+          "-start_number", "1",
+          "-hls_list_size", "0"
+        )
+        .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL) // allow FFmpeg to use experimental specs
+        .done();
+
+      //executor.createJob(builder).run();
+      System.out.println("⏳ Starting conversion: " + resolutionProfile.getName());
+
       //Probe to get video duration (needed for percentage calculation)
       double durationNs = ffprobe.probe(sourceVideoPath).getFormat().duration * TimeUnit.SECONDS.toNanos(1);
 
       //Create the job with a ProgressListener
       FFmpegJob job = executor.createJob(builder, progress -> {
-
         if (progress.out_time_ns <= 0 || durationNs <= 0) // Avoid N/A invalid time issue
           return;
 
         double percentage = (double) progress.out_time_ns / durationNs;
-
         System.out.printf(
           "[%s | %.0f%%] status:%s frame:%d time:%s fps:%.0f speed:%.2fx%n",
           resolutionProfile.getName(),
@@ -122,6 +153,7 @@ public class VideoTranscoderService {
       job.run();
     } catch (Exception e) {
       System.err.println("❌ FFmpeg failed with error: " + e.getMessage());
+      updateStatus(variantId, VideoStatus.FAILED);
       throw e;
     }
 

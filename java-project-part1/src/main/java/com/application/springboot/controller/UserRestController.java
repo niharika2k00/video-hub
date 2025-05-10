@@ -109,12 +109,11 @@ public class UserRestController {
     String mailBodyHtml = emailTemplateProcessor.processContent(mailBodyMd, replacements); // convert markdown content to html
 
     JSONObject jsonPayload = new JSONObject();
-    jsonPayload.put("subject", "Welcome to Image Hub! Your Account Has Been Successfully Created");
+    jsonPayload.put("subject", "Welcome to Video Hub! Your Account Has Been Successfully Created");
     jsonPayload.put("body", mailBodyHtml);
     jsonPayload.put("receiverEmail", newUserObject.getEmail());
 
     kafkaTemplate.send("email-notification", jsonPayload.toJSONString());
-
     return newUserObject;
   }
 

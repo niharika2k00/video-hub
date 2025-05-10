@@ -28,7 +28,7 @@ public class VideoProcessingService implements MediaProcessingService<VideoPaylo
     Resolution resolutionProfile = payload.getResolutionProfile();
 
     // video transcoding to HLS/ABR variants
-    videoTranscoderService.transcodeToHlsVariants(sourceVideoPath, resolutionProfile, segmentDuration);
+    videoTranscoderService.transcodeToHlsVariants(videoId, sourceVideoPath, resolutionProfile, segmentDuration);
 
     // generate master manifest file
     masterManifestGeneratorService.generateMasterManifest(sourceVideoPath);

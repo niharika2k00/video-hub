@@ -9,14 +9,13 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.Objects;
 
-// creating composite key class for Image Variant table
 @Getter
 @Setter
-@Embeddable
+@Embeddable // creating composite key class for video_variant table
 public class VideoVariantId implements Serializable {
+  private VideoResolution resolution;
   @Column(name = "video_id")
   private int videoId;
-  private VideoResolution resolution;
 
   public VideoVariantId() {}
 
@@ -31,7 +30,6 @@ public class VideoVariantId implements Serializable {
     if (obj == null || getClass() != obj.getClass()) return false;
 
     VideoVariantId videoVariantId = (VideoVariantId) obj;
-
     return Objects.equals(videoId, videoVariantId.videoId) && Objects.equals(resolution, videoVariantId.resolution);
   }
 
