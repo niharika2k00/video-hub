@@ -1,9 +1,8 @@
 package com.application.springboot.service;
 
-import com.application.sharedlibrary.entity.User;
-import com.application.sharedlibrary.service.ResourceLoaderService;
-import com.application.sharedlibrary.service.UserService;
-import com.application.sharedlibrary.util.EmailTemplateProcessor;
+import com.application.sharedlibrary.entity.VideoVariant;
+import com.application.sharedlibrary.enums.VideoStatus;
+import com.application.sharedlibrary.service.VideoVariantService;
 import com.application.springboot.dto.ResolutionFactory;
 import com.application.springboot.dto.VideoPayload;
 import org.json.simple.JSONObject;
@@ -12,28 +11,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class KafkaConsumerService implements MessageBrokerConsumer {
 
   @Qualifier("VideoProcessingService")
   private final MediaProcessingService mediaProcessingService;
-  private final KafkaTemplate<String, String> kafkaTemplate;
-  private final UserService userService;
-  private final EmailTemplateProcessor emailTemplateProcessor;
-  private final ResourceLoaderService resourceLoaderService;
+  private final VideoVariantService videoVariantService;
+  private final PostProcessingOrchestrator postProcessingOrchestrator;
 
   @Autowired
-  public KafkaConsumerService(MediaProcessingService mediaProcessingService, KafkaTemplate<String, String> kafkaTemplate, UserService userService, EmailTemplateProcessor emailTemplateProcessor, ResourceLoaderService resourceLoaderService) {
+  public KafkaConsumerService(MediaProcessingService mediaProcessingService, VideoVariantService videoVariantService, PostProcessingOrchestrator postProcessingOrchestrator) {
     this.mediaProcessingService = mediaProcessingService;
-    this.kafkaTemplate = kafkaTemplate;
-    this.userService = userService;
-    this.emailTemplateProcessor = emailTemplateProcessor;
-    this.resourceLoaderService = resourceLoaderService;
+    this.videoVariantService = videoVariantService;
+    this.postProcessingOrchestrator = postProcessingOrchestrator;
   }
 
   @Value("${custom.target-resolution-count}")
@@ -59,16 +53,17 @@ public class KafkaConsumerService implements MessageBrokerConsumer {
     JSONObject jsonObj = (JSONObject) parser.parse(payload);
 
     //Map<String, Object> map = jsonObj.toMap();
-    int id = ((Number) jsonObj.get("id")).intValue(); // while storing(put) int is autoboxed into an Integer. And JSONObject treats int as long,so need to recast to int
+    int videoId = ((Number) jsonObj.get("id")).intValue(); // while storing(put) int is autoboxed into an Integer. And JSONObject treats int as long,so need to recast to int
     int userId = ((Number) jsonObj.get("authenticatedUserId")).intValue();
+    String sourceVideoPath = (String) jsonObj.get("sourceVideoPath");
     String message = (String) jsonObj.get("message");
 
     System.out.println(message + " A consumer in the group " + kafkaConsumerGroupId + " is now listening to the topic for processing tasks.");
 
     // using builder method for object initialization
     VideoPayload details = VideoPayload.builder()
-      .videoId(id)
-      .sourceVideoPath((String) jsonObj.get("sourceVideoPath"))
+      .videoId(videoId)
+      .sourceVideoPath(sourceVideoPath)
       .resolutionProfile(ResolutionFactory.createResolutionProfile(targetResolution))
       .segmentDuration(10)
       .authenticatedUserId(userId)
@@ -77,30 +72,20 @@ public class KafkaConsumerService implements MessageBrokerConsumer {
 
     try {
       mediaProcessingService.process(details);
+
+      // Post process once the video is fully transcoded to all ABR(Adaptive Bitrate Streaming) variants
+      int liveCount = videoVariantService.getCountByVideoId(videoId);
+      List<VideoVariant> variants = videoVariantService.findByVideoId(videoId);
+      boolean allVariantsAvailable = variants.stream().allMatch(v -> v.getStatus() == VideoStatus.AVAILABLE);
+
+      for (VideoVariant item : variants)
+        System.out.println(item);
+
+      if (allVariantsAvailable)
+        postProcessingOrchestrator.handler(userId, videoId, sourceVideoPath);
     } catch (Exception e) {
       System.out.println("Error in processing video: " + e.getMessage());
       throw new RuntimeException(e);
     }
-
-    // Notify(via mail) user when processing is fully complete
-    User authenticatedUser = new User();
-    authenticatedUser = userService.findById(userId);
-
-    // Mapping placeholders for replacement
-    Map<String, String> replacements = Map.of(
-      "{{username}}", authenticatedUser.getName().toUpperCase()
-    );
-
-    String mailBodyMd = resourceLoaderService.readFileFromResources("video_process_success_email.md");
-    String mailBodyHtml = emailTemplateProcessor.processContent(mailBodyMd, replacements);
-
-    JSONObject jsonPayload = new JSONObject();
-    jsonPayload.put("subject", "Your Video Has Been Successfully Processed!");
-    jsonPayload.put("body", mailBodyHtml);
-    jsonPayload.put("receiverEmail", authenticatedUser.getEmail());
-
-    // producer publishes message to a kafka topic 2 for sending emails
-    System.out.println("Message published to 2nd topic...Sending mail...");
-    kafkaTemplate.send("email-notification", jsonPayload.toJSONString());
   }
 }

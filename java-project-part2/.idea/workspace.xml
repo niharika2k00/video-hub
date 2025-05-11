@@ -5,25 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e462488e-fa55-4f6d-89c4-756bade6d862" name="Changes" comment="add support for thumbnail">
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/SubtitleGenerator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/dao/VideoVariantRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/service/VideoVariantService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/service/VideoVariantServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../deployment/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../deployment/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../java-project-part1/src/main/java/com/application/springboot/controller/UserRestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../java-project-part1/src/main/java/com/application/springboot/controller/UserRestController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../java-project-part1/src/main/java/com/application/springboot/dao/VideoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../java-project-part1/src/main/java/com/application/springboot/dao/VideoRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../java-project-part1/src/main/resources/user_welcome_email.md" beforeDir="false" afterPath="$PROJECT_DIR$/../java-project-part1/src/main/resources/user_welcome_email.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/NotificationDispatcherService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/PostProcessingOrchestrator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/KafkaConsumerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/KafkaConsumerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/MasterManifestGeneratorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/MasterManifestGeneratorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/SubtitleGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/SubtitleGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/ThumbnailGeneratorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/ThumbnailGeneratorService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/VideoProcessingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/VideoProcessingService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/VideoTranscoderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/application/springboot/service/VideoTranscoderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/image_process_success_email.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/video_process_success_email.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/dao/VideoVariantRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/dao/VideoVariantRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/entity/VideoVariant.java" beforeDir="false" afterPath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/entity/VideoVariant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/entity/VideoVariantId.java" beforeDir="false" afterPath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/entity/VideoVariantId.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/enums/VideoResolution.java" beforeDir="false" afterPath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/enums/VideoResolution.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/service/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/service/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/service/VideoVariantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/service/VideoVariantService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/service/VideoVariantServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../java-project-part3/src/main/java/com/application/sharedlibrary/service/VideoVariantServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,7 +106,7 @@
       <recent name="com.application.springboot.service" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main512">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" activateToolWindowBeforeRun="false">
       <option name="ALTERNATIVE_JRE_PATH" value="corretto-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />

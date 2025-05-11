@@ -3,26 +3,28 @@ package com.application.sharedlibrary.entity;
 import com.application.sharedlibrary.enums.VideoResolution;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Embeddable // creating composite key class for video_variant table
 public class VideoVariantId implements Serializable {
-  private VideoResolution resolution;
   @Column(name = "video_id")
   private int videoId;
 
-  public VideoVariantId() {}
-
-  public VideoVariantId(int videoId, VideoResolution resolution) {
-    this.videoId = videoId;
-    this.resolution = resolution;
-  }
+  @Enumerated(EnumType.STRING)
+  @Column(name = "resolution", nullable = false)
+  private VideoResolution resolution;
 
   @Override
   public boolean equals(Object obj) {

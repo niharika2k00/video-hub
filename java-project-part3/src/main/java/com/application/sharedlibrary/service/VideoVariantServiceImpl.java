@@ -7,6 +7,7 @@ import com.application.sharedlibrary.exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,8 +21,8 @@ public class VideoVariantServiceImpl implements VideoVariantService {
   }
 
   @Override
-  public VideoVariant saveOrUpdate(VideoVariant video) {
-    return videoVariantRepository.save(video);
+  public VideoVariant saveOrUpdate(VideoVariant variant) {
+    return videoVariantRepository.save(variant);
   }
 
   @Override
@@ -39,7 +40,17 @@ public class VideoVariantServiceImpl implements VideoVariantService {
   }
 
   @Override
-  public int getCountByVideoId(int id) {
-    return videoVariantRepository.getCountByVideoId(id);
+  public List<VideoVariant> findByVideoId(int videoId) throws InvalidRequestException {
+    List<VideoVariant> variants = videoVariantRepository.findByVideoId(videoId);
+
+    if (variants == null || variants.isEmpty())
+      throw new InvalidRequestException("Video variant not found. Please verify the ID and try again.");
+
+    return variants;
+  }
+
+  @Override
+  public int getCountByVideoId(int videoId) {
+    return videoVariantRepository.getCountByVideoId(videoId);
   }
 }

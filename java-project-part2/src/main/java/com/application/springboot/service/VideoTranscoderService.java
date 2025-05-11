@@ -7,6 +7,7 @@ import com.application.sharedlibrary.enums.VideoStatus;
 import com.application.sharedlibrary.exception.InvalidRequestException;
 import com.application.sharedlibrary.service.VideoVariantService;
 import com.application.springboot.dto.Resolution;
+import com.application.springboot.dto.VideoPayload;
 import jakarta.annotation.PostConstruct;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
@@ -48,10 +49,14 @@ public class VideoTranscoderService {
     this.executor = new FFmpegExecutor(ffmpeg, ffprobe);
   }
 
-  public void transcodeToHlsVariants(int videoId, String sourceVideoPath, Resolution resolutionProfile, int segmentDuration) throws IOException, InvalidRequestException {
+  public void transcodeToHlsVariants(VideoPayload payload) throws IOException, InvalidRequestException {
+    int videoId = payload.getVideoId();
+    String sourceVideoPath = payload.getSourceVideoPath();
+    int segmentDuration = payload.getSegmentDuration();
+    Resolution resolutionProfile = payload.getResolutionProfile();
+
     System.out.println("source video path: " + sourceVideoPath);
-    String enumName = "P" + resolutionProfile.getName().replace("p", "").toUpperCase(); // "360p" to "P360"
-    VideoVariantId variantId = new VideoVariantId(videoId, VideoResolution.fromLabel(enumName)); // composite key
+    VideoVariantId variantId = new VideoVariantId(videoId, VideoResolution.fromLabel(resolutionProfile.getName())); // composite key  P720("720p"),
 
     // store in variant db
     createVideoVariant(variantId, resolutionProfile);
@@ -78,7 +83,10 @@ public class VideoTranscoderService {
 
   private void updateStatus(VideoVariantId id, VideoStatus status) throws InvalidRequestException {
     VideoVariant item = videoVariantService.findById(id);
+    System.out.println("update status for video.id=" + item.getId().getVideoId());
+
     item.setStatus(status);
+    videoVariantService.saveOrUpdate(item);
   }
 
   public void createDirectoriesIfNotExists(Path path) throws IOException {

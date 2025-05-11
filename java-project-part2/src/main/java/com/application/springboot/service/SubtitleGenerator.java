@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 public class SubtitleGenerator {
 
   // not working now
-  public void generateSubtitle(String sourceVideoPath) throws IOException, InterruptedException {
+  public void generate(String sourceVideoPath) throws IOException, InterruptedException {
     Path videoFolderPath = Paths.get(sourceVideoPath).getParent();
     String outputPath = videoFolderPath.resolve("").toString();
 

@@ -17,7 +17,7 @@ public class MasterManifestGeneratorService {
 
   public MasterManifestGeneratorService() {}
 
-  public void generateMasterManifest(String sourceVideoPath) throws Exception {
+  public void generate(String sourceVideoPath) throws Exception {
     String videoFolderPath = sourceVideoPath.substring(0, sourceVideoPath.lastIndexOf("/"));
     List<Resolution> allAvailableResolutions = extractResolutionProfilesFromSegments(videoFolderPath);
     StringBuilder masterContent = new StringBuilder("#EXTM3U\n");

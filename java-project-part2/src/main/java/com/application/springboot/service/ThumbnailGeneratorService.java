@@ -33,7 +33,7 @@ public class ThumbnailGeneratorService {
     this.ffprobe = new FFprobe(ffprobePath);
   }
 
-  public void generateThumbnail(String sourceVideoPath) throws IOException {
+  public void generate(String sourceVideoPath) throws IOException {
     Path videoFolderPath = Paths.get(sourceVideoPath).getParent();
     String outputPath = videoFolderPath.resolve("thumbnail.jpg").toString();
 

@@ -27,3 +27,5 @@ public enum VideoResolution {
     throw new IllegalArgumentException("Unknown resolution: " + label);
   }
 }
+
+// values() -> array of enum constants e.g [P144, P240, P360]

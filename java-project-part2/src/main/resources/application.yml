@@ -30,7 +30,7 @@ logging:
 
 # Custom environment variables
 custom:
-  target-resolution-count: 3
+  target-resolution-count: 6
   path:
     process-success-email-template: "/Users/niharika/Workspace/Personal/IntellijProjects/project-videohub/java-project-part2/image_process_success_email.md"
     image-collection-dir:           "/Users/niharika/Workspace/Personal/IntellijProjects/project-videohub/photoGallery"
