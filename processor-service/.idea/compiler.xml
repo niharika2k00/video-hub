@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="core-utils" />
+        <module name="processor-service" />
         <module name="pixprocessor-service" />
       </profile>
     </annotationProcessing>
@@ -19,6 +20,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="core-utils" options="-parameters" />
       <module name="pixprocessor-service" options="-parameters" />
+      <module name="processor-service" options="-parameters" />
       <module name="springboot" options="-parameters" />
     </option>
   </component>

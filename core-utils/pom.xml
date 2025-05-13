@@ -12,8 +12,8 @@
 
     <groupId>com.application</groupId>
     <artifactId>core-utils</artifactId>
-    <version>0.0.1</version>
-    <name>core-utils</name>
+    <version>1.0.0</version>
+    <name>Core Utilities</name>
     <packaging>jar</packaging>
     <description>Spring Boot Project (common library)</description>
 
