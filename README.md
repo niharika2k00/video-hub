@@ -1,4 +1,4 @@
-# 🎥 Video Hub
+# <div align="center">🎥 Video Hub</div>
 
 A robust microservices-based video processing and management platform built with Spring Boot, featuring video upload, processing and streaming with email notification capabilities.
 
@@ -135,7 +135,8 @@ The application implements a comprehensive security system with:
 
 To configure email notifications:
 
- <!-- TODO -->
+TODO
+
 <!-- 1. Enable 2-Step Verification in your Google Account
 2. Generate an App Password
 3. Update the email configuration in `EmailSenderConfig.java` -->
