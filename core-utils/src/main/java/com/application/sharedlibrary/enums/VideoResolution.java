@@ -1,7 +1,6 @@
 package com.application.sharedlibrary.enums;
 
 public enum VideoResolution {
-  P144("144p"),
   P240("240p"),
   P360("360p"),
   P480("480p"),

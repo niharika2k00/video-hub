@@ -11,7 +11,6 @@ A robust microservices-based video processing and management platform built with
 ├── main-application      # Entry point and API gateway
 ├── processor-service     # Manages video processing tasks
 ├── README.md
-├── src
 └── videos
 ```
 
@@ -21,7 +20,7 @@ A robust microservices-based video processing and management platform built with
 
   - Support for large video file uploads (up to 50MB)
   - Asynchronous video processing using Kafka
-  - Multiple resolution processing (360p, 720p, 1024p)
+  - Multiple resolution processing (240p, 360p, 480p, 720p, 1080p)
   - FFmpeg integration for video manipulation
 
 - **Security**
