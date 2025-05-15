@@ -52,4 +52,12 @@ public class VideoController {
 
     return "Video uploaded and processing started successfully!";
   }
+
+  // DELETE /videoId/id
+  @DeleteMapping("/video/{id}")
+  public String deleteVideo(@PathVariable int id) {
+    videoService.deleteById(id);
+    System.out.println("Successfully deleted video with id " + id);
+    return "Successfully deleted video with id " + id;
+  }
 }

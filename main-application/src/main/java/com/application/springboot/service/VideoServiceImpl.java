@@ -45,4 +45,10 @@ public class VideoServiceImpl implements VideoService {
   public Video saveOrUpdate(Video video) {
     return videoRepository.save(video);
   }
+
+  @Override
+  @Transactional
+  public void deleteById(int id) {
+    videoRepository.deleteById(id);
+  }
 }

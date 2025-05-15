@@ -11,4 +11,6 @@ public interface VideoService {
   List<Video> findAll();
 
   Video saveOrUpdate(Video video);
+
+  void deleteById(int id);
 }
