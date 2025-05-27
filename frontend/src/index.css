@@ -1,0 +1,16 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+@import "tailwindcss";
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* https://tailwindcss.com/docs/theme */
+@theme {
+  --color-primary: #6366f1;
+  --color-secondary: #ec4899;
+}

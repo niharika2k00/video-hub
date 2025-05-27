@@ -1,0 +1,6 @@
+# Video files
+videos/
+
+# IDE files
+.idea/
+.vscode/

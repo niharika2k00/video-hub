@@ -4,22 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e0d6a024-6aca-406d-8939-37818f3d24dd" name="Changes" comment="add delete video function">
-      <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/processor-service/src/main/java/com/application/springboot/service/PostProcessingOrchestrator.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/processor-service/src/main/java/com/application/springboot/service/PostProcessingOrchestrator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/project-video.iml" beforeDir="false" />
+    <list default="true" id="e0d6a024-6aca-406d-8939-37818f3d24dd" name="Changes" comment="update application names">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="ChangesViewManager">
-    <option name="groupingKeys">
-      <option value="directory" />
-      <option value="module" />
-    </option>
   </component>
   <component name="CompilerWorkspaceConfiguration">
     <option name="MAKE_PROJECT_ON_SAVE" value="true" />
@@ -28,7 +20,7 @@
     <option name="myRunOnSave" value="true" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/backend" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="OptimizeOnSaveOptions">
     <option name="myRunOnSave" value="true" />
@@ -105,15 +97,7 @@
       <option name="project" value="LOCAL" />
       <updated>1747157821446</updated>
     </task>
-    <task id="LOCAL-00006" summary="add delete video function">
-      <option name="closed" value="true" />
-      <created>1747321117138</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1747321117138</updated>
-    </task>
-    <option name="localTasksCounter" value="7" />
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -125,7 +109,6 @@
     <MESSAGE value="add video variant save feature" />
     <MESSAGE value="add post processing methods" />
     <MESSAGE value="update application names" />
-    <MESSAGE value="add delete video function" />
-    <option name="LAST_COMMIT_MESSAGE" value="add delete video function" />
+    <option name="LAST_COMMIT_MESSAGE" value="update application names" />
   </component>
 </project>

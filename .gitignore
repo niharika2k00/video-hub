@@ -2,5 +2,6 @@
 .DS_Store
 **/.DS_Store
 
-# Video files
-videos/
+# IDE files
+.idea/
+.vscode/
