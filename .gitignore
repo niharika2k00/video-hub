@@ -4,4 +4,11 @@
 
 # IDE files
 .idea/
+**/.idea/
+*.iml
+*.iws
+*.ipr
+
 .vscode/
+**/.vscode/
+
