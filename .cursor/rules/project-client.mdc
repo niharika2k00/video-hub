@@ -3,6 +3,7 @@ description:
 globs:
 alwaysApply: true
 ---
+
 You are a Senior Software Engineer with strong expertise in Frontend UI design. Create a responsive frontend website, VIDEOHUB.
 
 ## Development Guidelines for building FRONTEND project
@@ -15,7 +16,6 @@ You are a Senior Software Engineer with strong expertise in Frontend UI design. 
    - React Router DOM for routing
 4. Integrate a toast notification system for success and error messages (e.g., `react-toastify`)
 5. Use statemanagement tool, React Context API from starting whereever requried
-
 6. Ensure the folder structure is well-organised and adheres to industry best practices for scalability, maintainability and clarity.
 7. Create reusable and composable components wherever applicable for promoting modular and extensible code architecture
 8. DO NOT hardcode anything in the website
