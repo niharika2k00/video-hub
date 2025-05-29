@@ -1,5 +1,6 @@
 package com.application.sharedlibrary.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,16 +37,9 @@ public class Video {
   private String thumbnailUrl;
 
   @OneToMany(mappedBy = "video", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JsonManagedReference
   //@JoinColumn(name = "id", referencedColumnName = "video_id")
   private Set<VideoVariant> videoVariantList;
-
-  public Set<VideoVariant> getVideoVariantList() {
-    return videoVariantList;
-  }
-
-  public void setVideoVariantList(Set<VideoVariant> videoVariantList) {
-    this.videoVariantList = videoVariantList;
-  }
 
   public Video() {}
 
@@ -60,3 +54,12 @@ public class Video {
     this.thumbnailUrl = thumbnailUrl;
   }
 }
+
+/*
+Issue: The findById API returned a recursive JSON because each Video contains VideoVariant reference and then holds a reference back to Video entity.
+Hence, Jackson tries to serialize its videoVariantList, which contains a Video, which again contains videoVariantList, and so on...
+
+Fix:
+@JsonManagedReference: will serialize normally (i.e., videoVariantList)
+@JsonBackReference: will not serialize back (breaks the recursion)
+*/

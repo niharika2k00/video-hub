@@ -1,6 +1,7 @@
 package com.application.sharedlibrary.entity;
 
 import com.application.sharedlibrary.enums.VideoStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class VideoVariant {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "video_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+  @JsonBackReference
   private Video video;
 
   @Column(name = "height", nullable = false)
