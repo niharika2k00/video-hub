@@ -35,6 +35,11 @@ public class VideoServiceImpl implements VideoService {
   }
 
   @Override
+  public List<Video> findByAuthorId(Integer id) {
+    return videoRepository.findByAuthorId(id);
+  }
+
+  @Override
   public List<Video> findAll() {
     System.out.println("video count: " + videoRepository.count());
     return videoRepository.findAll();

@@ -8,6 +8,8 @@ import java.util.List;
 public interface VideoService {
   Video findById(int id) throws InvalidRequestException, IllegalArgumentException;
 
+  List<Video> findByAuthorId(Integer id);
+
   List<Video> findAll();
 
   Video saveOrUpdate(Video video);

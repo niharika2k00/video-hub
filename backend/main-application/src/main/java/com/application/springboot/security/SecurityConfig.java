@@ -67,7 +67,7 @@ public class SecurityConfig {
       .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login", "/api/users/auth", "/api/upload/video").permitAll()
       .requestMatchers(HttpMethod.POST, "/api/users/logout").authenticated()
 
-      .requestMatchers(HttpMethod.GET, "/api/users", "/api/users/**", "/api/roles", "/api/roles/**").hasAnyAuthority(level1)
+      .requestMatchers(HttpMethod.GET, "/api/users", "/api/users/**", "/api/roles", "/api/roles/**", "/api/videos/**").hasAnyAuthority(level1)
 
       .requestMatchers(HttpMethod.PUT, "/api/users", "/api/roles").hasAnyAuthority(level2)
       .requestMatchers(HttpMethod.POST, "/api/roles", "/api/upload/image").hasAnyAuthority(level2)

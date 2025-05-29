@@ -6,6 +6,7 @@ import com.application.springboot.exception.MissingFileException;
 import com.application.springboot.service.VideoProcessingService;
 import com.application.springboot.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +26,8 @@ public class VideoController {
   }
 
   // GET all /videos
-  @GetMapping("/videos")
+  //@GetMapping("/videos")
+  // commenting out as this is causing ambiguity due to same @GetMapping
   public List<Video> findAll() {
     return videoService.findAll();
   }
@@ -35,6 +37,20 @@ public class VideoController {
   public Video findById(@PathVariable int id) throws Exception {
     Video userDetails = videoService.findById(id);
     return userDetails;
+  }
+
+  // GET /videos?authorId=2
+  @GetMapping("/videos")
+  public ResponseEntity<List<Video>> findByAuthorId(@RequestParam(name = "authorId", required = false) Integer userId) {
+    List<Video> videos = null;
+
+    if (userId != null) {
+      videos = videoService.findByAuthorId(userId);
+    } else {
+      videos = findAll(); // videoService.findAll()
+    }
+
+    return ResponseEntity.ok(videos);
   }
 
   // POST /video/upload
@@ -53,7 +69,7 @@ public class VideoController {
     return "Video uploaded and processing started successfully!";
   }
 
-  // DELETE /videoId/id
+  // DELETE /videos/id
   @DeleteMapping("/videos/{id}")
   public String deleteVideo(@PathVariable int id) {
     videoService.deleteById(id);
