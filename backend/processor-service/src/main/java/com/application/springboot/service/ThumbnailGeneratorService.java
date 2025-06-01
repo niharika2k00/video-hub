@@ -16,7 +16,8 @@ import java.nio.file.Paths;
 @Service
 public class ThumbnailGeneratorService {
 
-  public ThumbnailGeneratorService() {}
+  public ThumbnailGeneratorService() {
+  }
 
   @Value("${custom.ffmpeg.path}")
   private String ffmpegPath;
@@ -33,23 +34,24 @@ public class ThumbnailGeneratorService {
     this.ffprobe = new FFprobe(ffprobePath);
   }
 
-  public void generate(String sourceVideoPath) throws IOException {
+  public String generate(String sourceVideoPath) throws IOException {
     Path videoFolderPath = Paths.get(sourceVideoPath).getParent();
     String outputPath = videoFolderPath.resolve("thumbnail.jpg").toString();
 
     FFmpegBuilder builder = new FFmpegBuilder()
-      .setInput(sourceVideoPath)
-      .overrideOutputFiles(true)
-      .addOutput(outputPath)
-      .setFormat("image2")
-      .addExtraArgs("-ss", String.valueOf(10))  // seek time in secs
-      .addExtraArgs("-vframes", "1") // Capture 1 frame only
-      .done();
+        .setInput(sourceVideoPath)
+        .overrideOutputFiles(true)
+        .addOutput(outputPath)
+        .setFormat("image2")
+        .addExtraArgs("-ss", String.valueOf(10)) // seek time in secs
+        .addExtraArgs("-vframes", "1") // Capture 1 frame only
+        .done();
 
     FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
     FFmpegJob job = executor.createJob(builder);
     job.run();
 
     System.out.println("✅ Thumbnail created at: " + outputPath);
+    return outputPath;
   }
 }

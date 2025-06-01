@@ -97,12 +97,6 @@
             <artifactId>ffmpeg</artifactId>
             <version>0.8.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.application</groupId>
-            <artifactId>core-utils</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <build>

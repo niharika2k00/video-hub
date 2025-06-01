@@ -1,6 +1,7 @@
 package com.application.springboot.service;
 
 import com.application.sharedlibrary.entity.Video;
+import com.application.sharedlibrary.service.VideoService;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,7 +24,7 @@ public class KafkaQueuePublisherService implements QueuePublisherService {
   public void publishToQueue(int videoId) throws Exception {
 
     Video video = videoService.findById(videoId);
-    
+
     JSONObject jsonObj = new JSONObject();
     jsonObj.put("id", video.getId());
     jsonObj.put("authenticatedUserId", video.getAuthorId());

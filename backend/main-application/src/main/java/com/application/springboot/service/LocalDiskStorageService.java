@@ -1,6 +1,7 @@
 package com.application.springboot.service;
 
 import com.application.sharedlibrary.entity.Video;
+import com.application.sharedlibrary.service.VideoService;
 import com.application.springboot.dto.VideoUploadRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

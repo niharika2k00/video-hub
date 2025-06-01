@@ -5,26 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e462488e-fa55-4f6d-89c4-756bade6d862" name="Changes" comment="add support for thumbnail">
-      <change afterPath="$PROJECT_DIR$/../../.cursor/rules/project-videohub.mdc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/eslint.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/postcss.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/public/vite.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/App.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/App.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/HomeScreen.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/assets/react.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/Navbar.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/index.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/main.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/tailwind.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/vite.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/VideoCard.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/pages/Dashboard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/setup_videohub.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/setup_videohub.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/src/components/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/components/Navbar.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,13 +39,6 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$MAVEN_REPOSITORY$/net/bramp/ffmpeg/ffmpeg/0.8.0/ffmpeg-0.8.0.jar!/net/bramp/ffmpeg/builder/FFmpegBuilder.class" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/application/springboot/service/VideoProcessingService.java" root0="FORCE_HIGHLIGHTING" />
-  </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="workOffline" value="true" />
-      </MavenGeneralSettings>
-    </option>
   </component>
   <component name="OptimizeOnSaveOptions">
     <option name="myRunOnSave" value="true" />
@@ -110,7 +91,7 @@
       <recent name="com.application.springboot.service" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager" selected="Application.Main512">
     <configuration name="Main" type="Application" factoryName="Application" activateToolWindowBeforeRun="false">
       <option name="ALTERNATIVE_JRE_PATH" value="corretto-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -148,6 +129,7 @@
         <env name="RESOLUTION" value="360p" />
       </envs>
       <option name="MAIN_CLASS_NAME" value="com.application.springboot.SpringbootApplication" />
+      <module name="processor-service" />
       <option name="VM_PARAMETERS" value="-DGROUP_ID=group2 -DRESOLUTION=360p -Dspring.devtools.livereload.enabled=false " />
       <method v="2">
         <option name="Make" enabled="true" />

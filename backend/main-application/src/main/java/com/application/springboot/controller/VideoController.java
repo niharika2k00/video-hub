@@ -1,10 +1,10 @@
 package com.application.springboot.controller;
 
 import com.application.sharedlibrary.entity.Video;
+import com.application.sharedlibrary.service.VideoService;
 import com.application.springboot.dto.VideoUploadRequestDto;
 import com.application.springboot.exception.MissingFileException;
 import com.application.springboot.service.VideoProcessingService;
-import com.application.springboot.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

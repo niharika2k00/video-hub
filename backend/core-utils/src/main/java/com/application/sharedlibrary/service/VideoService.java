@@ -1,4 +1,4 @@
-package com.application.springboot.service;
+package com.application.sharedlibrary.service;
 
 import com.application.sharedlibrary.entity.Video;
 import com.application.sharedlibrary.exception.InvalidRequestException;
@@ -6,6 +6,7 @@ import com.application.sharedlibrary.exception.InvalidRequestException;
 import java.util.List;
 
 public interface VideoService {
+
   Video findById(int id) throws InvalidRequestException, IllegalArgumentException;
 
   List<Video> findByAuthorId(Integer id);

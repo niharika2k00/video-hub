@@ -1,8 +1,8 @@
-package com.application.springboot.service;
+package com.application.sharedlibrary.service;
 
+import com.application.sharedlibrary.dao.VideoRepository;
 import com.application.sharedlibrary.entity.Video;
 import com.application.sharedlibrary.exception.InvalidRequestException;
-import com.application.springboot.dao.VideoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

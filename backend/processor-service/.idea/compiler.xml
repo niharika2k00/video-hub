@@ -7,18 +7,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="core-utils" />
         <module name="processor-service" />
+        <module name="core-utils" />
         <module name="pixprocessor-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="main-application" target="17" />
       <module name="springboot" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="core-utils" options="-parameters" />
+      <module name="main-application" options="-parameters" />
       <module name="pixprocessor-service" options="-parameters" />
       <module name="processor-service" options="-parameters" />
       <module name="springboot" options="-parameters" />
