@@ -1,3 +1,8 @@
+AWS SDK link
+https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/services/s3/model/PutObjectRequest.html
+https://sdk.amazonaws.com/java/api/latest/
+https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/services/s3/S3Client.html#headBucket(software.amazon.awssdk.services.s3.model.HeadBucketRequest)
+
 **TODO**
 
 **Doubts**

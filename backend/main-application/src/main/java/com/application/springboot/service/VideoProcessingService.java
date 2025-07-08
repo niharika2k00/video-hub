@@ -10,17 +10,14 @@ import java.util.Optional;
 
 @Service
 public class VideoProcessingService {
-  @Qualifier("SqlMetadataService")
   private final MetadataService metadataService;
-
-  @Qualifier("LocalDiskStorageService")
   private final StorageService storageService;
-
-  @Qualifier("KafkaQueuePublisherService")
   private final QueuePublisherService queuePublisherService;
 
   @Autowired
-  public VideoProcessingService(MetadataService metadataService, StorageService storageService, QueuePublisherService queuePublisherService) {
+  public VideoProcessingService(@Qualifier("SqlMetadataService") MetadataService metadataService,
+                                @Qualifier("LocalVideoStorageService") StorageService storageService,
+                                @Qualifier("KafkaQueuePublisherService") QueuePublisherService queuePublisherService) {
     this.metadataService = metadataService;
     this.storageService = storageService;
     this.queuePublisherService = queuePublisherService;

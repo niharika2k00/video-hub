@@ -19,7 +19,7 @@
     <properties>
         <java.version>17</java.version>
     </properties>
-
+    
     <dependencies>
         <!-- for accessing common/shared library -->
         <dependency>

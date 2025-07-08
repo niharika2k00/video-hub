@@ -28,7 +28,7 @@ public class KafkaQueuePublisherService implements QueuePublisherService {
     JSONObject jsonObj = new JSONObject();
     jsonObj.put("id", video.getId());
     jsonObj.put("authenticatedUserId", video.getAuthorId());
-    jsonObj.put("sourceVideoPath", video.getFilePath());
+    jsonObj.put("videoDirectoryPath", video.getVideoDirectoryPath());
     jsonObj.put("message", "Video with ID " + video.getId() + " has been successfully published to kafka for further processing");
 
     messageBrokerProducer.sendToTopic(jsonObj.toJSONString());
