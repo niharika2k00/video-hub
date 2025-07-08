@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 public class VideoPayload extends Payload {
   private int videoId;
-  private String sourceVideoPath;
+  private String videoDirectoryPath;
   private int segmentDuration; // in seconds
   private Resolution resolutionProfile;
 }

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Service
@@ -34,18 +33,17 @@ public class ThumbnailGeneratorService {
     this.ffprobe = new FFprobe(ffprobePath);
   }
 
-  public String generate(String sourceVideoPath) throws IOException {
-    Path videoFolderPath = Paths.get(sourceVideoPath).getParent();
-    String outputPath = videoFolderPath.resolve("thumbnail.jpg").toString();
+  public String generate(String videoDirPath, String sourceVideoFilePath) throws Exception {
+    String outputPath = Paths.get(videoDirPath).resolve("thumbnail.jpg").toString();
 
     FFmpegBuilder builder = new FFmpegBuilder()
-        .setInput(sourceVideoPath)
-        .overrideOutputFiles(true)
-        .addOutput(outputPath)
-        .setFormat("image2")
-        .addExtraArgs("-ss", String.valueOf(10)) // seek time in secs
-        .addExtraArgs("-vframes", "1") // Capture 1 frame only
-        .done();
+      .setInput(sourceVideoFilePath)
+      .overrideOutputFiles(true)
+      .addOutput(outputPath)
+      .setFormat("image2")
+      .addExtraArgs("-ss", String.valueOf(10)) // seek time in secs
+      .addExtraArgs("-vframes", "1") // Capture 1 frame only
+      .done();
 
     FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
     FFmpegJob job = executor.createJob(builder);

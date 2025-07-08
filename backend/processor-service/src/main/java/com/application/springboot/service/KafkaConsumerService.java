@@ -24,7 +24,8 @@ public class KafkaConsumerService implements MessageBrokerConsumer {
   private final PostProcessingOrchestrator postProcessingOrchestrator;
 
   @Autowired
-  public KafkaConsumerService(MediaProcessingService mediaProcessingService, VideoVariantService videoVariantService, PostProcessingOrchestrator postProcessingOrchestrator) {
+  public KafkaConsumerService(MediaProcessingService mediaProcessingService, VideoVariantService videoVariantService,
+      PostProcessingOrchestrator postProcessingOrchestrator) {
     this.mediaProcessingService = mediaProcessingService;
     this.videoVariantService = videoVariantService;
     this.postProcessingOrchestrator = postProcessingOrchestrator;
@@ -33,16 +34,22 @@ public class KafkaConsumerService implements MessageBrokerConsumer {
   @Value("${custom.target-resolution-count}")
   private int targetResolutionCount;
 
+  @Value("${custom.path.project-root-dir}")
+  String projectRootPath;
+
   @Value("${GROUP_ID}")
   private String kafkaConsumerGroupId;
 
   @Value("${RESOLUTION}")
   private String targetResolution; // "720p"
 
-  // Here a single Kafka topic is configured with 3 consumer groups (passed in the ENV), each containing multiple(x) consumers. Each group is responsible for handling a specific image resolution for resizing.
+  // Here a single Kafka topic is configured with 3 consumer groups (passed in the
+  // ENV), each containing multiple(x) consumers. Each group is responsible for
+  // handling a specific image resolution for resizing.
 
   // Listener with 2 consumer that handle 128 | 512 | 1024 px image resolution
-  // @ConditionalOnProperty annotation helps to enable/disable listeners based on the value of environment variable dynamically
+  // @ConditionalOnProperty annotation helps to enable/disable listeners based on
+  // the value of environment variable dynamically
   // https://docs.spring.io/spring-boot/api/java/org/springframework/boot/autoconfigure/condition/ConditionalOnProperty.html
   // @ConditionalOnProperty(name = "${GROUP_ID}", havingValue = "group1")
   @KafkaListener(topics = "video-processor", groupId = "${GROUP_ID}")
@@ -52,28 +59,35 @@ public class KafkaConsumerService implements MessageBrokerConsumer {
     JSONParser parser = new JSONParser();
     JSONObject jsonObj = (JSONObject) parser.parse(payload);
 
-    //Map<String, Object> map = jsonObj.toMap();
-    int videoId = ((Number) jsonObj.get("id")).intValue(); // while storing(put) int is autoboxed into an Integer. And JSONObject treats int as long,so need to recast to int
+    // Map<String, Object> map = jsonObj.toMap();
+    int videoId = ((Number) jsonObj.get("id")).intValue(); // while storing(put) int is autoboxed into an Integer. And
+                                                           // JSONObject treats int as long,so need to recast to int
     int userId = ((Number) jsonObj.get("authenticatedUserId")).intValue();
-    String sourceVideoPath = (String) jsonObj.get("sourceVideoPath");
+    String videoDirRelativePath = (String) jsonObj.get("videoDirectoryPath"); // "/videos/userId/videoId"
     String message = (String) jsonObj.get("message");
 
-    System.out.println(message + " A consumer in the group " + kafkaConsumerGroupId + " is now listening to the topic for processing tasks.");
+    String videoDirAbsolutePath = projectRootPath + videoDirRelativePath;
+    System.out.println("relative source video folder path: " + videoDirRelativePath);
+    System.out.println("videoDirAbsolutePath: " + videoDirAbsolutePath);
+
+    System.out.println(message + ". A consumer in the group " + kafkaConsumerGroupId
+        + " is now listening to the topic for processing tasks.");
 
     // using builder method for object initialization
     VideoPayload details = VideoPayload.builder()
-      .videoId(videoId)
-      .sourceVideoPath(sourceVideoPath)
-      .resolutionProfile(ResolutionFactory.createResolutionProfile(targetResolution))
-      .segmentDuration(10)
-      .authenticatedUserId(userId)
-      .message(message)
-      .build();
+        .videoId(videoId)
+        .videoDirectoryPath(videoDirAbsolutePath)
+        .resolutionProfile(ResolutionFactory.createResolutionProfile(targetResolution))
+        .segmentDuration(10)
+        .authenticatedUserId(userId)
+        .message(message)
+        .build();
 
     try {
       mediaProcessingService.process(details);
 
-      // Post process once the video is fully transcoded to all ABR(Adaptive Bitrate Streaming) variants
+      // Post process once the video is fully transcoded to all ABR(Adaptive Bitrate
+      // Streaming) variants
       int liveCount = videoVariantService.getCountByVideoId(videoId);
       List<VideoVariant> variants = videoVariantService.findByVideoId(videoId);
       boolean allVariantsAvailable = variants.stream().allMatch(v -> v.getStatus() == VideoStatus.AVAILABLE);
@@ -82,7 +96,7 @@ public class KafkaConsumerService implements MessageBrokerConsumer {
         System.out.println(item);
 
       if (allVariantsAvailable)
-        postProcessingOrchestrator.handler(userId, videoId, sourceVideoPath);
+        postProcessingOrchestrator.handler(userId, videoId, videoDirAbsolutePath);
     } catch (Exception e) {
       System.out.println("Error in processing video: " + e.getMessage());
       throw new RuntimeException(e);

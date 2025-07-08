@@ -17,9 +17,8 @@ public class MasterManifestGeneratorService {
 
   public MasterManifestGeneratorService() {}
 
-  public void generate(String sourceVideoPath) throws Exception {
-    String videoFolderPath = sourceVideoPath.substring(0, sourceVideoPath.lastIndexOf("/"));
-    List<Resolution> allAvailableResolutions = extractResolutionProfilesFromSegments(videoFolderPath);
+  public void generate(String videoDirPath) throws Exception {
+    List<Resolution> allAvailableResolutions = extractResolutionProfilesFromSegments(videoDirPath);
     StringBuilder masterContent = new StringBuilder("#EXTM3U\n");
 
     for (Resolution res : allAvailableResolutions) {
@@ -31,12 +30,13 @@ public class MasterManifestGeneratorService {
     }
 
     // Files.write(path, byte[] bytes)
-    Files.write(Paths.get(videoFolderPath + "/master.m3u8"), masterContent.toString().getBytes());
+    Files.write(Paths.get(videoDirPath + "/master.m3u8"), masterContent.toString().getBytes());
+    System.out.println("✅ Master manifest generated");
   }
 
-  public List<Resolution> extractResolutionProfilesFromSegments(String videoFolderPath) {
+  public List<Resolution> extractResolutionProfilesFromSegments(String videoDirPath) {
     List<Resolution> allResolutions = new ArrayList<>();
-    Path segmentsPath = Paths.get(videoFolderPath, "segments");
+    Path segmentsPath = Paths.get(videoDirPath, "segments");
 
     if (!Files.isDirectory(segmentsPath))
       return List.of();
