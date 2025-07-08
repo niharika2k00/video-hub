@@ -1,5 +1,6 @@
 package com.application.sharedlibrary.entity;
 
+import com.application.sharedlibrary.enums.StorageType;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -27,14 +28,18 @@ public class Video {
   @Column(name = "uploaded_at", updatable = false, unique = true)
   private String uploadedAt;
 
-  @Column(name = "file_path")
-  private String filePath;
+  @Column(name = "video_directory_path") // relative path
+  private String videoDirectoryPath;
 
-  private String title;
-  private String description;
+  @Enumerated(EnumType.STRING) // specify how an enum is stored in the database
+  @Column(name = "storage_type", nullable = true)
+  private StorageType storageType;
+
   private String category;
+  private String description;
   private String duration;
   private String thumbnailUrl;
+  private String title;
 
   @OneToMany(mappedBy = "video", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JsonManagedReference
@@ -43,15 +48,16 @@ public class Video {
 
   public Video() {}
 
-  public Video(String title, String description, String category, int authorId, String uploadedAt, String filePath, String duration, String thumbnailUrl) {
-    this.title = title;
-    this.description = description;
-    this.category = category;
+  public Video(int authorId, String uploadedAt, String videoDirectoryPath, StorageType storageType, String category, String description, String duration, String thumbnailUrl, String title) {
     this.authorId = authorId;
     this.uploadedAt = uploadedAt;
-    this.filePath = filePath;
+    this.videoDirectoryPath = videoDirectoryPath;
+    this.storageType = storageType;
+    this.category = category;
+    this.description = description;
     this.duration = duration;
     this.thumbnailUrl = thumbnailUrl;
+    this.title = title;
   }
 }
 

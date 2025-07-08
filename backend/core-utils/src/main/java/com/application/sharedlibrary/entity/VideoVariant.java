@@ -29,7 +29,7 @@ public class VideoVariant {
   @Column(name = "width", nullable = false)
   private int width;
 
-  @Enumerated(EnumType.STRING) // specify how an enum is stored in the database
+  @Enumerated(EnumType.STRING)
   @Column(name = "status", nullable = false)
   private VideoStatus status;
 
