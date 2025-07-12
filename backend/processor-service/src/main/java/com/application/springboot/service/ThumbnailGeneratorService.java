@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class ThumbnailGeneratorService {
@@ -35,13 +36,14 @@ public class ThumbnailGeneratorService {
 
   public void generate(String videoDirPath, String sourceVideoFilePath) throws Exception {
     String outputPath = Paths.get(videoDirPath).resolve("thumbnail.jpg").toString();
+    int randomSeconds = ThreadLocalRandom.current().nextInt(1, 11); // [1, 10] inclusive as each video segment is of 10 secs hardcoded in KafkaConsumerService.java
 
     FFmpegBuilder builder = new FFmpegBuilder()
       .setInput(sourceVideoFilePath)
       .overrideOutputFiles(true)
       .addOutput(outputPath)
       .setFormat("image2")
-      .addExtraArgs("-ss", String.valueOf(10)) // seek time in secs
+      .addExtraArgs("-ss", String.valueOf(randomSeconds)) // seek time in secs
       .addExtraArgs("-vframes", "1") // Capture 1 frame only
       .done();
 

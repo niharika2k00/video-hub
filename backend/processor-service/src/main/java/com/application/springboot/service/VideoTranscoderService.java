@@ -128,7 +128,8 @@ s3://demobucket-890291224/videos/1/40/40.mp4
     Path manifestsFolderPath = storagePathResolver.getManifestsPath(videoDirAbsolutePath);
 
     String segmentPattern = resolutionSegmentFolderPath.resolve("%05d.ts").toString();
-    String outputManifestFilePath = manifestsFolderPath.resolve("rendition_" + resolutionProfile.getName() + ".m3u8").toString();
+    String outputManifestFilePath = manifestsFolderPath.resolve("rendition_" + resolutionProfile.getName() + ".m3u8").toString(); // rendition_360p.m3u8
+    String baseUrlInRenditions = "../segments/" + resolutionProfile.getName() + "/"; // relative path required when uploaded in S3
     System.out.println("outputManifestFilePath:" + outputManifestFilePath);
 
     try {
@@ -149,6 +150,7 @@ s3://demobucket-890291224/videos/1/40/40.mp4
           "-level", "3.1",
           "-hls_time", String.valueOf(segmentDuration),
           "-hls_playlist_type", "vod",
+          "-hls_base_url", baseUrlInRenditions,
           "-hls_segment_filename", segmentPattern,
           "-start_number", "1",
           "-hls_list_size", "0"

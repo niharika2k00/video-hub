@@ -26,7 +26,7 @@ public class MasterManifestGeneratorService {
         .append(",RESOLUTION=")
         .append(res.getWidth()).append("x").append(res.getHeight())
         .append("\n")
-        .append("manifests/rendition_").append(res.getHeight()).append(".m3u8\n");
+        .append("manifests/rendition_").append(res.getHeight()).append("p.m3u8\n");
     }
 
     // Files.write(path, byte[] bytes)
