@@ -33,7 +33,7 @@ public class ThumbnailGeneratorService {
     this.ffprobe = new FFprobe(ffprobePath);
   }
 
-  public String generate(String videoDirPath, String sourceVideoFilePath) throws Exception {
+  public void generate(String videoDirPath, String sourceVideoFilePath) throws Exception {
     String outputPath = Paths.get(videoDirPath).resolve("thumbnail.jpg").toString();
 
     FFmpegBuilder builder = new FFmpegBuilder()
@@ -49,7 +49,6 @@ public class ThumbnailGeneratorService {
     FFmpegJob job = executor.createJob(builder);
     job.run();
 
-    System.out.println("✅ Thumbnail created at: " + outputPath);
-    return outputPath;
+    System.out.println("✅ Thumbnail created at: " + outputPath); // local path
   }
 }

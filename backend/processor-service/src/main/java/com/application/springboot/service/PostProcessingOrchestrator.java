@@ -17,8 +17,11 @@ import static com.application.springboot.util.VideoPathUtil.getSourceVideoAbsolu
 @Service
 public class PostProcessingOrchestrator {
 
-  @Value("${custom.path.project-root-dir}")
-  String projectRootDirectory;
+  @Value("${aws.credentials.profile}")
+  String awsProfile;
+
+  @Value("${aws.credentials.region}")
+  String awsRegion;
 
   @Value("${aws.s3.bucket-name}")
   String bucketName;
@@ -43,6 +46,7 @@ public class PostProcessingOrchestrator {
   }
 
   public void handler(int userId, int videoId, String videoDirPath) throws Exception {
+    String materManifestFilePath = ""; // required for the frontend for HLS streaming
     System.out.println("Post-processing started...");
 
     Video video = videoService.findById(videoId);
@@ -54,9 +58,21 @@ public class PostProcessingOrchestrator {
     masterManifestGeneratorService.generate(videoDirPath);
 
     // generate thumbnail image
-    String thumbnailPath = thumbnailGeneratorService.generate(videoDirPath, sourceVideoAbsolutePath);
+    String thumbnailUrl = "";
+    thumbnailGeneratorService.generate(videoDirPath, sourceVideoAbsolutePath);
 
-    video.setThumbnailUrl(thumbnailPath);
+    if (video.getStorageType() == StorageType.AWS_S3) {
+      String baseS3Url = String.format("https://%s.s3.%s.amazonaws.com/", bucketName, awsRegion);
+
+      //https://demobucket-890291224.s3.us-east-1.amazonaws.com/videos/1/15/thumbnail.jpg
+      String objectKey = String.format("videos/%s/%s/thumbnail.jpg", userId, videoId);
+      thumbnailUrl = baseS3Url + objectKey;
+
+      materManifestFilePath = baseS3Url + String.format("videos/%s/%s/master.m3u8", userId, videoId);
+    }
+
+    video.setThumbnailUrl(thumbnailUrl);
+    video.setVideoDirectoryPath(materManifestFilePath);
     videoService.saveOrUpdate(video);
 
     // delete the raw video file from local
