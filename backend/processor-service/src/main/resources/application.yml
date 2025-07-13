@@ -32,12 +32,19 @@ logging:
 custom:
   target-resolution-count: 6
   path:
-    process-success-email-template: "/Users/niharika/Workspace/Personal/IntellijProjects/project-videohub/java-project-part2/image_process_success_email.md"
-    image-collection-dir:           "/Users/niharika/Workspace/Personal/IntellijProjects/project-videohub/photoGallery"
+    project-root-dir:               "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub"
+    process-success-email-template: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/main-application/video_process_success_email.md"
+    image-collection-dir:           "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/photoGallery"
   ffmpeg:
     path:  "/opt/homebrew/bin/ffmpeg"
     probe: "/opt/homebrew/bin/ffprobe"
 
+aws:
+  credentials:
+    profile:    "shaktiman"
+    region:     "us-east-1"
+  s3:
+    bucket-name: "demobucket-890291224"
 
 
 
