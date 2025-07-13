@@ -46,13 +46,19 @@ logging:
     root: warn # log only warning and error
 
 custom:
-  baseurl: "http://localhost:5173" # frontend base url
+  baseurl:      "http://localhost:5173" # frontend base url
+  storage-type: "AWS_S3"
   path:
-    source-video-dir:       "/Users/niharika/Workspace/Personal/IntellijProjects/project-videohub/videos"
-    welcome-email-template: "/Users/niharika/Workspace/Personal/IntellijProjects/project-videohub/java-project-part1/user_welcome_email.md"
+    project-root-dir:       "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub"
+    source-video-dir:       "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/videos"
+    welcome-email-template: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/java-project-part1/user_welcome_email.md"
   # ----- reference for deployment -----
-  #    source-image-dir: "/home/ubuntu/javaproject/images"
+  #    source-video-dir: "/home/ubuntu/javaproject/images"
   #    welcome-email-template: "/home/ubuntu/javaproject/part1/user_welcome_email.md"
 
-  # welcomeEmailTemplate  imageProcessSuccessEmailTemplater
+  # welcomeEmailTemplate  imageProcessSuccessEmailTemplate
   # default username: user with the below generated password
+
+
+
+# "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub"
