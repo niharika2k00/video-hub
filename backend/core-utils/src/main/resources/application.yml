@@ -1,0 +1,4 @@
+aws:
+  credentials:
+    profile: "shaktiman"
+    region: "us-east-1"
