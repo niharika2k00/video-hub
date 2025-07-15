@@ -1,14 +1,15 @@
-version: "3.8"
 services:
   nginx:
     image: nginx:latest
-    ports:
-      - 8080:80
-      - 443:443
+    container_name: nginx
+    restart: unless-stopped
+    ports: # [host_port(my) : container_port]
+      - "8080:80" # HTTP  → container:80
+      - "8443:443" # HTTPS → container:443 (or "443:443" if you prefer)
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # needed on Linux so the container can reach your host’s :5173
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-    networks:
-      - webnet
+      - ./nginx.conf:/etc/nginx/nginx.conf # ro: read only can read the file but cannot overwrite or delete it
 
-networks:
-  webnet:
+# NOTE: 443 won't work as no SSL certificate is configured in NGINX
+# Host port 8080 (can be anything) is mapped to container port 80 for NGINX, so accessing http://localhost:8080, will be redirected to http://localhost:80
