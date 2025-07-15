@@ -1,5 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Dashboard from "./pages/Dashboard";
+import Profile from "@/pages/Profile";
+import VideoPage from "./pages/VideoPage";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
@@ -14,6 +17,10 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/about" />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />{" "}
+          <Route path="/video/:id" element={<VideoPage />} />
         </Routes>
       </main>
       <Footer />

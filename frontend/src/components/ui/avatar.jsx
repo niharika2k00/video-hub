@@ -1,40 +1,73 @@
+import * as React from "react";
 import { cn } from "@/lib/utils";
 
-/*
- * Avatar – circular.  If `src` fails or not provided, show initials.
- * Props: { name?:string, src?:string, className?:string, size?:number }
- */
-export const Avatar = ({ name = "", src, className = "", size = 32 }) => {
-  const initials = name
-    .split(" ")
-    .filter(Boolean)
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
-  const dimension = `${size}px`;
-
-  return src ? (
-    <img
-      src={src}
-      alt={name}
-      className={cn("rounded-full object-cover", className)}
-      style={{ width: dimension, height: dimension }}
-      onError={(e) => {
-        e.currentTarget.onerror = null; // stop loop
-        e.currentTarget.src = "";
-      }}
-    />
-  ) : (
+const AvatarRoot = React.forwardRef(({ className, ...props }, ref) => {
+  return (
     <span
+      ref={ref}
       className={cn(
-        "inline-flex items-center justify-center rounded-full bg-primary text-white font-semibold",
+        "relative inline-flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-muted",
         className
       )}
-      style={{ width: dimension, height: dimension }}
-    >
-      {initials || "U"}
-    </span>
+      {...props}
+    />
+  );
+});
+
+const AvatarImage = ({ className, ...props }) => (
+  <img className={cn("h-full w-full object-cover", className)} {...props} />
+);
+
+const AvatarFallback = ({ className, children }) => (
+  <span
+    className={cn(
+      "flex h-full w-full items-center justify-center rounded-full font-medium",
+      className
+    )}
+  >
+    {children}
+  </span>
+);
+
+/* ─── Smart <Avatar> wrapper ──────────────────────────────────── */
+const Avatar = ({
+  src,
+  name = "User",
+  className,
+  imgClassName,
+  initialsSize,
+  ...props
+}) => {
+  /* produce initials e.g. “Niharika Dutta” -> “ND” */
+  const initials = React.useMemo(
+    () =>
+      name
+        .split(" ")
+        .filter(Boolean)
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase(),
+    [name]
+  );
+
+  return (
+    <AvatarRoot className={className} {...props}>
+      {src ? (
+        <AvatarImage src={src} alt={name} className={imgClassName} />
+      ) : (
+        <AvatarFallback
+          className={cn(
+            "bg-indigo-100 text-indigo-600",
+            initialsSize // apply dynamic size
+          )}
+        >
+          {initials}
+        </AvatarFallback>
+      )}
+    </AvatarRoot>
   );
 };
+
+export { AvatarRoot, AvatarImage, AvatarFallback };
+export default Avatar;

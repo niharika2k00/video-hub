@@ -1,8 +1,15 @@
 import { NavLink } from "react-router-dom";
 import { useEffect } from "react";
-import { Menu, User, LogOut, Settings } from "lucide-react";
+import {
+  Menu,
+  LogOut,
+  Settings,
+  LayoutDashboard,
+  Info,
+  User,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar } from "@/components/ui/avatar";
+import Avatar from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -11,35 +18,63 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import useAuth from "@/context/AuthContext";
+import ThemeToggle from "@/components/ThemeToggle";
 
-const NavLinks = ({ onNavigate }) => (
-  <ul className="flex flex-col md:flex-row gap-6 md:gap-4 text-lg md:text-sm">
-    <li>
-      <NavLink
-        onClick={onNavigate}
-        to="/"
-        className={({ isActive }) =>
-          isActive
-            ? "text-primary font-medium"
-            : "hover:text-primary transition-colors"
-        }
-      >
-        Home
-      </NavLink>
-    </li>
-    <li>
-      <NavLink
-        onClick={onNavigate}
-        to="/#about"
-        className="hover:text-primary transition-colors"
-      >
-        About
-      </NavLink>
-    </li>
-  </ul>
-);
+function NavLinks({ user, onNavigate }) {
+  return (
+    <ul className="flex flex-col md:flex-row gap-6 md:gap-4 text-lg md:text-sm">
+      <li>
+        <NavLink
+          onClick={onNavigate}
+          to="/"
+          className={({ isActive }) =>
+            isActive
+              ? "text-primary font-medium"
+              : "hover:text-primary transition-colors"
+          }
+        >
+          Home
+        </NavLink>
+      </li>
 
-export default function Navbar() {
+      <li>
+        <NavLink
+          onClick={onNavigate}
+          to="/about"
+          className={({ isActive }) =>
+            isActive
+              ? "text-primary font-medium"
+              : "hover:text-primary transition-colors"
+          }
+        >
+          <Info className="h-4 w-4 md:hidden" /> About
+        </NavLink>
+      </li>
+
+      {user && (
+        <li>
+          <NavLink
+            onClick={onNavigate}
+            to="/dashboard"
+            className={({ isActive }) =>
+              isActive
+                ? "text-primary font-medium"
+                : "hover:text-primary transition-colors"
+            }
+          >
+            <LayoutDashboard className="h-4 w-4 md:hidden" /> Dashboard
+          </NavLink>
+        </li>
+      )}
+
+      <li className="ml-auto">
+        <ThemeToggle />
+      </li>
+    </ul>
+  );
+}
+
+function Navbar() {
   const { user, logout } = useAuth();
 
   useEffect(() => {
@@ -57,9 +92,9 @@ export default function Navbar() {
           <span className="text-primary">VIDEO</span>HUB
         </NavLink>
 
-        {/* Desktop nav */}
+        {/* Desktop */}
         <nav className="hidden md:flex items-center gap-6">
-          <NavLinks />
+          <NavLinks user={user} />
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -68,7 +103,6 @@ export default function Navbar() {
                   <span className="font-medium">{user.name}</span>
                 </button>
               </DropdownMenuTrigger>
-
               <DropdownMenuContent>
                 <DropdownMenuItem asChild>
                   <NavLink to="/profile" className="flex items-center gap-2">
@@ -83,10 +117,9 @@ export default function Navbar() {
                     Settings
                   </NavLink>
                 </DropdownMenuItem>
-
                 <DropdownMenuItem
-                  // onSelect={logout}
-                  onClick={logout}
+                  onSelect={logout}
+                  // onClick={logout}
                   className="flex items-center gap-2"
                 >
                   <LogOut className="h-4 w-4" />
@@ -101,31 +134,51 @@ export default function Navbar() {
           )}
         </nav>
 
-        {/* Mobile nav hamburger */}
+        {/* Mobile */}
         <Sheet>
-          <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon">
-              <Menu className="h-7 w-7" />
+          <SheetTrigger asChild>
+            <Button
+              variant="ghost"
+              className="md:hidden rounded-md p-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary"
+              aria-label="Open navigation menu"
+            >
+              <Menu className="h-6 w-6" />
             </Button>
           </SheetTrigger>
+
           <SheetContent>
-            <div className="flex flex-col gap-4 mt-4">
-              <NavLinks
-                onNavigate={() =>
-                  document.querySelector('[role="dialog"] button')?.click()
-                }
-              />
+            <NavLinks user={user} onNavigate={() => {}} />
+
+            <div className="mt-6">
               {user ? (
-                <div className="flex items-center gap-2 p-2">
-                  <Avatar name={user.name} src={user.imageUrl} />
-                  <span className="font-medium">{user.name}</span>
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <Avatar name={user.name} src={user.imageUrl} />
+                    <span className="font-medium">{user.name}</span>
+                  </div>
+
+                  <Button
+                    variant="ghost"
+                    onClick={logout}
+                    className="justify-start gap-2"
+                  >
+                    <LogOut className="h-4 w-4" /> Logout
+                  </Button>
+
+                  <Button
+                    asChild
+                    variant="ghost"
+                    className="justify-start gap-2"
+                  >
+                    <NavLink to="/settings">
+                      <Settings className="h-4 w-4" /> Settings
+                    </NavLink>
+                  </Button>
                 </div>
               ) : (
-                <NavLink to="/signin" className="w-full">
-                  <Button asChild variant="secondary" className="w-full">
-                    Sign In
-                  </Button>
-                </NavLink>
+                <Button asChild variant="secondary" className="w-full">
+                  <NavLink to="/signin">Sign In</NavLink>
+                </Button>
               )}
             </div>
           </SheetContent>
@@ -134,3 +187,5 @@ export default function Navbar() {
     </header>
   );
 }
+
+export default Navbar;

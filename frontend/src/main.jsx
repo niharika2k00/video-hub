@@ -1,4 +1,5 @@
 import React from "react";
+import { ThemeProvider } from "@/context/ThemeContext";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -11,13 +12,16 @@ import { AuthProvider } from "./context/AuthContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AuthProvider>
-      <VideoProvider>
-        <BrowserRouter>
-          <App />
-          <ToastContainer position="top-right" autoClose={3000} />
-        </BrowserRouter>
-      </VideoProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      {" "}
+      <AuthProvider>
+        <VideoProvider>
+          <BrowserRouter>
+            <App />
+            <ToastContainer position="top-right" autoClose={3000} />
+          </BrowserRouter>
+        </VideoProvider>
+      </AuthProvider>
+    </ThemeProvider>{" "}
   </React.StrictMode>
 );
