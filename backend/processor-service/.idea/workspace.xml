@@ -5,7 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e462488e-fa55-4f6d-89c4-756bade6d862" name="Changes" comment="add support for thumbnail">
-      <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/public/thumbnail.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/SharePopover.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/ThemeToggle.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/UploadVideoDialog.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/VideoCard.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/VideoPlayer.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/ui/dialog.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/ui/label.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/ui/popover.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/ui/textarea.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/context/ThemeContext.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/pages/Dashboard.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/pages/Profile.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/src/pages/VideoPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../frontend/setup_videohub.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/setup_videohub.sh" afterDir="false" />
@@ -64,22 +79,22 @@
     <option name="openDirectoriesWithSingleClick" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Application.Main.executor": "Run",
-    "Application.Main1024.executor": "Run",
-    "Application.Main512.executor": "Run",
-    "Application.SpringbootApplication.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "code.cleanup.on.save": "true",
-    "git-widget-placeholder": "main",
-    "last_directory_selection": "/Users/niharika/Workspace/Personal/IntellijProjects/java-project part2/src/main/java/com/application/springboot",
-    "last_opened_file_path": "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/backend/processor-service",
-    "settings.editor.selected.configurable": "project.propCompiler"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main1024.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main512.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SpringbootApplication.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;code.cleanup.on.save&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_directory_selection&quot;: &quot;/Users/niharika/Workspace/Personal/IntellijProjects/java-project part2/src/main/java/com/application/springboot&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/backend/processor-service&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propCompiler&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources" />

@@ -149,3 +149,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 - **Niharika Dutta** - [GitHub Profile](https://github.com/niharika2k00)
 
+References :
+
+- https://vite.dev/config/
+- https://ffmpeg.org/ffmpeg-all.html#Video-Options
+- https://tailwindcss.com/docs/installation/using-vite
