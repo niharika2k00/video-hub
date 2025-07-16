@@ -7,7 +7,7 @@ import software.amazon.awssdk.annotations.NotNull;
 
 @Getter
 @Setter
-public class UserUpdateRequestDto {
+public class UserDto {
   @NotNull
   private String name;
   @NotNull
@@ -20,7 +20,7 @@ public class UserUpdateRequestDto {
   private String bio;
   private String phoneNumber;
 
-  public UserUpdateRequestDto(String name, String email, String password, MultipartFile profileImage, String age, String location, String bio, String phoneNumber) {
+  public UserDto(String name, String email, String password, MultipartFile profileImage, String age, String location, String bio, String phoneNumber) {
     this.name = name;
     this.email = email;
     this.password = password;

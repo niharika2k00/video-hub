@@ -9,8 +9,8 @@ import com.application.sharedlibrary.service.ResourceLoaderService;
 import com.application.sharedlibrary.service.UserService;
 import com.application.sharedlibrary.util.EmailTemplateProcessor;
 import com.application.springboot.dto.LoginRequestDto;
+import com.application.springboot.dto.UserDto;
 import com.application.springboot.dto.UserLoginResponseDto;
-import com.application.springboot.dto.UserUpdateRequestDto;
 import com.application.springboot.exception.ResourceAlreadyExistsException;
 import com.application.springboot.service.JwtService;
 import com.application.springboot.service.RoleService;
@@ -94,7 +94,7 @@ public class UserRestController {
     value = "/auth/register",
     consumes = MULTIPART_FORM_DATA_VALUE
   )
-  public User addNewUser(@ModelAttribute UserUpdateRequestDto reqUserDto) throws Exception {
+  public User addNewUser(@ModelAttribute UserDto reqUserDto) throws Exception {
     // Check: email already exist
     Optional<User> isUserExist = userRepository.findByEmail(reqUserDto.getEmail());
     if (isUserExist.isPresent()) {
@@ -224,7 +224,7 @@ public class UserRestController {
     value = "/user/{id}",
     consumes = MULTIPART_FORM_DATA_VALUE
   )
-  public String updateUser(@PathVariable int id, @ModelAttribute UserUpdateRequestDto reqUserDto) throws Exception {
+  public String updateUser(@PathVariable int id, @ModelAttribute UserDto reqUserDto) throws Exception {
     userUpdateServiceImpl.updateUser(id, reqUserDto);
     return "User updated successfully";
   }

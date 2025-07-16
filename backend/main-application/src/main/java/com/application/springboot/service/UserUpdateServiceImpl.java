@@ -3,7 +3,7 @@ package com.application.springboot.service;
 import com.application.sharedlibrary.dao.UserRepository;
 import com.application.sharedlibrary.entity.User;
 import com.application.sharedlibrary.service.UserServiceImpl;
-import com.application.springboot.dto.UserUpdateRequestDto;
+import com.application.springboot.dto.UserDto;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class UserUpdateServiceImpl implements UserUpdateService {
 
   @Override
   @Transactional
-  public void updateUser(int id, UserUpdateRequestDto requestBody) throws Exception {
+  public void updateUser(int id, UserDto requestBody) throws Exception {
     User existingUser = userServiceImpl.findById(id);
     String oldPassword = existingUser.getPassword(); // hashed
     String newPassword = requestBody.getPassword(); // plaintext
