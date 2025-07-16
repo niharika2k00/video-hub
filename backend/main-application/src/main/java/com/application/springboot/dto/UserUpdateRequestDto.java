@@ -1,55 +1,38 @@
 package com.application.springboot.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.annotations.NotNull;
+
+@Getter
+@Setter
 public class UserUpdateRequestDto {
+  @NotNull
+  private String name;
+  @NotNull
+  private String email;
+  @NotNull
+  private String password;
+  private MultipartFile profileImage;
+  private String age;
+  private String location;
+  private String bio;
+  private String phoneNumber;
 
-  private final int id;
-  private final String name;
-  private final String email;
-  private final String age;
-  private final String location;
-  private final String bio;
-  private final String phoneNumber;
-
-  public UserUpdateRequestDto(int id, String name, String email, String age, String location, String bio, String phoneNumber) {
-    this.id = id;
+  public UserUpdateRequestDto(String name, String email, String password, MultipartFile profileImage, String age, String location, String bio, String phoneNumber) {
     this.name = name;
     this.email = email;
+    this.password = password;
+    this.profileImage = profileImage;
     this.age = age;
     this.location = location;
     this.bio = bio;
     this.phoneNumber = phoneNumber;
   }
 
-  public int getId() {
-    return id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getAge() {
-    return age;
-  }
-
-  public String getLocation() {
-    return location;
-  }
-
-  public String getBio() {
-    return bio;
-  }
-
-  public String getPhoneNumber() {
-    return phoneNumber;
-  }
-
   @Override
   public String toString() {
-    return "User{" + "id=" + id + ", name='" + name + '\'' + ", email='" + email + '\'' + ", age='" + age + ", location='" + location + '\'' + ", bio='" + bio + '\'' + ", phone number='" + phoneNumber + '\'' + '}';
+    return "User{" + ", name='" + name + '\'' + ", email='" + email + '\'' + ", age='" + age + ", location='" + location + '\'' + ", bio='" + bio + '\'' + ", phone number='" + phoneNumber + '\'' + '}';
   }
 }

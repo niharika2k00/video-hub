@@ -1,5 +1,6 @@
 package com.application.springboot.controller;
 
+import com.application.sharedlibrary.config.AwsClientBuilder;
 import com.application.sharedlibrary.dao.UserRepository;
 import com.application.sharedlibrary.entity.Role;
 import com.application.sharedlibrary.entity.User;
@@ -8,7 +9,6 @@ import com.application.sharedlibrary.service.ResourceLoaderService;
 import com.application.sharedlibrary.service.UserService;
 import com.application.sharedlibrary.util.EmailTemplateProcessor;
 import com.application.springboot.dto.LoginRequestDto;
-import com.application.springboot.dto.PasswordUpdateRequestDto;
 import com.application.springboot.dto.UserLoginResponseDto;
 import com.application.springboot.dto.UserUpdateRequestDto;
 import com.application.springboot.exception.ResourceAlreadyExistsException;
@@ -17,39 +17,56 @@ import com.application.springboot.service.RoleService;
 import com.application.springboot.service.UserUpdateServiceImpl;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Utilities;
+import software.amazon.awssdk.services.s3.model.GetUrlRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+
+import static com.application.springboot.utility.FileUtils.getFileExtention;
+import static com.application.springboot.utility.FileUtils.validateImgae;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @RequestMapping("/api")
 public class UserRestController {
+
+  @Value("${aws.s3.bucket-name}")
+  String bucketName;
+
   // Autowired to inject service bean into controller, serve as an intermediary between C and DAO layer
-  private final UserService userService;
-  private final RoleService roleService;
-  private final JwtService jwtService;
-  private final UserUpdateServiceImpl userUpdateServiceImpl;
-  private final KafkaTemplate<String, String> kafkaTemplate;
+  private final AwsClientBuilder connection;
   private final EmailTemplateProcessor emailTemplateProcessor;
-  private final UserRepository userRepository;
+  private final JwtService jwtService;
+  private final KafkaTemplate<String, String> kafkaTemplate;
   private final ResourceLoaderService resourceLoaderService;
+  private final RoleService roleService;
+  private final UserRepository userRepository;
+  private final UserService userService;
+  private final UserUpdateServiceImpl userUpdateServiceImpl;
 
   @Autowired
-  public UserRestController(UserService userService, RoleService roleService, JwtService jwtService, UserUpdateServiceImpl userUpdateServiceImpl, KafkaTemplate<String, String> kafkaTemplate, EmailTemplateProcessor emailTemplateProcessor, UserRepository userRepository, ResourceLoaderService resourceLoaderService) {
-    this.userService = userService;
-    this.roleService = roleService;
-    this.jwtService = jwtService;
-    this.userUpdateServiceImpl = userUpdateServiceImpl;
-    this.kafkaTemplate = kafkaTemplate;
+  public UserRestController(AwsClientBuilder connection, EmailTemplateProcessor emailTemplateProcessor, JwtService jwtService, KafkaTemplate<String, String> kafkaTemplate, ResourceLoaderService resourceLoaderService, RoleService roleService, UserRepository userRepository, UserService userService, UserUpdateServiceImpl userUpdateServiceImpl) {
+    this.connection = connection;
     this.emailTemplateProcessor = emailTemplateProcessor;
-    this.userRepository = userRepository;
+    this.jwtService = jwtService;
+    this.kafkaTemplate = kafkaTemplate;
     this.resourceLoaderService = resourceLoaderService;
+    this.roleService = roleService;
+    this.userRepository = userRepository;
+    this.userService = userService;
+    this.userUpdateServiceImpl = userUpdateServiceImpl;
   }
 
   // test http://localhost:4040/api/test
@@ -73,18 +90,28 @@ public class UserRestController {
   }
 
   // POST /users/register - SignUp | add new user
-  @PostMapping("/auth/register")
-  public User addNewUser(@RequestBody User user) throws Exception {
+  @PostMapping(
+    value = "/auth/register",
+    consumes = MULTIPART_FORM_DATA_VALUE
+  )
+  public User addNewUser(@ModelAttribute UserUpdateRequestDto reqUserDto) throws Exception {
     // Check: email already exist
-    Optional<User> isUserExist = userRepository.findByEmail(user.getEmail());
+    Optional<User> isUserExist = userRepository.findByEmail(reqUserDto.getEmail());
     if (isUserExist.isPresent()) {
       throw new ResourceAlreadyExistsException("Email already exists.");
     }
 
+    User user = new User();
     user.setId(0);
+    user.setName(reqUserDto.getName());
+    user.setEmail(reqUserDto.getEmail());
+    user.setAge(reqUserDto.getAge());
+    user.setBio(reqUserDto.getBio());
+    user.setLocation(reqUserDto.getLocation());
+    user.setPhoneNumber(reqUserDto.getPhoneNumber());
 
     // Password encryption
-    String plainTextPassword = user.getPassword();
+    String plainTextPassword = reqUserDto.getPassword();
     String salt = BCrypt.gensalt(12);
     String hashedPassword = BCrypt.hashpw(plainTextPassword, salt);
     user.setPassword(hashedPassword);
@@ -92,11 +119,48 @@ public class UserRestController {
 
     // Grant basic user role
     Role basicAuthority = roleService.findByRoleName("ROLE_USER");
-    user.setRoles(Set.of(basicAuthority));
+    user.setRoles(new HashSet<>(List.of(basicAuthority)));
 
     // Save user object to DB
     User newUserObject = userUpdateServiceImpl.saveOrUpdate(user);
     System.out.println("Success! New user registered. " + newUserObject);
+
+    // Handle profile image if present
+    MultipartFile profileImage = reqUserDto.getProfileImage();
+    if (profileImage != null && !profileImage.isEmpty()) {
+      validateImgae(profileImage);
+      String extention = getFileExtention(profileImage.getOriginalFilename());
+      String objectKey = String.format("profile_images/%d%s", newUserObject.getId(), extention); // build object key
+
+      // upload to S3
+      S3Client s3Client = connection.get(S3Client.class);
+      PutObjectRequest putReq = PutObjectRequest.builder()
+        .bucket(bucketName)
+        .key(objectKey)
+        .contentType(profileImage.getContentType())
+        .build();
+
+      try (InputStream in = profileImage.getInputStream()) {
+        s3Client.putObject(putReq,
+          software.amazon.awssdk.core.sync.RequestBody.fromInputStream(in, profileImage.getSize())); // fromInputStream as handling with MultipartFile
+      }
+
+      // Get public storage URL
+      S3Utilities s3Utilities = s3Client.utilities();
+      GetUrlRequest getUrlRequest = GetUrlRequest.builder()
+        .bucket(bucketName)
+        .key(objectKey)
+        .build();
+
+      // toExternalForm() function converts URL object to a String works similar as toString(). Below is the equivalent lambda function.
+      String profileImageUrl = s3Utilities.getUrl(getUrlRequest).toExternalForm();
+
+      //String profileImageUrl = s3Client.utilities()
+      //  .getUrl(b -> b.bucket(bucketName).key(objectKey))
+      //  .toExternalForm();
+      newUserObject.setProfileImage(profileImageUrl);
+      newUserObject = userUpdateServiceImpl.saveOrUpdate(newUserObject);
+    }
 
     // Mapping placeholders for replacement
     Map<String, String> replacements = Map.of(
@@ -155,18 +219,14 @@ public class UserRestController {
     return ResponseEntity.ok("Successfully logged out.");
   }
 
-  // PUT /users - update existing user details except password
-  @PutMapping("/users")
-  public String updateUser(@RequestBody UserUpdateRequestDto updatedUser) throws Exception {
-    userUpdateServiceImpl.updateUser(updatedUser);
+  // PUT /user/ - update existing user details
+  @PutMapping(
+    value = "/user/{id}",
+    consumes = MULTIPART_FORM_DATA_VALUE
+  )
+  public String updateUser(@PathVariable int id, @ModelAttribute UserUpdateRequestDto reqUserDto) throws Exception {
+    userUpdateServiceImpl.updateUser(id, reqUserDto);
     return "User updated successfully";
-  }
-
-  // PUT /users/password - update users password
-  @PutMapping("/users/auth")
-  public String updatePassword(@RequestBody PasswordUpdateRequestDto requestBody) throws Exception {
-    String msg = userUpdateServiceImpl.updatePassword(requestBody);
-    return msg;
   }
 
   // DELETE /users/{id}

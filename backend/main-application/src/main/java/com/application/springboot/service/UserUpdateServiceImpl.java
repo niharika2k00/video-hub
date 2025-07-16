@@ -3,7 +3,6 @@ package com.application.springboot.service;
 import com.application.sharedlibrary.dao.UserRepository;
 import com.application.sharedlibrary.entity.User;
 import com.application.sharedlibrary.service.UserServiceImpl;
-import com.application.springboot.dto.PasswordUpdateRequestDto;
 import com.application.springboot.dto.UserUpdateRequestDto;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
@@ -31,30 +30,25 @@ public class UserUpdateServiceImpl implements UserUpdateService {
 
   @Override
   @Transactional
-  public void updateUser(UserUpdateRequestDto requestBody) throws Exception {
-    User existingUser = userServiceImpl.findById(requestBody.getId());
-
-    BeanUtils.copyProperties(requestBody, existingUser);
-    saveOrUpdate(existingUser);
-  }
-
-  @Override
-  @Transactional
-  public String updatePassword(PasswordUpdateRequestDto requestBody) throws Exception {
-    User user = userServiceImpl.findById(requestBody.getId());
-    String oldPassword = user.getPassword(); // hashed
+  public void updateUser(int id, UserUpdateRequestDto requestBody) throws Exception {
+    User existingUser = userServiceImpl.findById(id);
+    String oldPassword = existingUser.getPassword(); // hashed
     String newPassword = requestBody.getPassword(); // plaintext
     String message;
 
-    if (BCrypt.checkpw(newPassword, oldPassword)) {
-      message = "New password must be different from the current password.";
+    BeanUtils.copyProperties(requestBody, existingUser);
+
+    if (BCrypt.checkpw(newPassword, oldPassword)) { // check same hash
+      message = "No change in password";
+      existingUser.setPassword(oldPassword); // setting old hash again as it was overridden by copyProperties
     } else {
-      String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
-      user.setPassword(hashedPassword);
-      saveOrUpdate(user);
       message = "Password updated successfully";
+      String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
+      existingUser.setPassword(hashedPassword);
+      saveOrUpdate(existingUser);
     }
 
-    return message;
+    System.out.println(message);
+    saveOrUpdate(existingUser);
   }
 }

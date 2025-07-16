@@ -21,6 +21,9 @@ public class User {
   @Column(name = "name", nullable = false)
   private String name;
 
+  @Column(name = "profile_image", nullable = true)
+  private String profileImage;
+
   @Column(name = "email", unique = true, nullable = false)
   private String email;
 
@@ -50,13 +53,14 @@ public class User {
   // Entity Class - hence no argument constructor
   public User() {}
 
-  public User(String name, String email, String password, String age, String location, String bio, String phoneNumber) {
+  public User(String name, String profileImage, String email, String password, String age, String location, String bio, String phoneNumber) {
     this.name = name;
+    this.profileImage = profileImage;
     this.email = email;
     this.password = password;
     this.age = age;
-    this.bio = bio;
     this.location = location;
+    this.bio = bio;
     this.phoneNumber = phoneNumber;
   }
 
@@ -74,6 +78,6 @@ public class User {
 
   @Override
   public String toString() {
-    return "User{" + "id=" + id + ", name='" + name + '\'' + ", email='" + email + '\'' + ", age='" + age + ", password='" + password + '\'' + ", location='" + location + '\'' + ", bio='" + bio + '\'' + ", phone number='" + phoneNumber + '\'' + '}';
+    return "User{" + "id=" + id + ", name='" + name + '\'' + ", email='" + email + '\'' + ", age='" + age + ", password='" + password + '\'' + ", location='" + location + '\'' + ", bio='" + bio + '\'' + ", phone number='" + phoneNumber + '\'' + ", phone number='" + phoneNumber + '}';
   }
 }

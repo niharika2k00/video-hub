@@ -16,6 +16,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import static com.application.springboot.utility.FileUtils.getFileExtention;
+
 @Primary // setting this as default
 @Service("LocalVideoStorageService")
 public class LocalVideoStorageService implements StorageService<VideoUploadRequestDto> {
@@ -61,11 +63,5 @@ public class LocalVideoStorageService implements StorageService<VideoUploadReque
     video.setVideoDirectoryPath("/videos/" + video.getAuthorId() + "/" + videoId); // /videos/userId/videoId
     video.setStorageType(StorageType.valueOf(storageType));
     videoService.saveOrUpdate(video); // store in SQL database
-  }
-
-  public String getFileExtention(String fileName) {
-    int dotIndex = fileName.lastIndexOf(".");
-
-    return (dotIndex > 0 && dotIndex < fileName.length() - 1) ? fileName.substring(dotIndex) : "";
   }
 }

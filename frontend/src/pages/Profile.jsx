@@ -139,7 +139,7 @@ export default function Profile() {
             <Avatar
               className="h-48 w-48 ring-4 ring-white"
               initialsSize="text-5xl"
-              src={user?.profilePicture}
+              src={user?.profileImage}
               name={user?.name}
             />
 
