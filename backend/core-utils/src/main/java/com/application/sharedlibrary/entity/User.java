@@ -1,5 +1,6 @@
 package com.application.sharedlibrary.entity;
 
+import com.application.sharedlibrary.enums.GenderType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -34,6 +35,9 @@ public class User {
   @Column(name = "age")
   private String age;
 
+  @Column(name = "gender")
+  private GenderType gender;
+
   @Column(name = "location")
   private String location;
 
@@ -53,12 +57,13 @@ public class User {
   // Entity Class - hence no argument constructor
   public User() {}
 
-  public User(String name, String profileImage, String email, String password, String age, String location, String bio, String phoneNumber) {
+  public User(String name, String profileImage, String email, String password, String age, GenderType gender, String location, String bio, String phoneNumber) {
     this.name = name;
     this.profileImage = profileImage;
     this.email = email;
     this.password = password;
     this.age = age;
+    this.gender = gender;
     this.location = location;
     this.bio = bio;
     this.phoneNumber = phoneNumber;
@@ -78,6 +83,16 @@ public class User {
 
   @Override
   public String toString() {
-    return "User{" + "id=" + id + ", name='" + name + '\'' + ", email='" + email + '\'' + ", age='" + age + ", password='" + password + '\'' + ", location='" + location + '\'' + ", bio='" + bio + '\'' + ", phone number='" + phoneNumber + '\'' + ", phone number='" + phoneNumber + '}';
+    return "User{" +
+      "id=" + id +
+      ", name='" + (name != null ? name : "null") + '\'' +
+      ", profileImage='" + (profileImage != null ? profileImage : "null") + '\'' +
+      ", email='" + (email != null ? email : "null") + '\'' +
+      ", age='" + (age != null ? age : "null") + '\'' +
+      ", gender=" + (gender != null ? gender : "null") +
+      ", location='" + (location != null ? location : "null") + '\'' +
+      ", bio='" + (bio != null ? bio : "null") + '\'' +
+      ", phoneNumber='" + (phoneNumber != null ? phoneNumber : "null") + '\'' +
+      '}';
   }
 }
