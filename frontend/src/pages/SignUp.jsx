@@ -12,6 +12,7 @@ export default function SignUp() {
     email: "",
     password: "",
     age: "",
+    gender: "",
     location: "",
     bio: "",
     phoneNumber: "",
@@ -20,9 +21,9 @@ export default function SignUp() {
   const navigate = useNavigate();
   const { register } = useAuth();
 
-  // (e) => setName(e.target.value)
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

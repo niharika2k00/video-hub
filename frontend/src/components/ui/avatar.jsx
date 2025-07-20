@@ -15,7 +15,7 @@ const AvatarRoot = React.forwardRef(({ className, ...props }, ref) => {
 });
 
 const AvatarImage = ({ className, ...props }) => (
-  <img className={cn("h-full w-full object-cover", className)} {...props} />
+  <img className={cn("h-full w-full object-contain", className)} {...props} />
 );
 
 const AvatarFallback = ({ className, children }) => (
