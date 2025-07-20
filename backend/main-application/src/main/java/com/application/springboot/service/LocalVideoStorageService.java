@@ -4,6 +4,7 @@ import com.application.sharedlibrary.entity.Video;
 import com.application.sharedlibrary.enums.StorageType;
 import com.application.sharedlibrary.service.VideoService;
 import com.application.springboot.dto.VideoUploadRequestDto;
+import com.application.springboot.utility.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
@@ -16,8 +17,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import static com.application.springboot.utility.FileUtils.getFileExtention;
-
 @Primary // setting this as default
 @Service("LocalVideoStorageService")
 public class LocalVideoStorageService implements StorageService<VideoUploadRequestDto> {
@@ -28,17 +27,19 @@ public class LocalVideoStorageService implements StorageService<VideoUploadReque
   @Value("${custom.storage-type}")
   String storageType;
 
+  private final FileUtils fileUtils;
   private final VideoService videoService;
 
   @Autowired
-  public LocalVideoStorageService(VideoService videoService) {
+  public LocalVideoStorageService(FileUtils fileUtils, VideoService videoService) {
+    this.fileUtils = fileUtils;
     this.videoService = videoService;
   }
 
   @Override
   public void storeMediaFile(int videoId, VideoUploadRequestDto reqBodyParams) throws Exception {
     MultipartFile videoFile = reqBodyParams.getVideoFile();
-    String extention = getFileExtention(videoFile.getOriginalFilename());
+    String extention = fileUtils.getFileExtention(videoFile.getOriginalFilename());
     Video video = videoService.findById(videoId);
 
     // Target path: .../videos/userId/videoId/videoId.mp4

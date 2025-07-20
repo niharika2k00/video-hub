@@ -1,6 +1,5 @@
 package com.application.springboot.controller;
 
-import com.application.sharedlibrary.config.AwsClientBuilder;
 import com.application.sharedlibrary.dao.UserRepository;
 import com.application.sharedlibrary.entity.Role;
 import com.application.sharedlibrary.entity.User;
@@ -15,38 +14,28 @@ import com.application.springboot.exception.ResourceAlreadyExistsException;
 import com.application.springboot.service.JwtService;
 import com.application.springboot.service.RoleService;
 import com.application.springboot.service.UserUpdateServiceImpl;
+import com.application.springboot.utility.FileUtils;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.S3Utilities;
-import software.amazon.awssdk.services.s3.model.GetUrlRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.application.springboot.utility.FileUtils.getFileExtention;
-import static com.application.springboot.utility.FileUtils.validateImgae;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @RequestMapping("/api")
 public class UserRestController {
 
-  @Value("${aws.s3.bucket-name}")
-  String bucketName;
-
   // Autowired to inject service bean into controller, serve as an intermediary between C and DAO layer
-  private final AwsClientBuilder connection;
+  private final FileUtils fileUtils;
   private final EmailTemplateProcessor emailTemplateProcessor;
   private final JwtService jwtService;
   private final KafkaTemplate<String, String> kafkaTemplate;
@@ -57,8 +46,8 @@ public class UserRestController {
   private final UserUpdateServiceImpl userUpdateServiceImpl;
 
   @Autowired
-  public UserRestController(AwsClientBuilder connection, EmailTemplateProcessor emailTemplateProcessor, JwtService jwtService, KafkaTemplate<String, String> kafkaTemplate, ResourceLoaderService resourceLoaderService, RoleService roleService, UserRepository userRepository, UserService userService, UserUpdateServiceImpl userUpdateServiceImpl) {
-    this.connection = connection;
+  public UserRestController(FileUtils fileUtils, EmailTemplateProcessor emailTemplateProcessor, JwtService jwtService, KafkaTemplate<String, String> kafkaTemplate, ResourceLoaderService resourceLoaderService, RoleService roleService, UserRepository userRepository, UserService userService, UserUpdateServiceImpl userUpdateServiceImpl) {
+    this.fileUtils = fileUtils;
     this.emailTemplateProcessor = emailTemplateProcessor;
     this.jwtService = jwtService;
     this.kafkaTemplate = kafkaTemplate;
@@ -106,6 +95,7 @@ public class UserRestController {
     user.setName(reqUserDto.getName());
     user.setEmail(reqUserDto.getEmail());
     user.setAge(reqUserDto.getAge());
+    user.setGender(reqUserDto.getGender());
     user.setBio(reqUserDto.getBio());
     user.setLocation(reqUserDto.getLocation());
     user.setPhoneNumber(reqUserDto.getPhoneNumber());
@@ -125,39 +115,10 @@ public class UserRestController {
     User newUserObject = userUpdateServiceImpl.saveOrUpdate(user);
     System.out.println("Success! New user registered. " + newUserObject);
 
-    // Handle profile image if present
+    // Process multipart profile image and uploads it to cloud storage (S3)
     MultipartFile profileImage = reqUserDto.getProfileImage();
     if (profileImage != null && !profileImage.isEmpty()) {
-      validateImgae(profileImage);
-      String extention = getFileExtention(profileImage.getOriginalFilename());
-      String objectKey = String.format("profile_images/%d%s", newUserObject.getId(), extention); // build object key
-
-      // upload to S3
-      S3Client s3Client = connection.get(S3Client.class);
-      PutObjectRequest putReq = PutObjectRequest.builder()
-        .bucket(bucketName)
-        .key(objectKey)
-        .contentType(profileImage.getContentType())
-        .build();
-
-      try (InputStream in = profileImage.getInputStream()) {
-        s3Client.putObject(putReq,
-          software.amazon.awssdk.core.sync.RequestBody.fromInputStream(in, profileImage.getSize())); // fromInputStream as handling with MultipartFile
-      }
-
-      // Get public storage URL
-      S3Utilities s3Utilities = s3Client.utilities();
-      GetUrlRequest getUrlRequest = GetUrlRequest.builder()
-        .bucket(bucketName)
-        .key(objectKey)
-        .build();
-
-      // toExternalForm() function converts URL object to a String works similar as toString(). Below is the equivalent lambda function.
-      String profileImageUrl = s3Utilities.getUrl(getUrlRequest).toExternalForm();
-
-      //String profileImageUrl = s3Client.utilities()
-      //  .getUrl(b -> b.bucket(bucketName).key(objectKey))
-      //  .toExternalForm();
+      String profileImageUrl = fileUtils.handleImageUpload(newUserObject.getId(), profileImage);
       newUserObject.setProfileImage(profileImageUrl);
       newUserObject = userUpdateServiceImpl.saveOrUpdate(newUserObject);
     }
@@ -219,13 +180,14 @@ public class UserRestController {
     return ResponseEntity.ok("Successfully logged out.");
   }
 
-  // PUT /user/ - update existing user details
+  // PUT /users/id - update existing user details
   @PutMapping(
-    value = "/user/{id}",
+    value = "/users/{id}",
     consumes = MULTIPART_FORM_DATA_VALUE
   )
   public String updateUser(@PathVariable int id, @ModelAttribute UserDto reqUserDto) throws Exception {
     userUpdateServiceImpl.updateUser(id, reqUserDto);
+
     return "User updated successfully";
   }
 
