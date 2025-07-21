@@ -46,7 +46,9 @@ const Profile = () => {
     }
   }, [user]);
 
-  const handleChange = (k, v) => setForm((p) => ({ ...p, [k]: v }));
+  const handleChange = (k, v) => {
+    setForm((p) => ({ ...p, [k]: v }));
+  };
 
   const handleSubmit = useCallback(async () => {
     setSubmitting(true);
@@ -143,7 +145,12 @@ const Profile = () => {
           ? "ring-2 ring-indigo-300 border-indigo-400"
           : "border-gray-300"
       } w-full rounded-md px-3 py-2 text-sm bg-white focus:outline-none`,
-      style: { direction: "ltr", unicodeBidi: "plaintext" },
+      style: {
+        textAlign: "left !important",
+        direction: "ltr !important",
+        unicodeBidi: "normal !important",
+        writingMode: "horizontal-tb !important",
+      },
       dir: "ltr",
     };
 
@@ -155,10 +162,11 @@ const Profile = () => {
 
         <div className="relative">
           {textarea ? (
-            <Textarea rows={4} {...sharedProps} />
+            <Textarea key={`${id}-${user?.id}`} rows={4} {...sharedProps} />
           ) : isDropdown ? (
             <div className="relative">
               <select
+                key={`${id}-${user?.id}`}
                 {...sharedProps}
                 className={`${sharedProps.className} appearance-none pr-10 border`}
                 disabled={false}
@@ -172,7 +180,7 @@ const Profile = () => {
               <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
             </div>
           ) : (
-            <Input type={type} {...sharedProps} />
+            <Input key={`${id}-${user?.id}`} type={type} {...sharedProps} />
           )}
 
           {/* edit button - only show for non-dropdown fields */}
@@ -193,7 +201,11 @@ const Profile = () => {
   };
 
   return (
-    <section className="min-h-screen container mx-auto px-6 py-10 flex flex-col gap-10">
+    <section
+      className="min-h-screen container mx-auto px-6 py-10 flex flex-col gap-10"
+      style={{ direction: "ltr !important", textAlign: "left !important" }}
+      dir="ltr"
+    >
       <div>
         <h1 className="text-3xl font-bold">Profile</h1>
         <p className="text-gray-500">View and edit your profile details</p>
@@ -236,6 +248,12 @@ const Profile = () => {
             handleSubmit();
           }}
           className="flex-1 bg-white/60 backdrop-blur rounded-3xl p-6 lg:p-10 shadow-sm border border-gray-200"
+          style={{
+            textAlign: "left !important",
+            direction: "ltr !important",
+            writingMode: "horizontal-tb !important",
+          }}
+          dir="ltr"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Field id="name" label="Name" />

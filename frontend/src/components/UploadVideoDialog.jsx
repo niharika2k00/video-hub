@@ -18,7 +18,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
-/* ---------------------------- validation schema ----------------------------- */
 const schema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
@@ -48,7 +47,6 @@ const UploadVideoDialog = ({ onSuccess, children }) => {
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(schema) });
 
-  /* ---------------------------- submit handler ----------------------------- */
   const onSubmit = async (data) => {
     const formData = new FormData();
     formData.append("title", data.title);
@@ -137,8 +135,13 @@ const UploadVideoDialog = ({ onSuccess, children }) => {
         </form>
 
         <DialogFooter>
-          <Button type="submit" form="upload-form" disabled={isSubmitting}>
-            {isSubmitting ? "Uploading…" : "Upload"}
+          <Button
+            type="submit"
+            form="upload-form"
+            disabled={isSubmitting}
+            className="w-50"
+          >
+            {isSubmitting ? "Uploading..." : "Upload"}
           </Button>
         </DialogFooter>
       </DialogContent>

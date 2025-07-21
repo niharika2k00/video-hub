@@ -154,3 +154,5 @@ References :
 - https://vite.dev/config/
 - https://ffmpeg.org/ffmpeg-all.html#Video-Options
 - https://tailwindcss.com/docs/installation/using-vite
+- https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/services/s3/model/package-summary.html
+-

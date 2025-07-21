@@ -21,8 +21,8 @@ export default function Hero() {
           your video into multiple qualities so your viewers always enjoy the
           best experience.
         </p>
-        <Button asChild size="lg" variant="success">
-          <NavLink to="#upload">Get Started</NavLink>
+        <Button asChild size="lg" variant="secondary">
+          <NavLink to="/dashboard">Get Started</NavLink>
         </Button>
       </div>
     </section>

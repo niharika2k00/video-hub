@@ -14,7 +14,7 @@ export const DialogHeader = ({ className, ...p }) => (
   <div className={cn("space-y-1.5 mb-4", className)} {...p} />
 );
 export const DialogFooter = ({ className, ...p }) => (
-  <div className={cn("flex justify-end gap-2 mt-6", className)} {...p} />
+  <div className={cn("flex justify-center gap-2 mt-6", className)} {...p} />
 );
 
 export const DialogContent = forwardRef(function DialogContent(

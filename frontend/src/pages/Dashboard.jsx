@@ -25,6 +25,19 @@ const Dashboard = () => {
     }
   }, [user?.id]);
 
+  const handleVideoDelete = useCallback(async (videoId) => {
+    try {
+      await api.delete(`/videos/${videoId}`);
+      toast.success("Video deleted successfully");
+
+      // Remove the deleted video from the state
+      setVideos((vidArr) => vidArr.filter((item) => item.id !== videoId));
+    } catch (error) {
+      console.error("Error deleting video:", error);
+      toast.error("Failed to delete video");
+    }
+  }, []);
+
   useEffect(() => {
     refetch();
   }, [refetch]);
@@ -40,7 +53,7 @@ const Dashboard = () => {
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {/* when upload succeeds, refetch() runs → grid refreshes */}
         <UploadVideoDialog onSuccess={refetch}>
-          {({ open } /* render-prop trigger */) => (
+          {({ open }) => (
             <button
               onClick={open}
               className="group relative flex h-48 w-full items-center
@@ -59,7 +72,11 @@ const Dashboard = () => {
         </UploadVideoDialog>
 
         {(videos ?? Array.from({ length: 8 })).map((video, idx) => (
-          <VideoCard key={video?.id || idx} video={video} />
+          <VideoCard
+            key={video?.id || idx}
+            video={video}
+            onDelete={handleVideoDelete}
+          />
         ))}
       </div>
 

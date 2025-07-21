@@ -21,8 +21,8 @@ function SharePopover({ url }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <div className="flex items-center gap-2 px-3 py-1 bg-primary/20 dark:bg-gray-800 rounded-full shadow-sm border border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition cursor-pointer w-fit">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+        <div className="flex items-center gap-2 px-3 py-1 bg-primary/20 rounded-full shadow-sm border border-gray-200 hover:bg-gray-200 transition cursor-pointer w-fit">
+          <span className="text-sm font-medium text-gray-700">
             Get Embed Link
           </span>
           <Button size="icon" variant="ghost" aria-label="Share">

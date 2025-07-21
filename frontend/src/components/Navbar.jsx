@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import useAuth from "@/context/AuthContext";
-import ThemeToggle from "@/components/ThemeToggle";
 
 function NavLinks({ user, onNavigate }) {
   return (
@@ -66,10 +65,6 @@ function NavLinks({ user, onNavigate }) {
           </NavLink>
         </li>
       )}
-
-      <li className="ml-auto">
-        <ThemeToggle />
-      </li>
     </ul>
   );
 }

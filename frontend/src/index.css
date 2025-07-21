@@ -18,13 +18,3 @@ body,
 .glass {
   @apply bg-white/40 backdrop-blur-lg shadow-md;
 }
-
-/* light (default) ---------------------------------------------- */
-html.light {
-  @apply bg-white text-gray-900;
-}
-
-/* dark ---------------------------------------------------------- */
-html.dark {
-  @apply bg-black text-gray-100;
-}
