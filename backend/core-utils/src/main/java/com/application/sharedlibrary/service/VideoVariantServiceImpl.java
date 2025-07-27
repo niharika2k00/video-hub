@@ -4,6 +4,7 @@ import com.application.sharedlibrary.dao.VideoVariantRepository;
 import com.application.sharedlibrary.entity.VideoVariant;
 import com.application.sharedlibrary.entity.VideoVariantId;
 import com.application.sharedlibrary.exception.InvalidRequestException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class VideoVariantServiceImpl implements VideoVariantService {
   }
 
   @Override
+  @Transactional
   public VideoVariant saveOrUpdate(VideoVariant variant) {
     return videoVariantRepository.save(variant);
   }
@@ -52,5 +54,11 @@ public class VideoVariantServiceImpl implements VideoVariantService {
   @Override
   public int getCountByVideoId(int videoId) {
     return videoVariantRepository.getCountByVideoId(videoId);
+  }
+
+  @Override
+  @Transactional
+  public void deleteByVideoId(int videoId) {
+    videoVariantRepository.deleteByVideoId(videoId);
   }
 }

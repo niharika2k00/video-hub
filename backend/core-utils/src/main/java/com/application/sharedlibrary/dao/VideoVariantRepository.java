@@ -21,4 +21,7 @@ public interface VideoVariantRepository extends JpaRepository<VideoVariant, Vide
 
   @Query(value = "SELECT * FROM video_variant WHERE video_id = :videoId", nativeQuery = true)
   List<VideoVariant> findByVideoId(@Param("videoId") int videoId);
+
+  @Query(value = "SELECT * FROM video_variant WHERE video_id = :videoId", nativeQuery = true)
+  List<VideoVariant> deleteByVideoId(@Param("videoId") int videoId);
 }

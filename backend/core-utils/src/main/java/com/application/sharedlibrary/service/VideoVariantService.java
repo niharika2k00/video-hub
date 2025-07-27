@@ -15,4 +15,6 @@ public interface VideoVariantService {
   List<VideoVariant> findByVideoId(int videoId) throws InvalidRequestException;
 
   int getCountByVideoId(int id);
+
+  void deleteByVideoId(int videoId);
 }

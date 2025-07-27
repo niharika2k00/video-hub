@@ -1,10 +1,13 @@
 package com.application.springboot.controller;
 
 import com.application.sharedlibrary.entity.Video;
+import com.application.sharedlibrary.exception.InvalidRequestException;
 import com.application.sharedlibrary.service.VideoService;
+import com.application.sharedlibrary.service.VideoVariantService;
 import com.application.springboot.dto.VideoUploadRequestDto;
 import com.application.springboot.exception.MissingFileException;
 import com.application.springboot.service.VideoProcessingService;
+import com.application.springboot.utility.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +19,17 @@ import java.util.List;
 @RequestMapping("/api")
 public class VideoController {
 
+  private final FileUtils fileUtils;
   private final VideoService videoService;
+  private final VideoVariantService videoVariantService;
   private final VideoProcessingService videoProcessingService;
 
   @Autowired
-  public VideoController(VideoProcessingService videoProcessingService, VideoService videoService) {
-    this.videoProcessingService = videoProcessingService;
+  public VideoController(FileUtils fileUtils, VideoService videoService, VideoProcessingService videoProcessingService, VideoVariantService videoVariantService) {
+    this.fileUtils = fileUtils;
     this.videoService = videoService;
+    this.videoProcessingService = videoProcessingService;
+    this.videoVariantService = videoVariantService;
   }
 
   // GET all /videos
@@ -71,8 +78,13 @@ public class VideoController {
 
   // DELETE /videos/id
   @DeleteMapping("/videos/{id}")
-  public String deleteVideo(@PathVariable int id) {
+  public String deleteVideo(@PathVariable int id) throws InvalidRequestException {
+    Video video = videoService.findById(id);
+    int userId = video.getAuthorId();
+    videoVariantService.deleteByVideoId(id);
     videoService.deleteById(id);
+
+    fileUtils.deleteVideoFolderHierarchy(userId, id);
     System.out.println("Successfully deleted video with id " + id);
     return "Successfully deleted video with id " + id;
   }

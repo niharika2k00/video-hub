@@ -36,6 +36,9 @@ public class Video {
   private StorageType storageType;
 
   private String category;
+
+  @Lob
+  @Column(columnDefinition = "TEXT")
   private String description;
   private String duration;
   private String thumbnailUrl;

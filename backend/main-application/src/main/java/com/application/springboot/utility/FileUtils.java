@@ -8,10 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Utilities;
-import software.amazon.awssdk.services.s3.model.GetUrlRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -49,14 +49,6 @@ public class FileUtils {
     return (dotIndex == -1) ? "" : fileName.substring(dotIndex).toLowerCase();
   }
 
-  public void deleteFileByUrl(String url) {
-    // example: "https://demobucket-890291224.s3.amazonaws.com/profile_images/1.png"
-    String objectKey = url.substring(url.indexOf('/', 8) + 1);
-
-    S3Client s3Client = connection.get(S3Client.class);
-    s3Client.deleteObject(b -> b.bucket(bucketName).key(objectKey));
-  }
-
   // handle profile image upload to storage (here S3)
   public String handleImageUpload(int userId, MultipartFile file) throws Exception {
     validateImgae(file);
@@ -92,4 +84,70 @@ public class FileUtils {
 
     return url;
   }
+
+  // for profile image delete (while updating)
+  public void deleteFileByUrl(String url) {
+    // example: "https://demobucket-890291224.s3.amazonaws.com/profile_images/1.png"
+    String objectKey = url.substring(url.indexOf('/', 8) + 1);
+
+    S3Client s3Client = connection.get(S3Client.class);
+    s3Client.deleteObject(b -> b.bucket(bucketName).key(objectKey));
+  }
+
+  public void deleteVideoFolderHierarchy(int userId, int videoId) {
+    S3Client s3Client = connection.get(S3Client.class);
+    String prefix = String.format("videos/%d/%d/", userId, videoId);
+    String continuationToken = null;
+
+    do {
+      // List up to 1000 objects per call
+      ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
+        .bucket(bucketName)
+        .prefix(prefix)
+        .continuationToken(continuationToken)
+        .build();
+
+      ListObjectsV2Response listResponse = s3Client.listObjectsV2(listRequest);
+
+      // returns S3 object so need to handle like this
+      List<ObjectIdentifier> objectsToDelete = listResponse.contents().stream()
+        .map(s3Obj -> ObjectIdentifier.builder().key(s3Obj.key()).build())
+        .toList();
+
+      if (!objectsToDelete.isEmpty()) {
+        DeleteObjectsRequest deleteReq = DeleteObjectsRequest.builder()
+          .bucket(bucketName)
+          .delete(Delete.builder().objects(objectsToDelete).build())
+          .build();
+
+        s3Client.deleteObjects(deleteReq);
+        System.out.println("✅ Deleted " + objectsToDelete.size() + " objects.");
+      }
+
+      continuationToken = listResponse.isTruncated() ? listResponse.nextContinuationToken() : null;
+    } while (continuationToken != null);
+  }
+
+  /*
+listResponse (result from S3)
+    {
+      "contents": [
+        { "key": "videos/1/2/master.m3u8", "size": 2048 },
+        { "key": "videos/1/2/thumbnail.jpg", "size": 10240 },
+        { "key": "videos/1/2/manifests/rendition_360p.m3u8", "size": 4096 },
+        { "key": "videos/1/2/manifests/rendition_720p.m3u8", "size": 4096 },
+        ...
+      ],
+      "isTruncated": false,
+      "keyCount": 4,
+      "nextContinuationToken": null
+    }
+
+objectsToDelete can't be obj.contents as listResponse.contents() returns List<S3Object> not List<ObjectIdentifier>
+class S3Object {
+    String key;
+    long size;
+    ...
+}
+   */
 }
