@@ -1,6 +1,6 @@
 services:
   zookeeper:
-    image:          confluentinc/cp-zookeeper:latest
+    image:          confluentinc/cp-zookeeper:7.2.15
     container_name: zookeeper
     #    restart:        always
     environment:
@@ -14,14 +14,14 @@ services:
 
   # kafka broker
   kafka:
-    image:          confluentinc/cp-kafka:latest
+    image:          confluentinc/cp-kafka:7.2.15
     container_name: kafka
     #    restart:        always
     ports:
       - "9092:9092" # For internal access
       - "9093:9093" # For external access
     environment:
-      KAFKA_NODE_ID:                          1
+      KAFKA_BROKER_ID:                        1
       KAFKA_ZOOKEEPER_CONNECT:                zookeeper:2181
       # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092 # when access internally from within the docker container
       # KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
@@ -41,7 +41,7 @@ services:
       - ./.kafka-data/data:/var/lib/kafka/data
 
   topic-init:
-    image:          confluentinc/cp-kafka:latest
+    image:          confluentinc/cp-kafka:7.2.15
     container_name: topic-init
     depends_on:
       - kafka
