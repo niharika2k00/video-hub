@@ -1,30 +1,68 @@
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="relative isolate overflow-hidden">
-      <img
-        className="absolute inset-0 -z-10 h-full w-full object-cover opacity-90"
-        src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80"
-        // src="https://images.pexels.com/photos/7991374/pexels-photo-7991374.jpeg?auto=compress&cs=tinysrgb&w=1600&h=750&dpr=2"
-        alt="Video thumbnails"
-      />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-gray-900/80 to-primary/70 mix-blend-multiply" />
-      <div className="container mx-auto px-6 py-32 max-w-2xl">
-        <h1 className="text-5xl md:text-6xl font-extrabold text-white text-center leading-tight drop-shadow mb-6">
-          Seamless <span className="text-secondary">Video</span> Upload&nbsp;
-          <br className="hidden lg:block" /> &amp; Adaptive Streaming
-        </h1>
-        <p className="text-lg text-gray-200 mb-8">
-          Upload once, stream everywhere — VideoHub automatically transcodes
-          your video into multiple qualities so your viewers always enjoy the
-          best experience.
-        </p>
-        <Button asChild size="lg" variant="secondary">
-          <NavLink to="/dashboard">Get Started</NavLink>
-        </Button>
-      </div>
-    </section>
+    <>
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 text-white">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/30 via-purple-600/30 to-indigo-700/30"></div>
+
+        {/* Floating Elements */}
+        <div className="absolute top-20 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
+        <div className="absolute top-40 right-20 w-32 h-32 bg-yellow-300/20 rounded-full blur-xl"></div>
+        <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-pink-400/20 rounded-full blur-xl"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+          <div className="text-center">
+            {/* Main Heading */}
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+              Seamless <span className="text-yellow-300">Video</span> Upload
+              &amp;
+              <br className="hidden lg:block" />
+              <span className="text-pink-300">Adaptive Streaming</span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-lg md:text-2xl mb-8 max-w-4xl mx-auto text-blue-100 leading-relaxed">
+              Upload once, stream everywhere — VideoHub automatically transcodes
+              your videos into multiple qualities with HLS technology for the
+              best viewing experience across all devices.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+              <Button
+                asChild
+                size="lg"
+                className="bg-yellow-300 hover:bg-yellow-400 text-gray-900 font-semibold px-8 py-4 text-lg rounded-xl transition-all duration-300 transform hover:scale-105"
+              >
+                <NavLink to="/dashboard" className="flex items-center">
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Get Started
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </NavLink>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Decorative Wave */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg
+            viewBox="0 0 1200 120"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0L50 20C100 40 200 80 300 80C400 80 500 40 600 20C700 0 800 0 900 20C1000 40 1100 80 1150 100L1200 120V120H0V0Z"
+              fill="rgb(248 250 252)"
+            />
+          </svg>
+        </div>
+      </section>
+    </>
   );
 }

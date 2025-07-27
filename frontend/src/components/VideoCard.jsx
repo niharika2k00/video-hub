@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import Skeleton from "react-loading-skeleton";
-import { Trash2 } from "lucide-react";
+import { Trash2, Play } from "lucide-react";
 import ConfirmationDialog from "@/components/ui/confirmation-dialog";
 
 export default function VideoCard({ video, className, onDelete }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
 
   if (!video) {
     return (
@@ -21,6 +22,11 @@ export default function VideoCard({ video, className, onDelete }) {
   }
 
   const { id, title, category, thumbnailUrl } = video;
+  const defaultThumbnail = "default-thumbnail.jpg";
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+  };
 
   return (
     <div className={cn("group relative", className)}>
@@ -28,11 +34,34 @@ export default function VideoCard({ video, className, onDelete }) {
         to={`/video/${id}`}
         className="block overflow-hidden rounded-xl shadow-lg transition-transform hover:-translate-y-1"
       >
-        <img
-          src={thumbnailUrl}
-          alt={title}
-          className="h-48 w-full object-cover group-hover:scale-105 transition-transform duration-300"
-        />
+        <div className="relative h-48 w-full bg-gray-100">
+          {/* Loading Spinner */}
+          {imageLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+              <div className="animate-spin inline-block w-8 h-8 border-3 border-t-transparent text-primary rounded-full">
+                <span className="sr-only">Uplaoding...</span>
+              </div>
+            </div>
+          )}
+
+          <img
+            src={thumbnailUrl || defaultThumbnail}
+            onLoad={handleImageLoad}
+            alt={title}
+            className={cn(
+              "h-48 w-full object-cover transition-all duration-300",
+              imageLoading ? "opacity-0" : "opacity-100 group-hover:scale-105"
+            )}
+          />
+
+          {/* Play Icon Overlay for Video Cards */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <div className="bg-black/50 rounded-full p-3">
+              <Play className="text-white" size={24} fill="white" />
+            </div>
+          </div>
+        </div>
+
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
         <div className="absolute bottom-0 p-4 text-white">
           <h3 className="text-lg font-semibold line-clamp-1">{title}</h3>

@@ -31,7 +31,9 @@ const Dashboard = () => {
       toast.success("Video deleted successfully");
 
       // Remove the deleted video from the state
-      setVideos((vidArr) => vidArr.filter((item) => item.id !== videoId));
+      setVideos((updatedVideoArray) =>
+        updatedVideoArray.filter((item) => item.id !== videoId)
+      );
     } catch (error) {
       console.error("Error deleting video:", error);
       toast.error("Failed to delete video");
@@ -62,10 +64,10 @@ const Dashboard = () => {
             >
               <PlusCircle
                 size={42}
-                className="text-primary transition group-hover:scale-110"
+                className="text-primary transition group-hover:scale-120"
               />
               <span className="absolute top-2 right-3 text-xs text-primary/70">
-                Upload New Video
+                Ready to upload a new video?
               </span>
             </button>
           )}
