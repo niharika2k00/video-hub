@@ -33,6 +33,7 @@ export default defineConfig({
   // },
   // assetsInclude: ["**/*.ts"],
   server: {
+    host: true, // allow access from any device (mobile) on same network
     port: 5173, // frontend server default port (5173 for vite)
     proxy: {
       "/api": {

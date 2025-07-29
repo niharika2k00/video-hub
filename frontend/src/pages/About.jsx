@@ -7,42 +7,42 @@ const About = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-r from-blue-500 via-purple-600 to-indigo-700 text-white">
         <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              About <span className="text-yellow-300">VideoHub</span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-blue-100">
-              The ultimate platform for video hosting, streaming, and sharing
-              with cutting-edge ABR technology and seamless HLS integration.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <UploadVideoDialog
-                onSuccess={() => {
-                  console.log("Video uploaded successfully!");
-                  window.location.href = "/dashboard";
-                }}
-              >
-                {({ open }) => (
-                  <button
-                    onClick={open}
-                    className="inline-flex items-center px-8 py-3 bg-yellow-300 text-gray-900 font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
-                  >
-                    <Upload className="w-5 h-5 mr-2" />
-                    Start Uploading
-                  </button>
-                )}
-              </UploadVideoDialog>
-              <Link
-                to="/dashboard"
-                className="inline-flex items-center px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-gray-900 transition-colors"
-              >
-                <BarChart3 className="w-5 h-5 mr-2" />
-                View Dashboard
-              </Link>
-            </div>
+        <div className="text-center relative max-w-7xl mx-auto px-4 py-16 pb-22 sm:px-6 sm:pb-24 md:pb-30 lg:pb-40 lg:px-8 ">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            About <span className="text-yellow-300">VideoHub</span>
+          </h1>
+          <p className="text-lg md:text-lg lg:text-2xl mb-8 max-w-3xl mx-auto text-blue-100">
+            The ultimate platform for video hosting, streaming, and sharing with
+            cutting-edge ABR technology and seamless HLS integration.
+          </p>
+
+          <div className="flex gap-6 justify-center">
+            <UploadVideoDialog
+              onSuccess={() => {
+                console.log("Video uploaded successfully!");
+                window.location.href = "/dashboard";
+              }}
+            >
+              {({ open }) => (
+                <button
+                  onClick={open}
+                  className="inline-flex items-center px-8 py-3 bg-yellow-300 text-gray-900 font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
+                >
+                  <Upload className="w-5 h-5 mr-2" />
+                  Start Uploading
+                </button>
+              )}
+            </UploadVideoDialog>
+
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-gray-900 transition-colors"
+            >
+              <BarChart3 className="w-5 h-5 mr-2" />
+              View Dashboard
+            </Link>
           </div>
         </div>
 

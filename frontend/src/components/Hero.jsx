@@ -6,7 +6,7 @@ export default function Hero() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-r from-blue-500 via-purple-600 to-indigo-700 text-white">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/30 via-purple-600/30 to-indigo-700/30"></div>
@@ -18,7 +18,7 @@ export default function Hero() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
             {/* Main Heading */}
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
               Seamless <span className="text-yellow-300">Video</span> Upload
               &amp;
               <br className="hidden lg:block" />
@@ -26,14 +26,14 @@ export default function Hero() {
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg md:text-2xl mb-8 max-w-4xl mx-auto text-blue-100 leading-relaxed">
+            <p className="text-lg md:text-lg lg:text-2xl mb-8 max-w-4xl mx-auto text-blue-100 leading-relaxed">
               Upload once, stream everywhere — VideoHub automatically transcodes
               your videos into multiple qualities with HLS technology for the
               best viewing experience across all devices.
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <div className="flex justify-center mb-16">
               <Button
                 asChild
                 size="lg"

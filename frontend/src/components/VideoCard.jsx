@@ -5,7 +5,7 @@ import Skeleton from "react-loading-skeleton";
 import { Trash2, Play } from "lucide-react";
 import ConfirmationDialog from "@/components/ui/confirmation-dialog";
 
-export default function VideoCard({ video, className, onDelete }) {
+const VideoCard = ({ video, onDelete, className }) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
 
@@ -29,11 +29,13 @@ export default function VideoCard({ video, className, onDelete }) {
   };
 
   return (
-    <div className={cn("group relative", className)}>
-      <Link
-        to={`/video/${id}`}
-        className="block overflow-hidden rounded-xl shadow-lg transition-transform hover:-translate-y-1"
-      >
+    <div
+      className={cn(
+        "group relative rounded-xl transition-transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/10 overflow-hidden",
+        className
+      )}
+    >
+      <Link to={`/video/${id}`} className="block">
         <div className="relative h-48 w-full bg-gray-100">
           {/* Loading Spinner */}
           {imageLoading && (
@@ -97,4 +99,6 @@ export default function VideoCard({ video, className, onDelete }) {
       )}
     </div>
   );
-}
+};
+
+export default VideoCard;

@@ -120,7 +120,7 @@ export default function Home() {
                 <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white mx-auto mb-6">
                   {step.icon}
                 </div>
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-gray-900 text-sm font-bold">
+                <div className="absolute -top-2 -left-1 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-gray-900 text-sm font-bold">
                   {step.number}
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
