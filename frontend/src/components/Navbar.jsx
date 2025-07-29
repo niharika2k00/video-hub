@@ -65,6 +65,20 @@ function NavLinks({ user, onNavigate }) {
           </NavLink>
         </li>
       )}
+
+      <li>
+        <NavLink
+          onClick={onNavigate}
+          to="/contact"
+          className={({ isActive }) =>
+            isActive
+              ? "text-primary font-medium"
+              : "hover:text-primary transition-colors"
+          }
+        >
+          <Info className="h-4 w-4 md:hidden" /> Contact
+        </NavLink>
+      </li>
     </ul>
   );
 }

@@ -45,9 +45,9 @@ const Dashboard = () => {
   }, [refetch]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-26">
       {/* Header Section */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 text-white py-16  pb-22 sm:pb-24 md:pb-30 lg:pb-40 ">
+      <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 text-white py-16  pb-22 sm:pb-24 md:pb-30 lg:pb-40">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="text-center relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
@@ -74,7 +74,7 @@ const Dashboard = () => {
       </section>
 
       {/* Main Content */}
-      <section className="py-12">
+      <section>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
@@ -83,13 +83,13 @@ const Dashboard = () => {
           )}
 
           {/* Stats Section */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-              <div className="flex items-center">
+          <div className="flex justify-center mb-12">
+            <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 max-w-sm w-full">
+              <div className="flex items-center justify-center">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white mr-4">
                   <Upload className="w-6 h-6" />
                 </div>
-                <div>
+                <div className="text-center">
                   <p className="text-sm text-gray-600">Total Videos</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {videos ? videos.length : "..."}

@@ -1,13 +1,14 @@
 import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Dashboard from "./pages/Dashboard";
+import Navbar from "@/components/Navbar";
+import Dashboard from "@/pages/Dashboard";
 import Profile from "@/pages/Profile";
-import VideoPage from "./pages/VideoPage";
-import Footer from "./components/Footer";
-import Home from "./pages/Home";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import About from "./pages/About";
+import VideoPage from "@/pages/VideoPage";
+import Footer from "@/components/Footer";
+import Home from "@/pages/Home";
+import SignIn from "@/pages/SignIn";
+import SignUp from "@/pages/SignUp";
+import About from "@/pages/About";
+import Contact from "@/pages/Contact";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />{" "}
           <Route path="/video/:id" element={<VideoPage />} />
