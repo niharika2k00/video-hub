@@ -10,10 +10,10 @@ spring:
     banner-mode: off
   servlet:
     multipart:
-      max-file-size:    50MB
+      max-file-size: 50MB
       max-request-size: 50MB
   datasource:
-    url:      "jdbc:mysql://localhost:3307/videohub" # "3.140.188.132:3306" JDBC URL of the database
+    url: "jdbc:mysql://localhost:3307/videohub" # "3.140.188.132:3306" JDBC URL of the database
     username: "root" # username and password for Database
     password: "pwroot"
   jpa:
@@ -46,11 +46,11 @@ logging:
     root: warn # log only warning and error
 
 custom:
-  baseurl:      "http://localhost:5173" # frontend base url
+  baseurl: "http://localhost:5173" # frontend base url
   storage-type: "AWS_S3"
   path:
-    project-root-dir:       "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub"
-    source-video-dir:       "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/videos"
+    project-root-dir: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub"
+    source-video-dir: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/videos"
     welcome-email-template: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/java-project-part1/user_welcome_email.md"
   # ----- reference for deployment -----
   #    source-video-dir: "/home/ubuntu/javaproject/images"
@@ -59,6 +59,10 @@ custom:
   # welcomeEmailTemplate  imageProcessSuccessEmailTemplate
   # default username: user with the below generated password
 
-
-
+aws:
+  credentials:
+    profile: "shaktiman"
+    region: "us-east-1"
+  s3:
+    bucket-name: "demobucket-890291224"
 # "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub"

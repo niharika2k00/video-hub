@@ -3,49 +3,44 @@ spring:
     name: Spring Boot Java Project (Consumer)
   main:
     banner-mode: off
-    web-application-type: none # Disable web server
+    web-application-type: none
   servlet:
     multipart:
-      max-file-size:    50MB
+      max-file-size: 50MB
       max-request-size: 50MB
   datasource:
-    url:      "jdbc:mysql://localhost:3307/videohub" # "3.140.188.132:3306" JDBC URL of the database
-    username: "root" # username and password for Database
+    url: "jdbc:mysql://db:3306/videohub"
+    username: "root"
     password: "pwroot"
   jpa:
     hibernate:
       ddl-auto: update
   kafka:
-    bootstrap-servers: localhost:9093 # 3.140.188.132:9093
+    bootstrap-servers: localhost:9093
   devtools:
     livereload:
       enabled: false
 
-# Reduce logging level
 logging:
   level:
-    root: warn # log only warning and error
+    root: warn
 
-# Custom environment variables
 custom:
   target-resolution-count: 6
   path:
-    project-root-dir:               "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub"
+    project-root-dir: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub"
     process-success-email-template: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/main-application/video_process_success_email.md"
-    image-collection-dir:           "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/photoGallery"
+    image-collection-dir: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/photoGallery"
   ffmpeg:
-    path:  "/opt/homebrew/bin/ffmpeg"
+    path: "/opt/homebrew/bin/ffmpeg"
     probe: "/opt/homebrew/bin/ffprobe"
 
 aws:
   credentials:
-    profile:    "shaktiman"
-    region:     "us-east-1"
+    profile: "shaktiman"
+    region: "us-east-1"
   s3:
     bucket-name: "demobucket-890291224"
-
-
-
 # ----- reference for deployment -----
 #    process-success-email-template: "/home/ubuntu/javaproject/part2/image_process_success_email.md"
 #    image-collection-dir: "/home/ubuntu/javaproject/photoGallery"

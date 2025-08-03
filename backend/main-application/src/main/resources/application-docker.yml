@@ -1,0 +1,34 @@
+server:
+  port: 4040
+spring:
+  application:
+    name: Spring Boot Java Project
+  main:
+    banner-mode: off
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  datasource:
+    url: "jdbc:mysql://db:3306/videohub"
+    username: "root"
+    password: "pwroot"
+  jpa:
+    hibernate:
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: kafka:9092
+logging:
+  level:
+    root: warn
+custom:
+  baseurl: "http://localhost:5173" # frontend base url
+  storage-type: "AWS_S3"
+  path:
+    project-root-dir: "/app"
+aws:
+  credentials:
+    profile: "shaktiman"
+    region: "us-east-1"
+  s3:
+    bucket-name: "demobucket-890291224"
