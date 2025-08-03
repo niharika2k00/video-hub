@@ -34,7 +34,8 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 @RequestMapping("/api")
 public class UserRestController {
 
-  // Autowired to inject service bean into controller, serve as an intermediary between C and DAO layer
+  // Autowired to inject service bean into controller, serve as an intermediary
+  // between C and DAO layer
   private final FileUtils fileUtils;
   private final EmailTemplateProcessor emailTemplateProcessor;
   private final JwtService jwtService;
@@ -46,7 +47,9 @@ public class UserRestController {
   private final UserUpdateServiceImpl userUpdateServiceImpl;
 
   @Autowired
-  public UserRestController(FileUtils fileUtils, EmailTemplateProcessor emailTemplateProcessor, JwtService jwtService, KafkaTemplate<String, String> kafkaTemplate, ResourceLoaderService resourceLoaderService, RoleService roleService, UserRepository userRepository, UserService userService, UserUpdateServiceImpl userUpdateServiceImpl) {
+  public UserRestController(FileUtils fileUtils, EmailTemplateProcessor emailTemplateProcessor, JwtService jwtService,
+      KafkaTemplate<String, String> kafkaTemplate, ResourceLoaderService resourceLoaderService, RoleService roleService,
+      UserRepository userRepository, UserService userService, UserUpdateServiceImpl userUpdateServiceImpl) {
     this.fileUtils = fileUtils;
     this.emailTemplateProcessor = emailTemplateProcessor;
     this.jwtService = jwtService;
@@ -58,10 +61,16 @@ public class UserRestController {
     this.userUpdateServiceImpl = userUpdateServiceImpl;
   }
 
-  // test http://localhost:4040/api/test
+  // http://localhost:4040/api/test
   @GetMapping("/test")
-  public String test() {
-    return "Welcome to backend APIs";
+  public Map<String, String> test() {
+    return Map.of(
+        "baseUrl", "http://localhost:4040/api",
+        "description", "This service is ready to transcode, stream, and serve your video content.",
+        "message", "🎥✨ Welcome to VideoHub API ✨🎥",
+        "next", "Ready to transcode, stream, and serve your video content.",
+        "status", "✅ Backend is up and running",
+        "tip", "Use Swagger or Postman to explore available endpoints");
   }
 
   // GET all /users
@@ -72,17 +81,15 @@ public class UserRestController {
 
   // GET /users/{id}
   @GetMapping("/users/{id}")
-  // can throw parent(Exception) class instead of comma separated multiple exceptions
+  // can throw parent(Exception) class instead of comma separated multiple
+  // exceptions
   public User findById(@PathVariable int id) throws Exception {
     User userDetails = userService.findById(id);
     return userDetails;
   }
 
   // POST /users/register - SignUp | add new user
-  @PostMapping(
-    value = "/auth/register",
-    consumes = MULTIPART_FORM_DATA_VALUE
-  )
+  @PostMapping(value = "/auth/register", consumes = MULTIPART_FORM_DATA_VALUE)
   public User addNewUser(@ModelAttribute UserDto reqUserDto) throws Exception {
     // Check: email already exist
     Optional<User> isUserExist = userRepository.findByEmail(reqUserDto.getEmail());
@@ -125,13 +132,13 @@ public class UserRestController {
 
     // Mapping placeholders for replacement
     Map<String, String> replacements = Map.of(
-      "{{username}}", newUserObject.getName().toUpperCase()
-    );
+        "{{username}}", newUserObject.getName().toUpperCase());
 
     // Sending email - picking email template from resources folder
     String mailBodyMd = resourceLoaderService.readFileFromResources("user_welcome_email.md");
-    //String mailBodyMd = Files.readString(Paths.get("./file_path"));
-    String mailBodyHtml = emailTemplateProcessor.processContent(mailBodyMd, replacements); // convert markdown content to html
+    // String mailBodyMd = Files.readString(Paths.get("./file_path"));
+    String mailBodyHtml = emailTemplateProcessor.processContent(mailBodyMd, replacements); // convert markdown content
+                                                                                           // to html
 
     JSONObject jsonPayload = new JSONObject();
     jsonPayload.put("subject", "Welcome to Video Hub! Your Account Has Been Successfully Created");
@@ -144,7 +151,16 @@ public class UserRestController {
 
   // POST /users/login - Login existing user
   @PostMapping("/auth/login")
-  public UserLoginResponseDto loginUser(@RequestBody LoginRequestDto reqBody) throws CustomResourceNotFoundException { // use {email, password} for now, later replace with {username, password}
+  public UserLoginResponseDto loginUser(@RequestBody LoginRequestDto reqBody) throws CustomResourceNotFoundException { // use
+                                                                                                                       // {email,
+                                                                                                                       // password}
+                                                                                                                       // for
+                                                                                                                       // now,
+                                                                                                                       // later
+                                                                                                                       // replace
+                                                                                                                       // with
+                                                                                                                       // {username,
+                                                                                                                       // password}
     System.out.println(reqBody);
     UserLoginResponseDto userLoginResponse = null;
 
@@ -155,8 +171,10 @@ public class UserRestController {
     // Salt is already stored as a prefix in the hashed password in database
     if (BCrypt.checkpw(inputPassword, originalPassword)) {
       System.out.println("Successfully logged in");
-      String jwtToken = jwtService.buildToken(userInfo.getId()); // embedding userid(not email) as subject in the JWT token as best practice
-      userLoginResponse = new UserLoginResponseDto(Optional.of(jwtToken), Optional.of(jwtService.getExpirationDate()), "Token generated successfully!");
+      String jwtToken = jwtService.buildToken(userInfo.getId()); // embedding userid(not email) as subject in the JWT
+                                                                 // token as best practice
+      userLoginResponse = new UserLoginResponseDto(Optional.of(jwtToken), Optional.of(jwtService.getExpirationDate()),
+          "Token generated successfully!");
     } else {
       System.out.println("Incorrect email or password");
       userLoginResponse = new UserLoginResponseDto(Optional.empty(), Optional.empty(), "Incorrect email or password");
@@ -181,10 +199,7 @@ public class UserRestController {
   }
 
   // PUT /users/id - update existing user details
-  @PutMapping(
-    value = "/users/{id}",
-    consumes = MULTIPART_FORM_DATA_VALUE
-  )
+  @PutMapping(value = "/users/{id}", consumes = MULTIPART_FORM_DATA_VALUE)
   public String updateUser(@PathVariable int id, @ModelAttribute UserDto reqUserDto) throws Exception {
     userUpdateServiceImpl.updateUser(id, reqUserDto);
 
