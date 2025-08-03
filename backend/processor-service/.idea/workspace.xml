@@ -5,33 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e462488e-fa55-4f6d-89c4-756bade6d862" name="Changes" comment="add support for thumbnail">
-      <change afterPath="$PROJECT_DIR$/../../frontend/public/thumbnail.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/SharePopover.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/ThemeToggle.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/UploadVideoDialog.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/VideoCard.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/VideoPlayer.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/ui/dialog.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/ui/label.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/ui/popover.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/components/ui/textarea.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/context/ThemeContext.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/pages/Dashboard.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/pages/Profile.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/src/pages/VideoPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../frontend/setup_videohub.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/setup_videohub.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/src/components/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/components/Navbar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/src/components/ui/avatar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/components/ui/avatar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/src/components/ui/input.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/components/ui/input.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/main.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwind.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/vite.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/src/pages/Contact.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/pages/Contact.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,7 +85,7 @@
       <recent name="com.application.springboot.service" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main512">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" activateToolWindowBeforeRun="false">
       <option name="ALTERNATIVE_JRE_PATH" value="corretto-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />

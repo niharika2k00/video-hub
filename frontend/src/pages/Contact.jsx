@@ -1,14 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Send,
-  ArrowLeft,
-  MessageSquare,
-  Clock,
-} from "lucide-react";
+import { Mail, Phone, MapPin, Send, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Contact() {
