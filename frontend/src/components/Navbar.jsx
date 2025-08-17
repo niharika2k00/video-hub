@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Info,
   User,
+  Crown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Avatar from "@/components/ui/avatar";
@@ -26,6 +27,7 @@ function NavLinks({ user, onNavigate }) {
         <NavLink
           onClick={onNavigate}
           to="/"
+          // boolean isActive becomes true if the current route is same as the "to" link, this is how react router works
           className={({ isActive }) =>
             isActive
               ? "text-primary font-medium"
@@ -120,12 +122,24 @@ function Navbar() {
                   </NavLink>
                 </DropdownMenuItem>
 
-                <DropdownMenuItem asChild>
+                {/* TODO: add settings page */}
+                {/* <DropdownMenuItem asChild>
                   <NavLink to="/settings" className="flex items-center gap-2">
                     <Settings className="h-4 w-4" />
                     Settings
                   </NavLink>
+                </DropdownMenuItem> */}
+
+                <DropdownMenuItem asChild>
+                  <NavLink
+                    to="/"
+                    className="flex items-center gap-2 text-primary font-bold hover:text-amber-600 hover:bg-amber-100"
+                  >
+                    <Crown className="h-4 w-4" />
+                    Get Pro
+                  </NavLink>
                 </DropdownMenuItem>
+
                 <DropdownMenuItem
                   onSelect={logout}
                   // onClick={logout}
@@ -181,6 +195,16 @@ function Navbar() {
                   >
                     <NavLink to="/settings">
                       <Settings className="h-4 w-4" /> Settings
+                    </NavLink>
+                  </Button>
+
+                  <Button
+                    asChild
+                    variant="ghost"
+                    className="justify-start gap-2 text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                  >
+                    <NavLink to="/pro">
+                      <Crown className="h-4 w-4" /> Get Pro
                     </NavLink>
                   </Button>
                 </div>

@@ -33,7 +33,7 @@ function ConfirmationDialog({
     <Dialog open={isDialogOpen} onOpenChange={onDialogStateChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle className="text-xl font-semibold"> {title} </DialogTitle>
           <DialogDescription className="text-sm text-gray-600">
             {description}
           </DialogDescription>
