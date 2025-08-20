@@ -50,7 +50,7 @@ export default function Contact() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 text-white py-16  pb-22 sm:pb-24 md:pb-30 lg:pb-40">
         <div className="absolute inset-0 bg-black/20"></div>
@@ -74,7 +74,7 @@ export default function Contact() {
         </div>
 
         {/* Decorative SVG */}
-        <div className="absolute bottom-0 left-0 right-0">
+        <div className="absolute bottom-0 left-0 right-0 -mb-px">
           <svg
             viewBox="0 0 1200 120"
             fill="none"
@@ -82,14 +82,14 @@ export default function Contact() {
           >
             <path
               d="M0 0L50 20C100 40 200 80 300 80C400 80 500 40 600 20C700 0 800 0 900 20C1000 40 1100 80 1150 100L1200 120V120H0V0Z"
-              fill="rgb(248 250 252)"
+              fill="#fff"
             />
           </svg>
         </div>
       </section>
 
       {/* Contact Form Section */}
-      <section className="py-10 bg-white">
+      <section className="py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}

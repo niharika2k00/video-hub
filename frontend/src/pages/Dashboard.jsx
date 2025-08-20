@@ -45,7 +45,7 @@ const Dashboard = () => {
   }, [refetch]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-26">
+    <div className="min-h-screen pb-26">
       {/* Header Section */}
       <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 text-white py-16  pb-22 sm:pb-24 md:pb-30 lg:pb-40">
         <div className="absolute inset-0 bg-black/20"></div>
@@ -59,7 +59,7 @@ const Dashboard = () => {
         </div>
 
         {/* Decorative Wave */}
-        <div className="absolute bottom-0 left-0 right-0">
+        <div className="absolute bottom-0 left-0 right-0 -mb-px">
           <svg
             viewBox="0 0 1200 120"
             fill="none"
@@ -67,7 +67,7 @@ const Dashboard = () => {
           >
             <path
               d="M0 0L50 20C100 40 200 80 300 80C400 80 500 40 600 20C700 0 800 0 900 20C1000 40 1100 80 1150 100L1200 120V120H0V0Z"
-              fill="rgb(248 250 252)"
+              fill="#fff"
             />
           </svg>
         </div>
@@ -100,38 +100,40 @@ const Dashboard = () => {
           </div>
 
           {/* Videos Grid - adjust the gap and the grid-cols */}
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-            {/* Upload Button */}
-            <UploadVideoDialog onSuccess={refetch}>
-              {({ open }) => (
-                <button
-                  onClick={open}
-                  className="group relative flex h-48 w-full items-center justify-center rounded-xl border-2 border-dashed border-blue-300 bg-gradient-to-br from-orange-50 to-rose-100 hover:from-blue-100 hover:to-purple-100 transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                >
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                      <PlusCircle className="w-8 h-8" />
+          {videos && videos.length > 0 && (
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+              {/* Upload Button */}
+              <UploadVideoDialog onSuccess={refetch}>
+                {({ open }) => (
+                  <button
+                    onClick={open}
+                    className="group relative flex h-48 w-full items-center justify-center rounded-xl border-2 border-dashed border-blue-300 bg-gradient-to-br from-orange-50 to-rose-100 hover:from-blue-100 hover:to-purple-100 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                  >
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <PlusCircle className="w-8 h-8" />
+                      </div>
+                      <p className="text-sm font-medium text-gray-700 mb-1">
+                        Upload New Video
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Click to get started
+                      </p>
                     </div>
-                    <p className="text-sm font-medium text-gray-700 mb-1">
-                      Upload New Video
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      Click to get started
-                    </p>
-                  </div>
-                </button>
-              )}
-            </UploadVideoDialog>
+                  </button>
+                )}
+              </UploadVideoDialog>
 
-            {/* Video Cards */}
-            {(videos ?? Array.from({ length: 8 })).map((video, idx) => (
-              <VideoCard
-                key={video?.id || idx}
-                video={video}
-                onDelete={handleVideoDelete}
-              />
-            ))}
-          </div>
+              {/* Video Cards */}
+              {(videos ?? Array.from({ length: 8 })).map((video, idx) => (
+                <VideoCard
+                  key={video?.id || idx}
+                  video={video}
+                  onDelete={handleVideoDelete}
+                />
+              ))}
+            </div>
+          )}
 
           {/* Empty State */}
           {videos && videos.length === 0 && (

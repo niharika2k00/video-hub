@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import Skeleton from "react-loading-skeleton";
-import { Trash2, Play } from "lucide-react";
+import { Trash2, Play, Loader2 } from "lucide-react";
 import ConfirmationDialog from "@/components/ui/confirmation-dialog";
 
 const VideoCard = ({ video, onDelete, className }) => {
@@ -21,8 +21,9 @@ const VideoCard = ({ video, onDelete, className }) => {
     );
   }
 
-  const { id, title, category, thumbnailUrl } = video;
+  const { id, title, category, thumbnailUrl, videoVariantList } = video;
   const defaultThumbnail = "default-thumbnail.jpg";
+  const hasVideoVariants = videoVariantList && videoVariantList.length > 0;
 
   const handleImageLoad = () => {
     setImageLoading(false);
@@ -37,15 +38,7 @@ const VideoCard = ({ video, onDelete, className }) => {
     >
       <Link to={`/video/${id}`} className="block">
         <div className="relative h-48 w-full bg-gray-100">
-          {/* Loading Spinner */}
-          {imageLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-              <div className="animate-spin inline-block w-8 h-8 border-3 border-t-transparent text-primary rounded-full">
-                <span className="sr-only">Uplaoding...</span>
-              </div>
-            </div>
-          )}
-
+          {/* Only show image if video variants exist */}
           <img
             src={thumbnailUrl || defaultThumbnail}
             onLoad={handleImageLoad}
@@ -56,12 +49,23 @@ const VideoCard = ({ video, onDelete, className }) => {
             )}
           />
 
-          {/* Play Icon Overlay for Video Cards */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <div className="bg-black/50 rounded-full p-3">
-              <Play className="text-white" size={24} fill="white" />
+          {/* Spinner when no video variants (resolutions) are present */}
+          {!hasVideoVariants && (
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <div className="p-3">
+                <Loader2 className="animate-spin w-10 h-10 text-white" />
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Play Icon Overlay for Video Cards */}
+          {hasVideoVariants && (
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <div className="bg-black/50 rounded-full p-3">
+                <Play className="text-white" size={24} fill="white" />
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />

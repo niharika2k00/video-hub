@@ -1,8 +1,11 @@
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
+import useAuth from "@/context/AuthContext";
 
 export default function Hero() {
+  const { user } = useAuth();
+
   return (
     <>
       {/* Hero Section */}
@@ -39,7 +42,10 @@ export default function Hero() {
                 size="lg"
                 className="bg-yellow-300 hover:bg-yellow-400 text-gray-900 font-semibold px-8 py-4 text-lg rounded-xl transition-all duration-300 transform hover:scale-105"
               >
-                <NavLink to="/dashboard" className="flex items-center">
+                <NavLink
+                  to={user ? "/dashboard" : "/signin"}
+                  className="flex items-center"
+                >
                   <Sparkles className="w-4 h-4 mr-2" />
                   Get Started
                   <ArrowRight className="w-5 h-5 ml-2" />
@@ -50,7 +56,9 @@ export default function Hero() {
         </div>
 
         {/* Decorative Wave */}
-        <div className="absolute bottom-0 left-0 right-0">
+        <div className="absolute bottom-0 left-0 right-0 -mb-px">
+          {" "}
+          {/* add negative -mb-px to remove the bottom margin of the svg */}
           <svg
             viewBox="0 0 1200 120"
             fill="none"
@@ -58,7 +66,7 @@ export default function Hero() {
           >
             <path
               d="M0 0L50 20C100 40 200 80 300 80C400 80 500 40 600 20C700 0 800 0 900 20C1000 40 1100 80 1150 100L1200 120V120H0V0Z"
-              fill="rgb(248 250 252)"
+              fill="#fff"
             />
           </svg>
         </div>

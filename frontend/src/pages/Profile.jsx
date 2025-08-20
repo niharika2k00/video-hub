@@ -188,7 +188,7 @@ const Profile = () => {
             <button
               type="button"
               onClick={() => setEditing(id)}
-              className={`absolute right-2 top-2 text-gray-400 hover:text-indigo-500 ${
+              className={`absolute right-2 top-2 text-gray-400 hover:text-indigo-500 cursor-pointer ${
                 editingField === id ? "text-indigo-600" : ""
               }`}
             >

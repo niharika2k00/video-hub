@@ -2,8 +2,11 @@ import { Link } from "react-router-dom";
 import AboutComponent from "@/components/AboutComponent";
 import UploadVideoDialog from "@/components/UploadVideoDialog";
 import { Upload, BarChart3, ArrowRight } from "lucide-react";
+import useAuth from "@/context/AuthContext";
 
 const About = () => {
+  const { user } = useAuth();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Hero Section */}
@@ -37,7 +40,7 @@ const About = () => {
             </UploadVideoDialog>
 
             <Link
-              to="/dashboard"
+              to={user ? "/dashboard" : "/signin"}
               className="inline-flex items-center px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-gray-900 transition-colors"
             >
               <BarChart3 className="w-5 h-5 mr-2" />
@@ -47,7 +50,7 @@ const About = () => {
         </div>
 
         {/* Decorative SVG */}
-        <div className="absolute bottom-0 left-0 right-0">
+        <div className="absolute bottom-0 left-0 right-0 -mb-px">
           <svg
             viewBox="0 0 1200 120"
             fill="none"
@@ -55,7 +58,7 @@ const About = () => {
           >
             <path
               d="M0 0L50 20C100 40 200 80 300 80C400 80 500 40 600 20C700 0 800 0 900 20C1000 40 1100 80 1150 100L1200 120V120H0V0Z"
-              fill="rgb(248 250 252)"
+              fill="#fff"
             />
           </svg>
         </div>
@@ -77,12 +80,13 @@ const About = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/dashboard"
+              to={user ? "/dashboard" : "/signin"}
               className="inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all"
             >
               Get Started
               <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
+
             <Link
               to="/contact"
               className="inline-flex justify-center items-center px-8 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:border-gray-400 hover:text-gray-900 transition-colors"

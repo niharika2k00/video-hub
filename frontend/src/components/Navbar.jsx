@@ -114,44 +114,104 @@ function Navbar() {
                   <span className="font-medium">{user.name}</span>
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem asChild>
-                  <NavLink to="/profile" className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    Profile
-                  </NavLink>
-                </DropdownMenuItem>
 
-                {/* TODO: add settings page */}
-                {/* <DropdownMenuItem asChild>
-                  <NavLink to="/settings" className="flex items-center gap-2">
-                    <Settings className="h-4 w-4" />
-                    Settings
-                  </NavLink>
-                </DropdownMenuItem> */}
+              <DropdownMenuContent className="w-64 p-2 mt-2 bg-white/95 backdrop-blur-sm border border-gray-200/50 shadow-xl rounded-xl">
+                {/* Menu Items */}
+                <div className="space-y-1">
+                  <DropdownMenuItem asChild>
+                    <NavLink
+                      to="/profile"
+                      className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 hover:text-primary hover:bg-primary/5 rounded-lg transition-all duration-200 cursor-pointer"
+                    >
+                      <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
+                        <User className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium">Profile</p>
+                        <p className="text-xs text-gray-500">
+                          Manage your account
+                        </p>
+                      </div>
+                    </NavLink>
+                  </DropdownMenuItem>
 
-                <DropdownMenuItem asChild>
-                  <NavLink
-                    to="/"
-                    className="flex items-center gap-2 text-primary font-bold hover:text-amber-600 hover:bg-amber-100"
-                  >
-                    <Crown className="h-4 w-4" />
-                    Get Pro
-                  </NavLink>
-                </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <NavLink
+                      to="/dashboard"
+                      className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 hover:text-primary hover:bg-primary/5 rounded-lg transition-all duration-200 cursor-pointer"
+                    >
+                      <div className="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center">
+                        <LayoutDashboard className="h-4 w-4 text-purple-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium">Dashboard</p>
+                        <p className="text-xs text-gray-500">
+                          View your videos
+                        </p>
+                      </div>
+                    </NavLink>
+                  </DropdownMenuItem>
 
+                  {/* TODO: add settings page */}
+                  {/* <DropdownMenuItem asChild>
+                    <NavLink
+                      to="/settings"
+                      className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 hover:text-primary hover:bg-primary/5 rounded-lg transition-all duration-200 cursor-pointer"
+                    >
+                      <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center">
+                        <Settings className="h-4 w-4 text-gray-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium">Settings</p>
+                        <p className="text-xs text-gray-500">
+                          Customize preferences
+                        </p>
+                      </div>
+                    </NavLink>
+                  </DropdownMenuItem> */}
+
+                  <DropdownMenuItem asChild>
+                    <NavLink
+                      to="/"
+                      className="flex items-center gap-3 px-3 py-2.5 text-sm text-amber-700 hover:text-amber-800 hover:bg-amber-50 rounded-lg transition-all duration-200 cursor-pointer"
+                    >
+                      <div className="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center">
+                        <Crown className="h-4 w-4 text-amber-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium">Upgrade to Pro</p>
+                        <p className="text-xs text-amber-600">
+                          Unlock premium features
+                        </p>
+                      </div>
+                    </NavLink>
+                  </DropdownMenuItem>
+                </div>
+
+                {/* Logout Section */}
                 <DropdownMenuItem
                   onSelect={logout}
-                  // onClick={logout}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200 cursor-pointer"
                 >
-                  <LogOut className="h-4 w-4" />
-                  Logout
+                  <div className="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center">
+                    <LogOut className="h-4 w-4 text-red-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium">Logout</p>
+                    <p className="text-xs text-red-500">
+                      Sign out of your account
+                    </p>
+                  </div>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild size="sm" variant="secondary">
+            <Button
+              asChild
+              size="sm"
+              variant="secondary"
+              className="px-6 py-2.5 rounded-lg font-medium hover:bg-primary/86 transition-all duration-200"
+            >
               <NavLink to="/signin">Sign In</NavLink>
             </Button>
           )}
@@ -201,10 +261,11 @@ function Navbar() {
                   <Button
                     asChild
                     variant="ghost"
-                    className="justify-start gap-2 text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                    className="justify-start gap-2 text-red-600 font-bold hover:text-amber-600 hover:bg-amber-100"
                   >
-                    <NavLink to="/pro">
-                      <Crown className="h-4 w-4" /> Get Pro
+                    <NavLink to="/">
+                      <Crown className="h-4 w-4" />
+                      Upgrade to Pro
                     </NavLink>
                   </Button>
                 </div>
