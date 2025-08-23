@@ -2,6 +2,10 @@ import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import dotenv from "dotenv";
+
+// load environment variables from .env file
+dotenv.config();
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -37,12 +41,12 @@ export default defineConfig({
     port: 5173, // frontend server default port (5173 for vite)
     proxy: {
       "/api": {
-        target: "http://localhost:4040", // backend server
+        target: process.env.VITE_BACKEND_SERVER_URL, // backend server
         changeOrigin: true,
         secure: false,
       },
       "/s01/video": {
-        target: "http://localhost:8080", // nginx server
+        target: process.env.VITE_NGINX_SERVER_URL, // nginx server
         changeOrigin: true,
       },
     },
