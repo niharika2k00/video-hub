@@ -14,7 +14,7 @@ const Footer = () => {
 
   const quickLinks = [
     { href: "/about", text: "About Us", hoverColor: "hover:text-yellow-200" },
-    { href: "/contact", text: "Contact", hoverColor: "hover:text-pink-200" },
+    { href: "/contact", text: "Contact Us", hoverColor: "hover:text-pink-200" },
     { href: "#", text: "Privacy Policy", hoverColor: "hover:text-indigo-300" },
     { href: "#", text: "Terms of Service", hoverColor: "hover:text-green-300" },
     { href: "#", text: "Support", hoverColor: "hover:text-yellow-200" },

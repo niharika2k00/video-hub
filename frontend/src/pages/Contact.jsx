@@ -1,21 +1,41 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin, Send, ArrowLeft } from "lucide-react";
+import { Mail, Phone, MapPin, Send, ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import api from "@/utils/api";
+import { toast } from "react-toastify";
 
-export default function Contact() {
+const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Form submitted:", formData);
-    // You can add API call here to send the contact form
+    setIsSubmitting(true);
+    try {
+      const response = await api.post("/contact", formData);
+      console.log(response);
+      toast.success("Message sent successfully! We'll get back to you soon.");
+
+      setFormData({
+        // Reset form
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Contact form submission error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -111,14 +131,13 @@ export default function Contact() {
                     >
                       Name
                     </label>
-                    <input
+                    <Input
                       type="text"
                       id="name"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="Your name"
                     />
                   </div>
@@ -129,14 +148,13 @@ export default function Contact() {
                     >
                       Email
                     </label>
-                    <input
+                    <Input
                       type="email"
                       id="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="your@email.com"
                     />
                   </div>
@@ -149,16 +167,30 @@ export default function Contact() {
                   >
                     Subject
                   </label>
-                  <input
+                  <Input
                     type="text"
                     id="subject"
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="What's this about?"
+                    maxLength={300}
                   />
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-xs text-gray-500">
+                      {formData.subject.length < 2 ? (
+                        <span className="text-red-500">
+                          Subject must be at least 2 characters
+                        </span>
+                      ) : (
+                        "Subject looks good"
+                      )}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      {formData.subject.length}/300
+                    </span>
+                  </div>
                 </div>
 
                 <div>
@@ -168,24 +200,48 @@ export default function Contact() {
                   >
                     Message
                   </label>
-                  <textarea
+                  <Textarea
                     id="message"
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
                     required
                     rows={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                     placeholder="Tell us more about your inquiry..."
+                    maxLength={6000}
                   />
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-xs text-gray-500">
+                      {formData.message.length < 2 ? (
+                        <span className="text-red-500">
+                          Message must be at least 2 characters
+                        </span>
+                      ) : (
+                        "Message looks good"
+                      )}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      {formData.message.length}/6000
+                    </span>
+                  </div>
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-5 h-5 mr-2" />
-                  Send Message
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5 mr-2" />
+                      Send Message
+                    </>
+                  )}
                 </Button>
               </form>
             </div>
@@ -279,4 +335,6 @@ export default function Contact() {
       </section>
     </div>
   );
-}
+};
+
+export default Contact;
