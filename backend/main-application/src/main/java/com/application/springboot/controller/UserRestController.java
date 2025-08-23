@@ -34,8 +34,7 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 @RequestMapping("/api")
 public class UserRestController {
 
-  // Autowired to inject service bean into controller, serve as an intermediary
-  // between C and DAO layer
+  // Autowired to inject service bean into controller, serve as an intermediary between C and DAO layer
   private final FileUtils fileUtils;
   private final EmailTemplateProcessor emailTemplateProcessor;
   private final JwtService jwtService;
@@ -48,8 +47,8 @@ public class UserRestController {
 
   @Autowired
   public UserRestController(FileUtils fileUtils, EmailTemplateProcessor emailTemplateProcessor, JwtService jwtService,
-      KafkaTemplate<String, String> kafkaTemplate, ResourceLoaderService resourceLoaderService, RoleService roleService,
-      UserRepository userRepository, UserService userService, UserUpdateServiceImpl userUpdateServiceImpl) {
+                            KafkaTemplate<String, String> kafkaTemplate, ResourceLoaderService resourceLoaderService, RoleService roleService,
+                            UserRepository userRepository, UserService userService, UserUpdateServiceImpl userUpdateServiceImpl) {
     this.fileUtils = fileUtils;
     this.emailTemplateProcessor = emailTemplateProcessor;
     this.jwtService = jwtService;
@@ -65,7 +64,7 @@ public class UserRestController {
   @GetMapping("/test")
   public Map<String, String> test() {
     return Map.of(
-        "baseUrl", "http://localhost:4040/api",
+        "endpoint", "http://localhost:4040/api",
         "description", "This service is ready to transcode, stream, and serve your video content.",
         "message", "🎥✨ Welcome to VideoHub API ✨🎥",
         "next", "Ready to transcode, stream, and serve your video content.",
@@ -81,8 +80,7 @@ public class UserRestController {
 
   // GET /users/{id}
   @GetMapping("/users/{id}")
-  // can throw parent(Exception) class instead of comma separated multiple
-  // exceptions
+  // can throw parent(Exception) class instead of comma separated multiple exceptions
   public User findById(@PathVariable int id) throws Exception {
     User userDetails = userService.findById(id);
     return userDetails;
@@ -137,8 +135,7 @@ public class UserRestController {
     // Sending email - picking email template from resources folder
     String mailBodyMd = resourceLoaderService.readFileFromResources("user_welcome_email.md");
     // String mailBodyMd = Files.readString(Paths.get("./file_path"));
-    String mailBodyHtml = emailTemplateProcessor.processContent(mailBodyMd, replacements); // convert markdown content
-                                                                                           // to html
+    String mailBodyHtml = emailTemplateProcessor.processContent(mailBodyMd, replacements); // convert markdown content to html
 
     JSONObject jsonPayload = new JSONObject();
     jsonPayload.put("subject", "Welcome to Video Hub! Your Account Has Been Successfully Created");
@@ -151,16 +148,7 @@ public class UserRestController {
 
   // POST /users/login - Login existing user
   @PostMapping("/auth/login")
-  public UserLoginResponseDto loginUser(@RequestBody LoginRequestDto reqBody) throws CustomResourceNotFoundException { // use
-                                                                                                                       // {email,
-                                                                                                                       // password}
-                                                                                                                       // for
-                                                                                                                       // now,
-                                                                                                                       // later
-                                                                                                                       // replace
-                                                                                                                       // with
-                                                                                                                       // {username,
-                                                                                                                       // password}
+  public UserLoginResponseDto loginUser(@RequestBody LoginRequestDto reqBody) throws CustomResourceNotFoundException { // use {email,password} for now, later replace with {username,password}
     System.out.println(reqBody);
     UserLoginResponseDto userLoginResponse = null;
 
@@ -172,7 +160,7 @@ public class UserRestController {
     if (BCrypt.checkpw(inputPassword, originalPassword)) {
       System.out.println("Successfully logged in");
       String jwtToken = jwtService.buildToken(userInfo.getId()); // embedding userid(not email) as subject in the JWT
-                                                                 // token as best practice
+      // token as best practice
       userLoginResponse = new UserLoginResponseDto(Optional.of(jwtToken), Optional.of(jwtService.getExpirationDate()),
           "Token generated successfully!");
     } else {
@@ -195,7 +183,7 @@ public class UserRestController {
     jwtService.addTokenToBlacklist(token, expirationTime);
 
     System.out.println("Successfully logged out.");
-    return ResponseEntity.ok("Successfully logged out.");
+    return ResponseEntity.ok("Successfully logged out");
   }
 
   // PUT /users/id - update existing user details

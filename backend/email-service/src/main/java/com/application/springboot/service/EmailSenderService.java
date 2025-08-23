@@ -41,7 +41,7 @@ public class EmailSenderService {
     message.setTo(receiverEmail);
     message.setFrom(senderEmail);
 
-    // Working code but only supports TXT, not HTML/MD
+    // Working code but only supports TXT, not HTML or markdown
     // SimpleMailMessage message = new SimpleMailMessage();
     // message.setSubject(subject);
     // message.setText(text);

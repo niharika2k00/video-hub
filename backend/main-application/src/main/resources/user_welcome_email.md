@@ -8,6 +8,6 @@ our support team at support@example.com.
 
 **Thank you for joining us!**
 
-Best regards,  
-Niharika Dutta  
+Best regards,
+Niharika Dutta
 Team Video Hub

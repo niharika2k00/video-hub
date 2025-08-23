@@ -33,27 +33,30 @@ public class SecurityConfig {
     this.customAccessDeniedException = customAccessDeniedException;
   }
 
-  @Value("${custom.baseurl}")
-  private String baseUrl;
+  @Value("${custom.endpoints.client.local}")
+  private String clientLocalEndpoint;
+
+  @Value("${custom.endpoints.server.staging}")
+  private String serverStagingEndpoint;
 
   // read-only roles
   String[] readAccessRoles = {
-    "ROLE_VIEWER"
+      "ROLE_VIEWER"
   };
 
   // editor roles
   String[] writeAccessRoles = {
-    "ROLE_USER",
-    "ROLE_DEVELOPER",
-    "ROLE_EDITOR",
-    "ROLE_MANAGER",
-    "ROLE_OPERATOR"
+      "ROLE_USER",
+      "ROLE_DEVELOPER",
+      "ROLE_EDITOR",
+      "ROLE_MANAGER",
+      "ROLE_OPERATOR"
   };
 
   // admin roles
   String[] adminControlRoles = {
-    "ROLE_ADMIN",
-    "ROLE_SUPER_ADMIN"
+      "ROLE_ADMIN",
+      "ROLE_SUPER_ADMIN"
   };
 
   String[] level1 = Stream.of(readAccessRoles, writeAccessRoles, adminControlRoles).flatMap(Arrays::stream).toArray(String[]::new);
@@ -63,21 +66,21 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
     http.authorizeHttpRequests(auth -> auth
-      .requestMatchers(HttpMethod.GET, "/", "/api", "/api/test").permitAll()
-      .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login", "/api/users/auth", "/api/upload/video").permitAll()
-      .requestMatchers(HttpMethod.POST, "/api/users/logout").authenticated()
+        .requestMatchers(HttpMethod.GET, "/", "/api", "/api/test").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login", "/api/users/auth", "/api/upload/video", "/api/contact").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/users/logout").authenticated()
 
-      .requestMatchers(HttpMethod.GET, "/api/users", "/api/users/**", "/api/roles", "/api/roles/**", "/api/videos/**").hasAnyAuthority(level1)
+        .requestMatchers(HttpMethod.GET, "/api/users", "/api/users/**", "/api/roles", "/api/roles/**", "/api/videos/**").hasAnyAuthority(level1)
 
-      .requestMatchers(HttpMethod.PUT, "/api/users", "/api/roles").hasAnyAuthority(level2)
-      .requestMatchers(HttpMethod.POST, "/api/roles", "/api/upload/image").hasAnyAuthority(level2)
+        .requestMatchers(HttpMethod.PUT, "/api/users", "/api/roles").hasAnyAuthority(level2)
+        .requestMatchers(HttpMethod.POST, "/api/roles", "/api/upload/image").hasAnyAuthority(level2)
 
-      .requestMatchers(HttpMethod.DELETE, "/api/users/**", "/api/roles/**").hasAnyAuthority(adminControlRoles)
-      .requestMatchers(HttpMethod.DELETE, "/api/video/**", "/api/roles/**").hasAnyAuthority(adminControlRoles)
+        .requestMatchers(HttpMethod.DELETE, "/api/users/**", "/api/roles/**").hasAnyAuthority(adminControlRoles)
+        .requestMatchers(HttpMethod.DELETE, "/api/video/**", "/api/roles/**").hasAnyAuthority(adminControlRoles)
 
-      .requestMatchers(HttpMethod.POST, "/api/users/{id}/roles").hasAnyAuthority(level2)
+        .requestMatchers(HttpMethod.POST, "/api/users/{id}/roles").hasAnyAuthority(level2)
 
-      .anyRequest().authenticated()
+        .anyRequest().authenticated()
     );
 
     //http.httpBasic((Customizer.withDefaults())); // enable HTTP basic authentication
@@ -105,7 +108,15 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of(baseUrl));
+
+    // Allow multiple origins for development and production
+    List<String> allowedOrigins = Arrays.asList(
+        clientLocalEndpoint,
+        serverStagingEndpoint
+    );
+
+    config.setAllowedOrigins(allowedOrigins);
+    // config.setAllowedOrigins(List.of(baseUrl));
     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     config.setAllowedHeaders(List.of("*"));
     config.setAllowCredentials(true); // Required for cookies or Authorization headers

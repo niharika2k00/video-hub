@@ -1,7 +1,6 @@
 package com.application.springboot.service;
 
 import com.application.sharedlibrary.config.AwsClientBuilder;
-import com.application.sharedlibrary.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,11 +22,9 @@ public class S3StorageSyncService implements CloudStorageSyncService {
   String bucketName;
 
   private final AwsClientBuilder connection;
-  private final VideoService videoService;
 
   @Autowired
-  public S3StorageSyncService(VideoService videoService, AwsClientBuilder connection) {
-    this.videoService = videoService;
+  public S3StorageSyncService(AwsClientBuilder connection) {
     this.connection = connection;
   }
 
@@ -36,12 +33,12 @@ public class S3StorageSyncService implements CloudStorageSyncService {
     S3Client s3Client = connection.get(S3Client.class);
     List<Bucket> buckets = s3Client.listBuckets().buckets();
     System.out.println("Total " + buckets.size() + " AWS S3 buckets present");
-    //ListBucketsResponse response = s3Client.listBuckets();
-    //List<Bucket> buckets = response.buckets();
-    //for (Bucket bucket : buckets) {
-    //  System.out.println("Bucket name: " + bucket.name());
-    //  System.out.println("Creation date: " + bucket.creationDate());
-    //}
+    // ListBucketsResponse response = s3Client.listBuckets();
+    // List<Bucket> buckets = response.buckets();
+    // for (Bucket bucket : buckets) {
+    // System.out.println("Bucket name: " + bucket.name());
+    // System.out.println("Creation date: " + bucket.creationDate());
+    // }
 
     boolean isBucketPresent = checkBucketExists(s3Client);
     if (isBucketPresent) {
@@ -64,26 +61,29 @@ public class S3StorageSyncService implements CloudStorageSyncService {
 
   @Override
   public void syncDirectoryFromLocal(String localPath, String remotePath) throws Exception {
+    try {
+      System.out.println("local path: " + localPath);
+      System.out.println("remote path: " + remotePath);
 
-    System.out.println("localPath: " + localPath);
-    System.out.println("remotePath: " + remotePath);
+      ProcessBuilder processBuilder = new ProcessBuilder(
+          "aws", "s3", "sync",
+          localPath,
+          remotePath,
+          "--profile", awsProfile,
+          "--region", awsRegion
+      );
 
-    ProcessBuilder processBuilder = new ProcessBuilder(
-      "aws", "s3", "sync",
-      localPath,
-      remotePath,
-      "--profile", awsProfile,
-      "--region", awsRegion
-    );
-    //processBuilder.inheritIO(); // Optional: To print output to console
+      // processBuilder.inheritIO(); // Optional: To print output to console
+      Process process = processBuilder.start();
+      int exitCode = process.waitFor();
 
-    Process process = processBuilder.start();
-    int exitCode = process.waitFor();
+      if (exitCode != 0)
+        throw new RuntimeException("❌ AWS S3 Sync failed with code: " + exitCode);
 
-    if (exitCode != 0) {
-      throw new RuntimeException("❌ AWS S3 Sync failed with code: " + exitCode);
+      System.out.println("✅ Sync completed from " + localPath + " → " + remotePath);
+    } catch (Exception e) {
+      System.out.println("❌ AWS S3 Sync failed with code: " + e.getMessage());
+      throw e;
     }
-
-    System.out.println("✅ Sync completed from " + localPath + " → " + remotePath);
   }
 }

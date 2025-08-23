@@ -23,10 +23,10 @@ public class MasterManifestGeneratorService {
 
     for (Resolution res : allAvailableResolutions) {
       masterContent.append("#EXT-X-STREAM-INF:BANDWIDTH=").append(res.getBitrate())
-        .append(",RESOLUTION=")
-        .append(res.getWidth()).append("x").append(res.getHeight())
-        .append("\n")
-        .append("manifests/rendition_").append(res.getHeight()).append("p.m3u8\n");
+          .append(",RESOLUTION=")
+          .append(res.getWidth()).append("x").append(res.getHeight())
+          .append("\n")
+          .append("manifests/rendition_").append(res.getHeight()).append("p.m3u8\n");
     }
 
     // Files.write(path, byte[] bytes)
