@@ -78,7 +78,7 @@ export default function VideoPage() {
           <SharePopover
             url={`${baseUrl}/${storageCode}/video/${video.authorId}/${video.id}/master.m3u8`} // has reverse proxy
           />
-        </div>{" "}
+        </div>
         <p className="text-sm text-gray-500">
           {video.category} • {new Date(video.uploadedAt).toLocaleDateString()}
         </p>

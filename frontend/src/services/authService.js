@@ -6,14 +6,22 @@ export const login = async ({ email, password }) => {
 };
 
 export const register = async (payload) => {
-  const { data } = await api.post("/auth/register", payload);
-  return data; // expects { token: "..." }
+  // convert payload to FormData for MULTIPART_FORM_DATA_VALUE multipart/form-data submission in backend controller
+  const formData = new FormData();
+
+  // add all payload fields to formData
+  Object.keys(payload).forEach((key) => {
+    formData.append(key, payload[key]);
+  });
+
+  const { data } = await api.post("/auth/register", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return data;
 };
 
-/**
- * logoutApi – POST raw Bearer token as text/plain
- */
-export const logoutApi = async (token) =>
+// /logout – POST raw Bearer token as text/plain
+export const logout = async (token) =>
   api.post("/auth/logout", token, {
     headers: { "Content-Type": "text/plain" },
   });

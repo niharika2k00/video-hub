@@ -68,7 +68,7 @@ const AuthProvider = ({ children }) => {
     try {
       setError(null);
       const responseObj = await apiLogin({ email, password });
-      const { token } = responseObj;
+      const { token } = responseObj; // destructuring the response object to get the token
       console.log("token", responseObj);
       localStorage.setItem("token", token);
       api.defaults.headers.common.Authorization = `Bearer ${token}`;
@@ -88,15 +88,8 @@ const AuthProvider = ({ children }) => {
   const register = async (payload) => {
     try {
       setError(null);
-      const { token } = await apiRegister(payload);
-      localStorage.setItem("token", token);
-      api.defaults.headers.common.Authorization = `Bearer ${token}`;
-
-      const data = parseToken(token);
-      if (data) {
-        const userDetails = await fetchUserDetails(data.sub);
-        setUser(userDetails);
-      }
+      const responseObj = await apiRegister(payload);
+      console.log("Registration successful:", responseObj);
     } catch (error) {
       setError(error.message);
       throw error;

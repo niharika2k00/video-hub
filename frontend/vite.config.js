@@ -9,33 +9,12 @@ dotenv.config();
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(),
-    // {
-    //   name: "custom-mime-types",
-    //   configureServer(server) {
-    //     server.middlewares.use((req, res, next) => {
-    //       if (req.url.endsWith(".m3u8")) {
-    //         res.setHeader("Content-Type", "application/vnd.apple.mpegurl");
-    //       }
-    //       if (req.url.endsWith(".ts")) {
-    //         res.setHeader("Content-Type", "video/mp2t");
-    //       }
-    //       next();
-    //     });
-    //   },
-    // },
-  ],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"), // configured for importing modules from src(root) directory
     },
   },
-  // optimizeDeps: {
-  //   include: ["video.js"], // pre-bundle that same copy for dev
-  // },
-  // assetsInclude: ["**/*.ts"],
   server: {
     host: true, // allow access from any device (mobile) on same network
     port: 5173, // frontend server default port (5173 for vite)
@@ -50,9 +29,10 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    // assetsInclude: ["**/*.ts"],
     // middlewareMode: false,
     // fs: {
-    //   allow: ["public"],
+    //   allow: ["public"], // allow access to public folder
     // },
   },
 });

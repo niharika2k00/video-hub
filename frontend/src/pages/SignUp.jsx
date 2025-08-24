@@ -5,8 +5,15 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Card } from "@/components/ui/card";
 import useAuth from "@/context/AuthContext";
+import { ChevronDown } from "lucide-react";
 
 export default function SignUp() {
+  const GENDER_MAPPING = {
+    FEMALE: "female",
+    MALE: "male",
+    PREFER_NOT_TO_SAY: "prefer_not_to_say",
+  };
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -19,7 +26,7 @@ export default function SignUp() {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { register } = useAuth();
+  const { register, login } = useAuth();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -29,7 +36,18 @@ export default function SignUp() {
     e.preventDefault();
     setLoading(true);
     try {
-      await register(form);
+      console.log(form);
+      // convert gender to backend format
+      const requestBody = {
+        ...form,
+        gender:
+          Object.keys(GENDER_MAPPING).find(
+            (key) => GENDER_MAPPING[key] === form.gender
+          ) ?? form.gender,
+      };
+
+      await register(requestBody);
+      await login(form.email, form.password);
       navigate("/");
     } finally {
       setLoading(false);
@@ -69,6 +87,21 @@ export default function SignUp() {
             value={form.age}
             onChange={handleChange}
           />
+          {/* Gender Dropdown */}
+          <div className="relative">
+            <select
+              name="gender"
+              value={form.gender}
+              onChange={handleChange}
+              className="w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+            >
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="prefer_not_to_say">Prefer not to say</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          </div>
           <Input
             name="location"
             placeholder="Location"

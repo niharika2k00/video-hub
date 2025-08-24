@@ -4,7 +4,6 @@ import { Edit3, Camera, ChevronDown } from "lucide-react";
 import useAuth from "@/context/AuthContext";
 import api from "@/utils/api";
 import { toast } from "react-toastify";
-
 import Avatar from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

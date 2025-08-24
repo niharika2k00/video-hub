@@ -1,6 +1,5 @@
 import Hero from "@/components/Hero";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import AboutComponent from "@/components/AboutComponent";
 import { Upload, Play, Share2, Zap, Users, ArrowRight } from "lucide-react";
 
