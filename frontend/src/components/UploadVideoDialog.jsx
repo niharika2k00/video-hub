@@ -40,10 +40,38 @@ const schema = z.object({
 const UploadVideoDialog = ({ onSuccess, children }) => {
   const [open, setOpen] = useState(false);
 
+  // Array of popular video categories
+  const videoCategories = [
+    "Art",
+    "Automotive",
+    "Business",
+    "Comedy",
+    "Education",
+    "Entertainment",
+    "Fashion",
+    "Fitness",
+    "Food",
+    "Gaming",
+    "Health",
+    "Innovation",
+    "Lifestyle",
+    "Music",
+    "Nature",
+    "News",
+    "Science",
+    "Sports",
+    "Technology",
+    "Travel",
+    "Tutorial",
+    "Vlog",
+    "Other",
+  ];
+
   const {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(schema) });
 
@@ -79,8 +107,10 @@ const UploadVideoDialog = ({ onSuccess, children }) => {
 
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Upload a new video</DialogTitle>
-          <DialogDescription className="text-sm text-gray-600">
+          <DialogTitle className="text-xl font-semibold">
+            Upload Your Video
+          </DialogTitle>
+          <DialogDescription className="text-sm text-gray-500 mt-1">
             All fields are required. Maximum file size: 150 MB
           </DialogDescription>
         </DialogHeader>
@@ -113,7 +143,18 @@ const UploadVideoDialog = ({ onSuccess, children }) => {
           {/* Category */}
           <div className="grid gap-1">
             <Label htmlFor="category">Category</Label>
-            <Input id="category" {...register("category")} />
+            <select
+              id="category"
+              className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-primary focus:border-primary disabled:cursor-not-allowed disabled:opacity-50"
+              {...register("category")}
+            >
+              <option value="">Select a category</option>
+              {videoCategories.map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
             {errors.category && (
               <p className="text-sm text-red-500">{errors.category.message}</p>
             )}
@@ -122,12 +163,23 @@ const UploadVideoDialog = ({ onSuccess, children }) => {
           {/* Video file */}
           <div className="grid gap-1">
             <Label htmlFor="videoFile">Video file</Label>
-            <Input
-              id="videoFile"
-              type="file"
-              accept="video/*"
-              {...register("videoFile")}
-            />
+            <div className="relative">
+              <Input
+                id="videoFile"
+                type="file"
+                accept="video/*"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                {...register("videoFile")}
+              />
+              <div className="flex items-center justify-between px-3 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 cursor-pointer">
+                <span className="text-sm text-gray-500">
+                  {watch("videoFile")?.[0]?.name || "Choose file"}
+                </span>
+                <span className="text-sm text-blue-600 font-medium">
+                  Browse
+                </span>
+              </div>
+            </div>
             {errors.videoFile && (
               <p className="text-sm text-red-500">{errors.videoFile.message}</p>
             )}

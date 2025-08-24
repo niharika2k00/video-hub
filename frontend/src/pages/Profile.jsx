@@ -139,19 +139,15 @@ const Profile = () => {
       id,
       disabled: editingField !== id,
       value: form[id] ?? "",
-      onChange: (e) => handleChange(id, e.target.value),
+      onChange: (e) => {
+        console.log(e.target.value);
+        handleChange(id, e.target.value);
+      },
       className: `${
         editingField === id
           ? "ring-2 ring-indigo-300 border-indigo-400"
           : "border-gray-300"
       } w-full rounded-md px-3 py-2 text-sm bg-white focus:outline-none`,
-      style: {
-        textAlign: "left !important",
-        direction: "ltr !important",
-        unicodeBidi: "normal !important",
-        writingMode: "horizontal-tb !important",
-      },
-      dir: "ltr",
     };
 
     return (
@@ -183,7 +179,7 @@ const Profile = () => {
             <Input key={`${id}-${user?.id}`} type={type} {...sharedProps} />
           )}
 
-          {/* edit button - only show for non-dropdown fields */}
+          {/* edit button - show for non-dropdown fields */}
           {!isDropdown && (
             <button
               type="button"

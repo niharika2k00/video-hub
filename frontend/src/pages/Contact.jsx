@@ -174,17 +174,19 @@ const Contact = () => {
                     value={formData.subject}
                     onChange={handleChange}
                     required
-                    placeholder="What's this about?"
+                    placeholder="What's this about ?"
                     maxLength={300}
                   />
                   <div className="flex justify-between items-center mt-1">
                     <span className="text-xs text-gray-500">
-                      {formData.subject.length < 2 ? (
+                      {formData.subject.length < 5 ? (
                         <span className="text-red-500">
-                          Subject must be at least 2 characters
+                          Subject must be at least 5 characters
                         </span>
                       ) : (
-                        "Subject looks good"
+                        <span className="text-green-500">
+                          Subject looks good
+                        </span>
                       )}
                     </span>
                     <span className="text-xs text-gray-400">
@@ -212,12 +214,14 @@ const Contact = () => {
                   />
                   <div className="flex justify-between items-center mt-1">
                     <span className="text-xs text-gray-500">
-                      {formData.message.length < 2 ? (
+                      {formData.message.length < 5 ? (
                         <span className="text-red-500">
-                          Message must be at least 2 characters
+                          Message must be at least 5 characters
                         </span>
                       ) : (
-                        "Message looks good"
+                        <span className="text-green-500">
+                          Message looks good
+                        </span>
                       )}
                     </span>
                     <span className="text-xs text-gray-400">
