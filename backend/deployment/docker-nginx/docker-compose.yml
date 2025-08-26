@@ -2,12 +2,12 @@ services:
   nginx:
     image: nginx:latest
     container_name: nginx
-    restart: unless-stopped
-    ports: # [host_port(my) : container_port]
+    restart: always
+    ports: # [host_port(mylocal) : container_port]
       - "8080:80" # HTTP  → container:80
-      - "8443:443" # HTTPS → container:443 (or "443:443" if you prefer)
+      - "443:443" # HTTPS → container:443 (or "443:443" if you prefer)
     extra_hosts:
-      - "host.docker.internal:host-gateway" # needed on Linux so the container can reach your host’s :5173
+      - "host.docker.internal:host-gateway" # needed on Linux so the container can reach host port :5173
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf # ro: read only can read the file but cannot overwrite or delete it
 

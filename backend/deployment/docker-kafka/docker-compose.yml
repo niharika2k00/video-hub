@@ -1,8 +1,8 @@
 services:
   zookeeper:
-    image:          confluentinc/cp-zookeeper:7.2.15
+    image: confluentinc/cp-zookeeper:7.2.15
     container_name: zookeeper
-    restart:        always
+    restart: always
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       # ZOOKEEPER_TICK_TIME: 2000
@@ -14,48 +14,136 @@ services:
 
   # kafka broker
   kafka:
-    image:          confluentinc/cp-kafka:7.2.15
+    image: confluentinc/cp-kafka:7.2.15
     container_name: kafka
-    restart:        always
+    restart: always
     ports:
       - "9092:9092" # For internal access
       - "9093:9093" # For external access
     environment:
-      KAFKA_BROKER_ID:                        1
-      KAFKA_ZOOKEEPER_CONNECT:                zookeeper:2181
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092 # when access internally from within the docker container
       # KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       # KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
 
-      KAFKA_ADVERTISED_LISTENERS:             INTERNAL://kafka:9092,EXTERNAL://localhost:9093
-      KAFKA_LISTENERS:                        INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP:   INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME:       INTERNAL
-      KAFKA_REPLICA_FETCH_MAX_BYTES:          20000000 # 20 MB
-      KAFKA_MESSAGE_MAX_BYTES:                20000000 # 20 MB
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:9093
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 20000000 # 20 MB
+      KAFKA_MESSAGE_MAX_BYTES: 20000000 # 20 MB
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_NUM_PARTITIONS:                   1
+      KAFKA_NUM_PARTITIONS: 1
     depends_on:
       - zookeeper
     volumes:
       - ./.kafka-data/data:/var/lib/kafka/data
 
   topic-init:
-    image:          confluentinc/cp-kafka:7.2.15
+    image: confluentinc/cp-kafka:7.2.15
     container_name: topic-init
     depends_on:
       - kafka
-    command:        >
-                    /bin/bash -c "
-                    echo "Waiting for Kafka to be ready...";
-                    for i in {1..20}; do
-                      kafka-topics --bootstrap-server kafka:9092 --list && break || sleep 5;
-                      echo "Retrying...";
-                    done &&
-                    kafka-topics --create --bootstrap-server kafka:9092 --replication-factor 1 --partitions 2 --topic testtopic &&
-                    kafka-topics --list --bootstrap-server kafka:9092
-                    "
+    command: >
+      /bin/bash -c "
+      echo "Waiting for Kafka to be ready...";
+      for i in {1..20}; do
+        kafka-topics --bootstrap-server kafka:9092 --list && break || sleep 5;
+        echo "Retrying...";
+      done &&
+      kafka-topics --create --bootstrap-server kafka:9092 --replication-factor 1 --partitions 2 --topic testtopic &&
+      kafka-topics --list --bootstrap-server kafka:9092
+      "
 
+# ec2 1 (i-0468796cd94e184bb):
+
+# 18.219.151.181
+# 10.0.0.14
+
+# From EC2 A, test if port 9093 is reachable on EC2 B
+# nc -zv 3.147.81.113 9093
+
+# ec2 2 (i-0f266a3a789866739):
+
+# 3.147.81.113
+# 10.0.7.5
+
+# # Method 1: Using docker exec
+# docker exec -it kafka kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 2 --topic mytesttopic
+
+# # Method 2: If you have Kafka installed directly on EC2 B
+# kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 2 --topic mytesttopic
+
+# # Verify the topic was created
+# docker exec -it kafka kafka-topics --bootstrap-server localhost:9092 --list
+
+# # List topics
+# docker exec -it kafka kafka-topics --bootstrap-server localhost:9092 --list
+
+# # Create a topic
+# docker exec -it kafka kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 2 --topic testtopic
+
+# # Delete a topic
+# docker exec -it kafka kafka-topics --delete --bootstrap-server localhost:9092 --topic testtopic
+
+# # Describe a topic
+# docker exec -it kafka kafka-topics --describe --bootstrap-server localhost:9092 --topic testtopic
+
+# kafka-topics.sh --create --bootstrap-server 18.119.166.165:9093 --replication-factor 1 --partitions 2 --topic remotetesttopic
+# kafka-topics.sh --list --bootstrap-server 18.119.166.165:9093
+
+# # docker run creates a new temporary container from the image and then  automatically removes the container when the command finishes (as -rm)
+# # On EC2 A, use Docker to run Kafka client tools
+# docker run --rm confluentinc/cp-kafka:7.2.15 kafka-topics --create --bootstrap-server 3.147.81.113:9093 --replication-factor 1 --partitions 2 --topic remotetesttopic
+# docker run --rm confluentinc/cp-kafka:7.2.15 kafka-topics --list --bootstrap-server 3.147.81.113:9093
+# # Create a topic
+# docker run --rm -it confluentinc/cp-kafka:7.2.15 kafka-topics --create --bootstrap-server 3.147.81.113:9093 --replication-factor 1 --partitions 2 --topic testtopic-from-ec2a
+
+# # Delete a topic
+# docker run --rm -it confluentinc/cp-kafka:7.2.15 kafka-topics --delete --bootstrap-server 3.147.81.113:9093 --topic testtopic-from-ec2a
+
+# # Describe a topic
+# docker run --rm -it confluentinc/cp-kafka:7.2.15 kafka-topics --describe --bootstrap-server 3.147.81.113:9093 --topic testtopic-from-ec2a
+
+# # List topics
+# docker run --rm -it edenhill/kcat:1.7.1 kafkacat -L -b 3.147.81.113:9093
+
+# # Create topic and send message
+# docker run --rm -it edenhill/kcat:1.7.1 sh -c "echo 'Test message' | kafkacat -P -b 3.147.81.113:9093 -t testtopic-docker"
+
+# # Consume messages
+# docker run --rm -it edenhill/kcat:1.7.1 kafkacat -C -b 3.147.81.113:9093 -t testtopic-docker -o beginning
+
+# CAN ALSO USE KAFKACAT
+
+# sudo apt install kafkacat -y
+
+# # List topics on EC2 B's Kafka
+# kafkacat -L -b 3.147.81.113:9093
+
+# # Create a topic from EC2 A
+# kafkacat -P -b 3.147.81.113:9093 -t testtopic-from-ec2a
+
+# # Send a test message
+# echo "Hello from EC2 A!" | kafkacat -P -b 3.147.81.113:9093 -t testtopic-from-ec2a
+
+# # Consume messages
+# kafkacat -C -b 3.147.81.113:9093 -t testtopic-from-ec2a -o beginning
+
+# IN EC2 INSTANCE B as docker container running:
+
+# docker exec -it kafka bash
+# kafka-topics --bootstrap-server localhost:9092 --list
+# kafka-topics --create --bootstrap-server localhost:9092 --topic mytopic
+
+# ssh -i "test-nd.pem" ubuntu@18.219.151.181
+# ssh -i "test-nd.pem" ubuntu@ec2-18-191-178-70.us-east-2.compute.amazonaws.com
+
+# docker run --rm -it confluentinc/cp-kafka:7.2.15 bash
+# kafka-topics --bootstrap-server 18.119.166.165:9092 --list  ec2 B ip
+
+# kafka kafka-topics --bootstrap-server localhost:9092 --list
 # kafka-topics --list --bootstrap-server kafka:9092      KAFKA_BROKER=kafka:9092 &&
 # can also use lightweight edenhill/kcat:1.7.1 as "latest" tag is not available https://hub.docker.com/r/edenhill/kcat/tags
 # producer:

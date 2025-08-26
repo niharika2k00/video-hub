@@ -1,0 +1,90 @@
+services:
+  main-application:
+    container_name: main-application
+    image: niharikadutta/main-application:v0.0.1
+    ports:
+      - "4040:4040"
+    volumes:
+      - ./videos:/app/videos
+      - ./config/main-application/application.yml:/app/config/application.yml:ro # hostpath : containerpath
+    command: ["--spring.config.location=file:/app/config/application.yml"]
+    environment:
+      - CUSTOM_PATH_PROJECT_ROOT_DIR=/app
+      - CUSTOM_PATH_SOURCE_VIDEO_DIR=/app/videos
+    # env_file:
+    #   - .env # file must exists in same directory as docker-compose.yml
+    networks:
+      - videohub-network
+
+  processor-service-240p:
+    container_name: processor-service-240p
+    image: niharikadutta/processor-service:v0.0.1
+    # profiles: ["240p"]
+    volumes:
+      - ./videos:/app/videos
+      - ./config/processor-service/application.yml:/app/config/application.yml:ro
+    environment:
+      - CUSTOM_PATH_PROJECT_ROOT_DIR=/app
+      - CUSTOM_PATH_SOURCE_VIDEO_DIR=/app/videos
+      - GROUP_ID=group1
+      - RESOLUTION=240p
+      - FFMPEG_PATH=/usr/bin/ffmpeg
+      - FFPROBE_PATH=/usr/bin/ffprobe
+      # AWS Credentials
+      - AWS_DEFAULT_REGION=us-east-1
+      - JAVA_OPTS=-DGROUP_ID=group1 -DRESOLUTION=240p -Dspring.devtools.livereload.enabled=false -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Djdk.util.jar.enableMultiRelease=false
+    networks:
+      - videohub-network
+
+  processor-service-360p:
+    container_name: processor-service-360p
+    image: niharikadutta/processor-service:v0.0.1
+    # profiles: ["360p"]
+    volumes:
+      - ./videos:/app/videos
+      - ./config/processor-service/application.yml:/app/config/application.yml:ro
+    environment:
+      - CUSTOM_PATH_PROJECT_ROOT_DIR=/app
+      - CUSTOM_PATH_SOURCE_VIDEO_DIR=/app/videos
+      - GROUP_ID=group2
+      - RESOLUTION=360p
+      - FFMPEG_PATH=/usr/bin/ffmpeg
+      - FFPROBE_PATH=/usr/bin/ffprobe
+      # AWS Credentials
+      - AWS_DEFAULT_REGION=us-east-1
+      - JAVA_OPTS=-DGROUP_ID=group2 -DRESOLUTION=360p -Dspring.devtools.livereload.enabled=false
+    networks:
+      - videohub-network
+
+  processor-service-720p:
+    container_name: processor-service-720p
+    image: niharikadutta/processor-service:v0.0.1
+    # profiles: ["720p"]
+    volumes:
+      - ./videos:/app/videos
+      - ./config/processor-service/application.yml:/app/config/application.yml:ro
+    environment:
+      - CUSTOM_PATH_PROJECT_ROOT_DIR=/app
+      - CUSTOM_PATH_SOURCE_VIDEO_DIR=/app/videos
+      - GROUP_ID=group3
+      - RESOLUTION=720p
+      - FFMPEG_PATH=/usr/bin/ffmpeg
+      - FFPROBE_PATH=/usr/bin/ffprobe
+      # AWS Credentials
+      - AWS_DEFAULT_REGION=us-east-1
+      - JAVA_OPTS=-DGROUP_ID=group3 -DRESOLUTION=720p -Dspring.devtools.livereload.enabled=false
+    networks:
+      - videohub-network
+
+  email-service:
+    container_name: email-service
+    image: niharikadutta/email-service:v0.0.1
+    volumes:
+      - ./config/email-service/application.yml:/app/config/application.yml:ro
+    # If email-service has an HTTP port too, publish a different host port:
+    # ports:
+    #   - "4041:4040"
+
+networks:
+  videohub-network:
+    external: true
