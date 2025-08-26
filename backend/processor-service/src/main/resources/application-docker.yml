@@ -9,14 +9,21 @@ spring:
       max-file-size: 50MB
       max-request-size: 50MB
   datasource:
-    url: "jdbc:mysql://db:3306/videohub"
+    url: "jdbc:mysql://mysql:3306/videohub"
     username: "root"
     password: "pwroot"
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
   kafka:
-    bootstrap-servers: localhost:9093
+    bootstrap-servers: 3.12.73.194:9093
+    # consumer:
+    #   properties:
+    #     session.timeout.ms: 30000 # 30 seconds
+    #     request.timeout.ms: 60000 # 60 seconds
+    #     heartbeat.interval.ms: 10000 # 10 seconds
   devtools:
     livereload:
       enabled: false
@@ -28,12 +35,12 @@ logging:
 custom:
   target-resolution-count: 6
   path:
-    project-root-dir: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub"
-    process-success-email-template: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/main-application/video_process_success_email.md"
-    image-collection-dir: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/photoGallery"
+    project-root-dir: ${CUSTOM_PATH_PROJECT_ROOT_DIR:/app}
+    source-video-dir: ${CUSTOM_PATH_SOURCE_VIDEO_DIR:/app/videos}
+    process-success-email-template: "/app/templates/video_process_success_email.md"
   ffmpeg:
-    path: "/opt/homebrew/bin/ffmpeg"
-    probe: "/opt/homebrew/bin/ffprobe"
+    path: ${FFMPEG_PATH:/usr/bin/ffmpeg} # /opt/homebrew/bin/ffmpeg for macos
+    probe: ${FFPROBE_PATH:/usr/bin/ffprobe}
 
 aws:
   credentials:

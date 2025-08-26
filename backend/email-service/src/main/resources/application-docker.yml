@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: Spring Boot Java Project (Email Service)
+  main:
+    banner-mode: off
+    web-application-type: none
+  jpa:
+    hibernate:
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: 3.12.73.194:9093
+
+logging:
+  level:
+    root: warn
+
+custom:
+  email: "dniharika16@gmail.com"

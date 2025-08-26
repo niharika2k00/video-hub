@@ -6,10 +6,10 @@ spring:
     web-application-type: none # Disable web server
   servlet:
     multipart:
-      max-file-size:    50MB
+      max-file-size: 50MB
       max-request-size: 50MB
   datasource:
-    url:      "jdbc:mysql://localhost:3307/videohub" # "3.140.188.132:3306" JDBC URL of the database
+    url: "jdbc:mysql://localhost:3307/videohub" # "3.140.188.132:3306" JDBC URL of the database
     username: "root" # username and password for Database
     password: "pwroot"
   jpa:
@@ -30,22 +30,19 @@ logging:
 custom:
   target-resolution-count: 6
   path:
-    project-root-dir:               "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub"
-    process-success-email-template: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/main-application/video_process_success_email.md"
-    image-collection-dir:           "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/photoGallery"
+    project-root-dir: "/Users/niharikadutta/Workspace/projects/video-hub"
+    process-success-email-template: "/Users/niharikadutta/Workspace/projects/video-hub/processor-service/video_process_success_email.md"
+    image-collection-dir: "/Users/niharikadutta/Workspace/projects/video-hub/photoGallery"
   ffmpeg:
-    path:  "/opt/homebrew/bin/ffmpeg"
+    path: "/opt/homebrew/bin/ffmpeg"
     probe: "/opt/homebrew/bin/ffprobe"
 
 aws:
   credentials:
-    profile:    "shaktiman"
-    region:     "us-east-1"
+    profile: "shaktiman"
+    region: "us-east-1"
   s3:
     bucket-name: "demobucket-890291224"
-
-
-
 # ----- reference for deployment -----
 #    process-success-email-template: "/home/ubuntu/javaproject/part2/image_process_success_email.md"
 #    image-collection-dir: "/home/ubuntu/javaproject/photoGallery"
