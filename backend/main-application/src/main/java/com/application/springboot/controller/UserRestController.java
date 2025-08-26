@@ -144,6 +144,10 @@ public class UserRestController {
 
     kafkaTemplate.send("email-notification", jsonPayload.toJSONString());
     return newUserObject;
+
+    // Method 2: For user to automatically login after registration, need to return "201 Created" response along with a JWT token similar to /login endpoint
+    // String jwtToken = jwtService.buildToken(newUserObject.getId());
+    // return new UserLoginResponseDto(Optional.of(jwtToken), Optional.of(jwtService.getExpirationDate()), "User registered successfully!");
   }
 
   // POST /users/login - Login existing user

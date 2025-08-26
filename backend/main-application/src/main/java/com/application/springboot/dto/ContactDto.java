@@ -16,11 +16,11 @@ public class ContactDto {
   private String email;
 
   @NotNull
-  @Size(min = 2, max = 300, message = "Subject must be between 5 and 200 characters")
+  @Size(min = 5, max = 300, message = "Subject must be between 5 and 200 characters")
   private String subject;
 
   @NotBlank(message = "Message is required")
-  @Size(min = 2, max = 6000, message = "Message must be between 2 and 2000 characters")
+  @Size(min = 5, max = 6000, message = "Message must be between 2 and 2000 characters")
   private String message;
 
   // default constructor

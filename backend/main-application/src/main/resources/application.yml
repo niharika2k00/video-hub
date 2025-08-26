@@ -46,12 +46,20 @@ logging:
     root: warn # log only warning and error
 
 custom:
-  baseurl: "http://localhost:5173" # frontend base url
+  endpoints:
+    server:
+      local: "http://localhost:4040"
+      staging: "http://18.219.151.181:4040"
+      # production: "http://18.219.151.181:4040"
+    client:
+      local: "http://localhost:5173" # frontend base endpoint
+      # staging: "http://18.219.151.181:5173"
+      # production: "http://18.219.151.181:4040"
   storage-type: "AWS_S3"
   path:
-    project-root-dir: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub"
-    source-video-dir: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/videos"
-    welcome-email-template: "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/java-project-part1/user_welcome_email.md"
+    project-root-dir: "/Users/niharikadutta/Workspace/projects/video-hub"
+    source-video-dir: "/Users/niharikadutta/Workspace/projects/video-hub/videos"
+    welcome-email-template: "/Users/niharikadutta/Workspace/projects/video-hub/backend/main-application/user_welcome_email.md"
   # ----- reference for deployment -----
   #    source-video-dir: "/home/ubuntu/javaproject/images"
   #    welcome-email-template: "/home/ubuntu/javaproject/part1/user_welcome_email.md"
@@ -63,6 +71,8 @@ aws:
   credentials:
     profile: "shaktiman"
     region: "us-east-1"
+    # access-key: "${AWS_ACCESS_KEY_ID}"
   s3:
     bucket-name: "demobucket-890291224"
 # "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub"
+
