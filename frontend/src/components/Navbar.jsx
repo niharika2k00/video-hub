@@ -115,7 +115,7 @@ function Navbar() {
                 </button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent className="w-64 p-2 mt-2 bg-white/95 backdrop-blur-sm border border-gray-200/50 shadow-xl rounded-xl">
+              <DropdownMenuContent className="w-64 p-2 mt-2 bg-white backdrop-blur-sm border border-gray-200/50 shadow-xl rounded-xl">
                 {/* Menu Items */}
                 <div className="space-y-1">
                   <DropdownMenuItem asChild>
