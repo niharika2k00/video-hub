@@ -1,8 +1,13 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
+// Use environment variable, fallback to relative URLs (means the endpoint of the backend server) if not set
+const baseURL = import.meta.env.VITE_BACKEND_SERVER_URL
+  ? `${import.meta.env.VITE_BACKEND_SERVER_URL}/api`
+  : "/api";
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: baseURL,
   timeout: 10000,
 });
 

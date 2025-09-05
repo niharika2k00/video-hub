@@ -5,8 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e462488e-fa55-4f6d-89c4-756bade6d862" name="Changes" comment="add support for thumbnail">
-      <change beforePath="$PROJECT_DIR$/../../frontend/setup_videohub.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/setup_videohub.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/src/pages/Contact.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/pages/Contact.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../frontend/public/favicon.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../script1.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../deployment/script2.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../../script2.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/src/utils/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/utils/api.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +37,8 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$MAVEN_REPOSITORY$/net/bramp/ffmpeg/ffmpeg/0.8.0/ffmpeg-0.8.0.jar!/net/bramp/ffmpeg/builder/FFmpegBuilder.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$USER_HOME$/Library/Java/JavaVirtualMachines/corretto-17.0.14/Contents/Home/lib/src.zip!/java.base/java/io/FileInputStream.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$USER_HOME$/Library/Java/JavaVirtualMachines/corretto-17.0.14/Contents/Home/lib/src.zip!/java.base/sun/nio/fs/UnixException.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/application/springboot/service/VideoProcessingService.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="OptimizeOnSaveOptions">
@@ -54,22 +61,24 @@
     <option name="openDirectoriesWithSingleClick" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Main1024.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Main512.executor&quot;: &quot;Run&quot;,
-    &quot;Application.SpringbootApplication.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;code.cleanup.on.save&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_directory_selection&quot;: &quot;/Users/niharika/Workspace/Personal/IntellijProjects/java-project part2/src/main/java/com/application/springboot&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/niharika/Workspace/Personal/IntellijProjects/video-hub/backend/processor-service&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propCompiler&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Application.Main-360p.executor": "Run",
+    "Application.Main-720p.executor": "Run",
+    "Application.Main.executor": "Run",
+    "Application.Main1024.executor": "Run",
+    "Application.Main512.executor": "Run",
+    "Application.SpringbootApplication.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "code.cleanup.on.save": "true",
+    "git-widget-placeholder": "main",
+    "last_directory_selection": "/Users/niharika/Workspace/Personal/IntellijProjects/java-project part2/src/main/java/com/application/springboot",
+    "last_opened_file_path": "/Users/niharika/Workspace/Personal/projects/video-hub/backend/processor-service",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Color Scheme Font"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources" />
@@ -85,54 +94,11 @@
       <recent name="com.application.springboot.service" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
-    <configuration name="Main" type="Application" factoryName="Application" activateToolWindowBeforeRun="false">
-      <option name="ALTERNATIVE_JRE_PATH" value="corretto-17" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <envs>
-        <env name="PORT" value="4041" />
-        <env name="GROUP_ID" value="group1" />
-        <env name="RESOLUTION" value="720p" />
-      </envs>
-      <option name="MAIN_CLASS_NAME" value="com.application.springboot.SpringbootApplication" />
-      <module name="processor-service" />
-      <option name="VM_PARAMETERS" value="-DGROUP_ID=group1 -DRESOLUTION=720p -Dspring.devtools.livereload.enabled=false " />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Main1024" type="Application" factoryName="Application">
-      <option name="ALTERNATIVE_JRE_PATH" value="corretto-17" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <envs>
-        <env name="PORT" value="4043" />
-        <env name="GROUP_ID" value="group3" />
-      </envs>
-      <option name="MAIN_CLASS_NAME" value="com.application.springboot.SpringbootApplication" />
-      <option name="VM_PARAMETERS" value="-DHEIGHT=1024 -DWIDTH=1024 -DGROUP_ID=group3" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Main512" type="Application" factoryName="Application">
-      <option name="ALTERNATIVE_JRE_PATH" value="corretto-17" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <envs>
-        <env name="PORT" value="4042" />
-        <env name="GROUP_ID" value="group2" />
-        <env name="RESOLUTION" value="360p" />
-      </envs>
-      <option name="MAIN_CLASS_NAME" value="com.application.springboot.SpringbootApplication" />
-      <module name="processor-service" />
-      <option name="VM_PARAMETERS" value="-DGROUP_ID=group2 -DRESOLUTION=360p -Dspring.devtools.livereload.enabled=false " />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Application.Main-360p">
     <list>
-      <item itemvalue="Application.Main512" />
-      <item itemvalue="Application.Main1024" />
-      <item itemvalue="Application.Main" />
+      <item itemvalue="Application.Main-360p" />
+      <item itemvalue="Application.Main-240p" />
+      <item itemvalue="Application.Main-720p" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -214,5 +180,8 @@
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/processor_service$Main.ic" NAME="Main Coverage Results" MODIFIED="1756303291506" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>

@@ -1,6 +1,99 @@
-# Video files
+# Video files and media
 videos/
 
-# IDE files
-# .idea/
-# .vscode/
+# Maven build artifacts
+target/
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+# https://github.com/takari/maven-wrapper#usage-without-binary-jar
+.mvn/wrapper/maven-wrapper.jar
+
+# Environment variables and configuration
+.env
+*.env
+.env.local
+.env.development
+.env.test
+.env.production
+application-local.yml
+application-local.properties
+
+# IDE and Editor files
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse
+.project
+.classpath
+.settings/
+.metadata/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Docker and containerization
+.dockerignore
+docker-compose.override.yml
+.docker-data/
+
+# Database and data directories
+.mysql-data/
+.kafka-data/
+.zookeeper-data/
+
+# Logs
+logs/
+*.log
+*.log.*
+log/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Java specific
+*.class
+*.jar
+*.war
+
+# AWS and cloud
+.aws/
+*.pem
+*.key
+
+# Build and deployment
+build/
+dist/
+deploy/
+*.tar.gz
+*.zip
+*.rar
+
+# Test coverage
+coverage/
+
+# Node.js (if any frontend assets are built in backend)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Backup files
+*.backup
+*.bak
+*.orig
