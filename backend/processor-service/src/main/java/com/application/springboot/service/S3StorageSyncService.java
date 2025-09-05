@@ -59,6 +59,8 @@ public class S3StorageSyncService implements CloudStorageSyncService {
     }
   }
 
+  // local path (docker): /app/videos/1/14
+  // remote path: s3://<bucket_name>/videos/1/14
   @Override
   public void syncDirectoryFromLocal(String localPath, String remotePath) throws Exception {
     try {
@@ -66,11 +68,11 @@ public class S3StorageSyncService implements CloudStorageSyncService {
       System.out.println("remote path: " + remotePath);
 
       ProcessBuilder processBuilder = new ProcessBuilder(
-          "aws", "s3", "sync",
-          localPath,
-          remotePath,
-          "--profile", awsProfile,
-          "--region", awsRegion
+        "aws", "s3", "sync",
+        localPath,
+        remotePath,
+        "--region", awsRegion
+        // "--profile", awsProfile,
       );
 
       // processBuilder.inheritIO(); // Optional: To print output to console

@@ -38,7 +38,7 @@ public class NotificationDispatcherService {
       "{{username}}", authenticatedUser.getName().toUpperCase()
     );
 
-    String mailBodyMd = resourceLoaderService.readFileFromResources("video_process_success_email.md");
+    String mailBodyMd = resourceLoaderService.readFileFromResources("email-templates/video-process-success-email.md");
     String mailBodyHtml = emailTemplateProcessor.processContent(mailBodyMd, replacements);
 
     JSONObject jsonPayload = new JSONObject();

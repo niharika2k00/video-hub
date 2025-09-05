@@ -17,9 +17,6 @@ import static com.application.springboot.util.VideoPathUtil.getSourceVideoAbsolu
 @Service
 public class PostProcessingOrchestrator {
 
-  @Value("${aws.credentials.profile}")
-  String awsProfile;
-
   @Value("${aws.credentials.region}")
   String awsRegion;
 
@@ -57,14 +54,14 @@ public class PostProcessingOrchestrator {
     // generate master manifest file
     masterManifestGeneratorService.generate(videoDirPath);
 
-    // generate thumbnail image
+    // generate thumbnail image in local directory and creating static urls
     String thumbnailUrl = "";
     thumbnailGeneratorService.generate(videoDirPath, sourceVideoAbsolutePath);
 
     if (video.getStorageType() == StorageType.AWS_S3) {
       String baseS3Url = String.format("https://%s.s3.%s.amazonaws.com/", bucketName, awsRegion);
 
-      //https://demobucket-890291224.s3.us-east-1.amazonaws.com/videos/1/15/thumbnail.jpg
+      // https://demobucket-890291224.s3.us-east-1.amazonaws.com/videos/1/15/thumbnail.jpg
       String objectKey = String.format("videos/%s/%s/thumbnail.jpg", userId, videoId);
       thumbnailUrl = baseS3Url + objectKey;
 
@@ -81,11 +78,10 @@ public class PostProcessingOrchestrator {
     // syncing directory from local in cloud AWS S3 (if selected)
     if (video.getStorageType() == StorageType.AWS_S3) {
       System.out.println("INSIDE SYNCING LOGIC.......");
-
       storageSyncService.createBucket(bucketName);
 
-      // s3://demobucket-890291224/videos/1/70
-      //String[] parts = videoDirPath.split("/", 4); // ["s3:", "", "demobucket", "videos/1/40"]
+      // s3://<bucket_name>/videos/1/70
+      //String[] parts = videoDirPath.split("/", 4); // ["s3:", "", "<bucket_name>", "videos/1/40"]
 
       storageSyncService.syncDirectoryFromLocal(videoDirPath, "s3://" + bucketName + "/videos/" + userId + "/" + videoId);
     }

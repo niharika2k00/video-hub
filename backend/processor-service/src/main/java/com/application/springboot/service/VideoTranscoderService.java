@@ -45,8 +45,7 @@ public class VideoTranscoderService {
 
   @Autowired
   public VideoTranscoderService(VideoVariantService videoVariantService,
-                                @Qualifier("LocalMediaStoragePathResolver") MediaStoragePathResolver storagePathResolver
-  ) {
+                                @Qualifier("LocalMediaStoragePathResolver") MediaStoragePathResolver storagePathResolver) {
     this.videoVariantService = videoVariantService;
     this.storagePathResolver = storagePathResolver;
   }
@@ -60,19 +59,20 @@ public class VideoTranscoderService {
   }
 
   /*
- the value of videoDirRelativePath for local :
-/Users/niharika/Workspace/Personal/IntellijProjects/project-videohub/videos/1/40/40.mp4
-
-videoDirRelativePath for s3 :
-s3://demobucket-890291224/videos/1/40/40.mp4
-*/
+   * the value of videoDirRelativePath for local :
+   * /Users/niharika/Workspace/Personal/IntellijProjects/project-videohub/videos/1
+   * /40/40.mp4
+   *
+   * videoDirRelativePath for s3 :
+   * s3://demobucket-890291224/videos/1/40/40.mp4
+   */
   public void transcodeToHlsVariants(VideoPayload payload) throws IOException, InvalidRequestException {
     int videoId = payload.getVideoId();
     String videoDirAbsolutePath = payload.getVideoDirectoryPath();
     int segmentDuration = payload.getSegmentDuration();
     Resolution resolutionProfile = payload.getResolutionProfile();
 
-    VideoVariantId variantId = new VideoVariantId(videoId, VideoResolution.fromLabel(resolutionProfile.getName())); // composite key  P720("720p"),
+    VideoVariantId variantId = new VideoVariantId(videoId, VideoResolution.fromLabel(resolutionProfile.getName())); // composite key P720("720p"),
 
     // store in variant db
     createVideoVariant(variantId, resolutionProfile);
@@ -112,16 +112,17 @@ s3://demobucket-890291224/videos/1/40/40.mp4
     }
   }
 
-  private void transcodeResolution(String videoDirAbsolutePath, Resolution resolutionProfile, int segmentDuration, VideoVariantId variantId) throws IOException, InvalidRequestException {
+  private void transcodeResolution(String videoDirAbsolutePath, Resolution resolutionProfile, int segmentDuration,
+                                   VideoVariantId variantId) throws IOException, InvalidRequestException {
     // Create output directory structure
-    //Path videoFolderPath = Paths.get(videoDirAbsolutePath).getParent(); // or videoDirAbsolutePath.substring(0, relativeVideoDirectoryPath.lastIndexOf("/"))  "videos/userid/videoid"
-    //Path manifestsFolderPath = videoFolderPath.resolve("manifests");
-    //Path segmentsFolderPath = videoFolderPath.resolve("segments");
-    //Path resolutionFolderPath = videoFolderPath.resolve("segments").resolve(resolutionProfile.getName()); // for 720p... resolution folder
+    // Path videoFolderPath = Paths.get(videoDirAbsolutePath).getParent(); // or videoDirAbsolutePath.substring(0, relativeVideoDirectoryPath.lastIndexOf("/")) "videos/userid/videoid"
+    // Path manifestsFolderPath = videoFolderPath.resolve("manifests");
+    // Path segmentsFolderPath = videoFolderPath.resolve("segments");
+    // Path resolutionFolderPath = videoFolderPath.resolve("segments").resolve(resolutionProfile.getName()); // for 720p... resolution folder
 
-    //createDirectoriesIfNotExists(manifestsFolderPath);
-    //createDirectoriesIfNotExists(segmentsFolderPath);
-    //createDirectoriesIfNotExists(resolutionFolderPath);
+    // createDirectoriesIfNotExists(manifestsFolderPath);
+    // createDirectoriesIfNotExists(segmentsFolderPath);
+    // createDirectoriesIfNotExists(resolutionFolderPath);
 
     String sourceVideoAbsolutePath = getSourceVideoAbsolutePath(videoDirAbsolutePath);
     Path resolutionSegmentFolderPath = storagePathResolver.getSegmentsPath(videoDirAbsolutePath, resolutionProfile);
@@ -146,25 +147,28 @@ s3://demobucket-890291224/videos/1/40/40.mp4
         .setVideoCodec("libx264")
         .setAudioCodec("aac") // compression algorithm (codec) to use while video encoding
         .addExtraArgs(
-          "-profile:v", "main",
-          "-level", "3.1",
+          "-profile:v", "high",
+          "-level", "4.1",
+          "-pix_fmt", "yuv420p",
           "-hls_time", String.valueOf(segmentDuration),
           "-hls_playlist_type", "vod",
           "-hls_base_url", baseUrlInRenditions,
           "-hls_segment_filename", segmentPattern,
           "-start_number", "1",
-          "-hls_list_size", "0"
+          "-hls_list_size", "0",
+          "-preset", "fast",
+          "-crf", "23"
         )
         .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL) // allow FFmpeg to use experimental specs
         .done();
 
-      //executor.createJob(builder).run();
+      // executor.createJob(builder).run();
       System.out.println("⏳ Starting conversion: " + resolutionProfile.getName());
 
-      //Probe to get video duration (needed for percentage calculation)
+      // Probe to get video duration (needed for percentage calculation)
       double durationNs = ffprobe.probe(sourceVideoAbsolutePath).getFormat().duration * TimeUnit.SECONDS.toNanos(1);
 
-      //Create the job with a ProgressListener
+      // Create the job with a ProgressListener
       FFmpegJob job = executor.createJob(builder, progress -> {
         if (progress.out_time_ns <= 0 || durationNs <= 0) // Avoid N/A invalid time issue
           return;
@@ -178,8 +182,7 @@ s3://demobucket-890291224/videos/1/40/40.mp4
           progress.frame,
           FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
           progress.fps.doubleValue(),
-          progress.speed
-        );
+          progress.speed);
       });
 
       job.run();

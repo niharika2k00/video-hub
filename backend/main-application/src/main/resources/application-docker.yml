@@ -20,13 +20,15 @@ spring:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
   kafka:
-    bootstrap-servers: 3.12.73.194:9093 # EC2-B's public IP and external kafka port
+    bootstrap-servers: 3.128.201.123:9093 # EC2-B's public IP and external kafka port
 
 logging:
   level:
     root: warn
 
+# Custom environment variables
 custom:
+  storage-type: "AWS_S3"
   endpoints:
     server:
       local: "http://localhost:4040"
@@ -36,14 +38,12 @@ custom:
       local: "http://localhost:5173" # frontend base endpoint
       # staging: "http://18.219.151.181:5173"
       # production: "http://18.219.151.181:4040"
-  storage-type: "AWS_S3"
   path:
     project-root-dir: ${CUSTOM_PATH_PROJECT_ROOT_DIR:/app}
     source-video-dir: ${CUSTOM_PATH_SOURCE_VIDEO_DIR:/app/videos}
-    welcome-email-template: "/app/templates/user_welcome_email.md"
 aws:
   credentials:
-    profile: "shaktiman"
+    profile: "default"
     region: "us-east-1"
   s3:
     bucket-name: "demobucket-890291224"

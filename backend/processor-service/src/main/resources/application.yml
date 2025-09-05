@@ -3,49 +3,42 @@ spring:
     name: Spring Boot Java Project (Consumer)
   main:
     banner-mode: off
-    web-application-type: none # Disable web server
+    web-application-type: none # disable web server
   servlet:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
   datasource:
-    url: "jdbc:mysql://localhost:3307/videohub" # "3.140.188.132:3306" JDBC URL of the database
-    username: "root" # username and password for Database
+    url: "jdbc:mysql://localhost:3307/videohub"
+    username: "root"
     password: "pwroot"
   jpa:
     hibernate:
       ddl-auto: update
-  kafka:
-    bootstrap-servers: localhost:9093 # 3.140.188.132:9093
   devtools:
     livereload:
       enabled: false
+  kafka:
+    bootstrap-servers: localhost:9093
 
-# Reduce logging level
 logging:
   level:
-    root: warn # log only warning and error
+    root: warn
 
 # Custom environment variables
 custom:
   target-resolution-count: 6
   path:
-    project-root-dir: "/Users/niharikadutta/Workspace/projects/video-hub"
-    process-success-email-template: "/Users/niharikadutta/Workspace/projects/video-hub/processor-service/video_process_success_email.md"
-    image-collection-dir: "/Users/niharikadutta/Workspace/projects/video-hub/photoGallery"
+    project-root-dir: "/Users/niharika/Workspace/Personal/projects/video-hub"
   ffmpeg:
     path: "/opt/homebrew/bin/ffmpeg"
     probe: "/opt/homebrew/bin/ffprobe"
-
 aws:
   credentials:
-    profile: "shaktiman"
+    profile: "default"
     region: "us-east-1"
   s3:
     bucket-name: "demobucket-890291224"
-# ----- reference for deployment -----
-#    process-success-email-template: "/home/ubuntu/javaproject/part2/image_process_success_email.md"
-#    image-collection-dir: "/home/ubuntu/javaproject/photoGallery"
 
-#command to run jar
-# java -jar -DHEIGHT=128 -DWIDTH=128 -DGROUP_ID=group1 ./target/pixprocessor-service-0.0.1-SNAPSHOT.jar
+# /opt/homebrew/bin/ffmpeg for macos
+# /usr/bin/ffmpeg for linux
