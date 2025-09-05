@@ -23,7 +23,7 @@ networks:
 # https://hub.docker.com/_/mysql
 # https://docs.docker.com/reference/compose-file/networks/
 
-# not mentioning the port in the command as itwill use the default port 3306
+# not mentioning the port in the command as it will use the default port 3306
 # mysql -u root
 # mysql -u root -h localhost -P 3306
 
@@ -34,3 +34,4 @@ networks:
 # SELECT User, Host FROM mysql.user;
 # docker exec -it db-mysql-videohub mysql -u root -p
 
+# docker network create videohub-network

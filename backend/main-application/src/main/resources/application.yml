@@ -1,51 +1,57 @@
 server:
   port: 4040
 #  servlet:
-#    context-path: "/api" # base endpoint
+#    context-path: "/api" # base endpoint http://localhost:4040/api/api/...
 
 spring:
   application:
     name: Spring Boot Java Project
   main:
     banner-mode: off
+    # web-application-type: none # disable web server
+  mvc:
+    favicon:
+      enabled: false
   servlet:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
   datasource:
     url: "jdbc:mysql://localhost:3307/videohub" # "3.140.188.132:3306" JDBC URL of the database
-    username: "root" # username and password for Database
+    username: "root" # creds for database connection
     password: "pwroot"
   jpa:
     hibernate:
       ddl-auto: update
-  #  security:
-  #    user: # for endpoint security
-  #      name: Harry
-  #      password: hello123
+  # security:
+  #   user: # for endpoint security
+  #     name: Harry
+  #     password: hello123
   kafka:
-    bootstrap-servers: localhost:9093 # 3.140.188.132:9093
-    #    producer:
-    #      bootstrap-servers: localhost:9093
-    #      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-    #      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    #    consumer:
-    #      bootstrap-servers: localhost:9093
-    #      group-id: group1
-    #      auto-offset-reset: earliest
-    #      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    #      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    #      properties:
-    #        max-request-size: 10485760
-#      properties:
-#        fetch-max-bytes: 10485760
+    bootstrap-servers: localhost:9093
+  #   producer:
+  #     bootstrap-servers: localhost:9093
+  #     key-serializer: org.apache.kafka.common.serialization.StringSerializer
+  #     value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  #   consumer:
+  #     bootstrap-servers: localhost:9093
+  #     group-id: group1
+  #     auto-offset-reset: earliest
+  #     key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  #     value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  #     properties:
+  #       max-request-size: 10485760
+  # properties:
+  #   fetch-max-bytes: 10485760
 
 # Reduce logging level
 logging:
   level:
-    root: warn # log only warning and error
+    root: warn
 
+# Custom environment variables
 custom:
+  storage-type: "AWS_S3"
   endpoints:
     server:
       local: "http://localhost:4040"
@@ -55,24 +61,16 @@ custom:
       local: "http://localhost:5173" # frontend base endpoint
       # staging: "http://18.219.151.181:5173"
       # production: "http://18.219.151.181:4040"
-  storage-type: "AWS_S3"
   path:
-    project-root-dir: "/Users/niharikadutta/Workspace/projects/video-hub"
-    source-video-dir: "/Users/niharikadutta/Workspace/projects/video-hub/videos"
-    welcome-email-template: "/Users/niharikadutta/Workspace/projects/video-hub/backend/main-application/user_welcome_email.md"
-  # ----- reference for deployment -----
-  #    source-video-dir: "/home/ubuntu/javaproject/images"
-  #    welcome-email-template: "/home/ubuntu/javaproject/part1/user_welcome_email.md"
-
-  # welcomeEmailTemplate  imageProcessSuccessEmailTemplate
-  # default username: user with the below generated password
-
+    project-root-dir: "/Users/niharika/Workspace/Personal/projects/video-hub"
+    source-video-dir: "/Users/niharika/Workspace/Personal/projects/video-hub/videos"
 aws:
   credentials:
-    profile: "shaktiman"
+    profile: "default"
     region: "us-east-1"
+    # profile: "${AWS_PROFILE}"
+    # region: "${AWS_REGION}"
     # access-key: "${AWS_ACCESS_KEY_ID}"
+    # secret-key: "${AWS_SECRET_ACCESS_KEY}"
   s3:
     bucket-name: "demobucket-890291224"
-# "/Users/niharika/Workspace/Personal/IntellijProjects/video-hub"
-

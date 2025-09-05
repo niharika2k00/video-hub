@@ -62,12 +62,21 @@ services:
 # 10.0.0.14
 
 # From EC2 A, test if port 9093 is reachable on EC2 B
-# nc -zv 3.147.81.113 9093
+# nc -zv 3.128.201.123 9093
 
 # ec2 2 (i-0f266a3a789866739):
 
-# 3.147.81.113
+# 3.128.201.123
 # 10.0.7.5
+
+
+kafka is the container name
+bash is the command to get into the container
+
+docker exec -it kafka bash
+
+
+
 
 # # Method 1: Using docker exec
 # docker exec -it kafka kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 2 --topic mytesttopic
@@ -95,41 +104,41 @@ services:
 
 # # docker run creates a new temporary container from the image and then  automatically removes the container when the command finishes (as -rm)
 # # On EC2 A, use Docker to run Kafka client tools
-# docker run --rm confluentinc/cp-kafka:7.2.15 kafka-topics --create --bootstrap-server 3.147.81.113:9093 --replication-factor 1 --partitions 2 --topic remotetesttopic
-# docker run --rm confluentinc/cp-kafka:7.2.15 kafka-topics --list --bootstrap-server 3.147.81.113:9093
+# docker run --rm confluentinc/cp-kafka:7.2.15 kafka-topics --create --bootstrap-server 3.128.201.123:9093 --replication-factor 1 --partitions 2 --topic remotetesttopic
+# docker run --rm confluentinc/cp-kafka:7.2.15 kafka-topics --list --bootstrap-server 3.128.201.123:9093
 # # Create a topic
-# docker run --rm -it confluentinc/cp-kafka:7.2.15 kafka-topics --create --bootstrap-server 3.147.81.113:9093 --replication-factor 1 --partitions 2 --topic testtopic-from-ec2a
+# docker run --rm -it confluentinc/cp-kafka:7.2.15 kafka-topics --create --bootstrap-server 3.128.201.123:9093 --replication-factor 1 --partitions 2 --topic testtopic-from-ec2a
 
 # # Delete a topic
-# docker run --rm -it confluentinc/cp-kafka:7.2.15 kafka-topics --delete --bootstrap-server 3.147.81.113:9093 --topic testtopic-from-ec2a
+# docker run --rm -it confluentinc/cp-kafka:7.2.15 kafka-topics --delete --bootstrap-server 3.128.201.123:9093 --topic testtopic-from-ec2a
 
 # # Describe a topic
-# docker run --rm -it confluentinc/cp-kafka:7.2.15 kafka-topics --describe --bootstrap-server 3.147.81.113:9093 --topic testtopic-from-ec2a
+# docker run --rm -it confluentinc/cp-kafka:7.2.15 kafka-topics --describe --bootstrap-server 3.128.201.123:9093 --topic testtopic-from-ec2a
 
 # # List topics
-# docker run --rm -it edenhill/kcat:1.7.1 kafkacat -L -b 3.147.81.113:9093
+# docker run --rm -it edenhill/kcat:1.7.1 kafkacat -L -b 3.128.201.123:9093
 
 # # Create topic and send message
-# docker run --rm -it edenhill/kcat:1.7.1 sh -c "echo 'Test message' | kafkacat -P -b 3.147.81.113:9093 -t testtopic-docker"
+# docker run --rm -it edenhill/kcat:1.7.1 sh -c "echo 'Test message' | kafkacat -P -b 3.128.201.123:9093 -t testtopic-docker"
 
 # # Consume messages
-# docker run --rm -it edenhill/kcat:1.7.1 kafkacat -C -b 3.147.81.113:9093 -t testtopic-docker -o beginning
+# docker run --rm -it edenhill/kcat:1.7.1 kafkacat -C -b 3.128.201.123:9093 -t testtopic-docker -o beginning
 
 # CAN ALSO USE KAFKACAT
 
 # sudo apt install kafkacat -y
 
 # # List topics on EC2 B's Kafka
-# kafkacat -L -b 3.147.81.113:9093
+# kafkacat -L -b 3.128.201.123:9093
 
 # # Create a topic from EC2 A
-# kafkacat -P -b 3.147.81.113:9093 -t testtopic-from-ec2a
+# kafkacat -P -b 3.128.201.123:9093 -t testtopic-from-ec2a
 
 # # Send a test message
-# echo "Hello from EC2 A!" | kafkacat -P -b 3.147.81.113:9093 -t testtopic-from-ec2a
+# echo "Hello from EC2 A!" | kafkacat -P -b 3.128.201.123:9093 -t testtopic-from-ec2a
 
 # # Consume messages
-# kafkacat -C -b 3.147.81.113:9093 -t testtopic-from-ec2a -o beginning
+# kafkacat -C -b 3.128.201.123:9093 -t testtopic-from-ec2a -o beginning
 
 # IN EC2 INSTANCE B as docker container running:
 
@@ -185,3 +194,68 @@ services:
 # [hostip or myip]:[port]
 
 #  path for configs : /etc/kafka/
+
+
+
+nc -zv  3.128.201.123 9093
+
+
+wget https://archive.apache.org/dist/kafka/3.4.0/kafka_2.12-3.4.0.tgz
+tar -xzf kafka_2.12-3.4.0.tgz
+sudo mv kafka_2.12-3.4.0 /usr/local/kafka
+
+
+
+
+kafka-topics --version
+# List topics
+kafka-topics --list --bootstrap-server localhost:9092
+
+# Create a topic
+kafka-topics --create --topic my-topic --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
+
+# Describe a topic
+kafka-topics --describe --topic my-topic --bootstrap-server localhost:9092
+
+# Produce messages
+kafka-console-producer --topic my-topic --bootstrap-server localhost:9092
+
+# Consume messages
+kafka-console-consumer --topic my-topic --bootstrap-server localhost:9092 --from-beginning
+
+
+
+
+
+
+
+
+
+ docker exec -it kafka bash
+
+#  FROM EC2 B
+ docker exec -it kafka kafka-topics --bootstrap-server localhost:9092 --list
+ docker exec -it kafka kafka-topics --bootstrap-server 3.128.201.123:9092 --list
+
+
+
+Common kafkacat Options
+-b: Bootstrap server (your Kafka broker)
+-t: Topic name
+-P: Producer mode
+-C: Consumer mode
+-L: List topics/partitions
+-p: Partition number
+-g: Consumer group
+-K:: Key separator for key-value pairs
+
+
+#  FROM EC2 A
+# List all topics
+kcat -L -b 3.128.201.123:9093
+# List specific topic details
+kcat -L -b 3.128.201.123:9093 -t video-processor
+kcat -P -b 3.128.201.123:9093 -t video-processor
+echo "Test message by niharika" | kcat -P -b 3.128.201.123:9093 -t video-processor
+# send json message
+echo '{"videoId": "123", "status": "processing", "timestamp": "2024-01-01T00:00:00Z"}' | kcat -P -b 3.128.201.123:9093 -t video-processor

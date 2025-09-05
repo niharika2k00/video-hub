@@ -10,12 +10,17 @@ echo "Installing Docker..."
 sudo snap install docker
 
 echo "Installing additional tools..."
+sudo snap install aws-cli --classic
+sudo apt install kafkacat -y
 sudo apt install mysql-client -y
 sudo apt install coreutils -y  # nohup is part of coreutils
 sudo apt install tree -y
 
-echo "Checking nohup version:"
+aws --version
 nohup --version
+kcat -V
+ffmpeg -version
+which ffprobe
 
 # Docker permissions setup
 echo "Setting up Docker permissions..."
@@ -47,4 +52,4 @@ echo "Final container status:"
 docker ps
 
 echo "=== Setup Complete ==="
-echo "To view application logs, run: docker logs -f main-application-1"
+echo "To view application logs, run: docker logs -f main-application"

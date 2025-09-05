@@ -32,7 +32,7 @@ services:
       - FFPROBE_PATH=/usr/bin/ffprobe
       # AWS Credentials
       - AWS_DEFAULT_REGION=us-east-1
-      - JAVA_OPTS=-DGROUP_ID=group1 -DRESOLUTION=240p -Dspring.devtools.livereload.enabled=false -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Djdk.util.jar.enableMultiRelease=false
+      - JAVA_OPTS=-DGROUP_ID=group1 -DRESOLUTION=240p -Dspring.devtools.livereload.enabled=false -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Djdk.util.jar.enableMultiRelease=false -Dcom.sun.management.jmxremote=false -Dkafka.metrics.reporters= -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
     networks:
       - videohub-network
 
@@ -52,7 +52,7 @@ services:
       - FFPROBE_PATH=/usr/bin/ffprobe
       # AWS Credentials
       - AWS_DEFAULT_REGION=us-east-1
-      - JAVA_OPTS=-DGROUP_ID=group2 -DRESOLUTION=360p -Dspring.devtools.livereload.enabled=false
+      - JAVA_OPTS=-DGROUP_ID=group2 -DRESOLUTION=360p -Dspring.devtools.livereload.enabled=false -Dcom.sun.management.jmxremote=false -Dkafka.metrics.reporters= -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
     networks:
       - videohub-network
 
@@ -72,13 +72,15 @@ services:
       - FFPROBE_PATH=/usr/bin/ffprobe
       # AWS Credentials
       - AWS_DEFAULT_REGION=us-east-1
-      - JAVA_OPTS=-DGROUP_ID=group3 -DRESOLUTION=720p -Dspring.devtools.livereload.enabled=false
+      - JAVA_OPTS=-DGROUP_ID=group3 -DRESOLUTION=720p -Dspring.devtools.livereload.enabled=false -Dcom.sun.management.jmxremote=false -Dkafka.metrics.reporters= -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
     networks:
       - videohub-network
 
   email-service:
     container_name: email-service
     image: niharikadutta/email-service:v0.0.1
+    environment:
+      - JAVA_OPTS=-Dcom.sun.management.jmxremote=false -Dkafka.metrics.reporters= -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
     volumes:
       - ./config/email-service/application.yml:/app/config/application.yml:ro
     # If email-service has an HTTP port too, publish a different host port:
