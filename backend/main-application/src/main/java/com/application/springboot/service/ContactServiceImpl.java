@@ -16,13 +16,12 @@ import java.util.Map;
 @Service
 public class ContactServiceImpl implements ContactService {
 
-  private EmailTemplateProcessor emailTemplateProcessor;
-  private ResourceLoaderService resourceLoaderService;
-  private KafkaTemplate kafkaTemplate;
+  private final EmailTemplateProcessor emailTemplateProcessor;
+  private final ResourceLoaderService resourceLoaderService;
+  private final KafkaTemplate kafkaTemplate;
 
   @Autowired
-  public ContactServiceImpl(EmailTemplateProcessor emailTemplateProcessor, ResourceLoaderService resourceLoaderService,
-                            KafkaTemplate kafkaTemplate) {
+  public ContactServiceImpl(EmailTemplateProcessor emailTemplateProcessor, ResourceLoaderService resourceLoaderService, KafkaTemplate kafkaTemplate) {
     this.emailTemplateProcessor = emailTemplateProcessor;
     this.resourceLoaderService = resourceLoaderService;
     this.kafkaTemplate = kafkaTemplate;
@@ -37,10 +36,9 @@ public class ContactServiceImpl implements ContactService {
 
     return "Contact form submitted successfully!";
   }
-  
+
   private void publishContactSubmissionNotifyEvent(ContactDto contactDto) throws Exception {
-    String timestamp = LocalDateTime.now(ZoneId.of("Asia/Kolkata"))
-        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+    String timestamp = LocalDateTime.now(ZoneId.of("Asia/Kolkata")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
 
     System.out.println("=== NEW CONTACT FORM SUBMISSION DETAILS ===");
     System.out.println("Timestamp: " + timestamp);
@@ -52,19 +50,18 @@ public class ContactServiceImpl implements ContactService {
 
     // Mapping placeholders for replacement
     Map<String, String> replacements = Map.of(
-        "{{submitted_on}}", timestamp,
-        "{{name}}", contactDto.getName(),
-        "{{email}}", contactDto.getEmail(),
-        "{{subject}}", contactDto.getSubject(),
-        "{{message}}", contactDto.getMessage());
+      "{{submitted_on}}", timestamp,
+      "{{name}}", contactDto.getName(),
+      "{{email}}", contactDto.getEmail(),
+      "{{subject}}", contactDto.getSubject(),
+      "{{message}}", contactDto.getMessage());
 
-    String mailBodyMd = resourceLoaderService.readFileFromResources("new_contact_form_submission_email.md");
-    String mailBodyHtml = emailTemplateProcessor.processContent(mailBodyMd, replacements); // convert markdown content
-    // to html
+    String mailBodyMd = resourceLoaderService.readFileFromResources("email-templates/new-contact-form-submission-email.md");
+    String mailBodyHtml = emailTemplateProcessor.processContent(mailBodyMd, replacements); // convert markdown content to html
 
     JSONObject jsonPayload = new JSONObject();
     jsonPayload.put("subject",
-        "\uD83D\uDCE9 [VideoHub] New Contact Form Submission Received - " + contactDto.getSubject());
+      "\uD83D\uDCE9 [VideoHub] New Contact Form Submission Received - " + contactDto.getSubject());
     jsonPayload.put("body", mailBodyHtml);
     jsonPayload.put("receiverEmail", "dniharika16@gmail.com");
 
@@ -74,16 +71,16 @@ public class ContactServiceImpl implements ContactService {
 
   private void publishContactAcknowledgementEvent(ContactDto contactDto) throws Exception {
     String timestamp = LocalDateTime.now(ZoneId.of("Asia/Kolkata"))
-        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+      .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
 
     // Mapping placeholders for replacement
     Map<String, String> replacements = Map.of(
-        "{{name}}", contactDto.getName(),
-        "{{submitted_on}}", timestamp,
-        "{{subject}}", contactDto.getSubject(),
-        "{{message}}", contactDto.getMessage());
+      "{{name}}", contactDto.getName(),
+      "{{submitted_on}}", timestamp,
+      "{{subject}}", contactDto.getSubject(),
+      "{{message}}", contactDto.getMessage());
 
-    String mailBodyMd = resourceLoaderService.readFileFromResources("contact_form_acknowledgement_email.md");
+    String mailBodyMd = resourceLoaderService.readFileFromResources("email-templates/contact-form-acknowledgement-email.md");
     String mailBodyHtml = emailTemplateProcessor.processContent(mailBodyMd, replacements); // convert markdown content to html
 
     JSONObject jsonPayload = new JSONObject();

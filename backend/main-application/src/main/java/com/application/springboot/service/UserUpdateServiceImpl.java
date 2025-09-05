@@ -58,8 +58,14 @@ public class UserUpdateServiceImpl implements UserUpdateService {
 
     // handle multipart profile image and upload it to cloud storage (S3)
     MultipartFile profileImage = requestBody.getProfileImage();
+    // Check if user uploads a profile image
     if (profileImage != null && !profileImage.isEmpty()) {
-      fileUtils.deleteFileByUrl(existingUser.getProfileImage()); // delete previous image
+      // delete previous profile image if exists
+      String existingProfileImageUrl = existingUser.getProfileImage();
+      if (existingProfileImageUrl != null && !existingProfileImageUrl.trim().isEmpty()) {
+        fileUtils.deleteFileByUrl(existingProfileImageUrl);
+      }
+
       String updatedProfileImageUrl = fileUtils.handleImageUpload(id, profileImage);
       existingUser.setProfileImage(updatedProfileImageUrl);
     }
@@ -68,5 +74,3 @@ public class UserUpdateServiceImpl implements UserUpdateService {
     saveOrUpdate(existingUser);
   }
 }
-
-// https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/BeanUtils.html

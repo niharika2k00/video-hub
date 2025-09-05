@@ -35,7 +35,7 @@ public class FileUtils {
     System.out.println("size of display image: " + fileSize);
     if (!ALLOWED_FORMATS.contains(fileContentType)) {
       throw new IllegalArgumentException(
-        "Only JPG, JPEG, PNG, WEBP or HEIC images are allowed (got " + fileContentType + ')');
+          "Only JPG, JPEG, PNG, WEBP or HEIC images are allowed (got " + fileContentType + ')');
     }
 
     // size check
@@ -59,34 +59,41 @@ public class FileUtils {
     // upload to S3
     S3Client s3Client = connection.get(S3Client.class);
     PutObjectRequest putReq = PutObjectRequest.builder()
-      .bucket(bucketName)
-      .key(objectKey)
-      .contentType(file.getContentType())
-      .build();
+        .bucket(bucketName)
+        .key(objectKey)
+        .contentType(file.getContentType())
+        .build();
 
     try (InputStream in = file.getInputStream()) {
-      s3Client.putObject(putReq, RequestBody.fromInputStream(in, file.getSize())); // fromInputStream as handling with MultipartFile
+      s3Client.putObject(putReq, RequestBody.fromInputStream(in, file.getSize())); // fromInputStream as handling with
+                                                                                   // MultipartFile
     }
 
     // Get public storage URL
     S3Utilities s3Utilities = s3Client.utilities();
     GetUrlRequest getUrlRequest = GetUrlRequest.builder()
-      .bucket(bucketName)
-      .key(objectKey)
-      .build();
+        .bucket(bucketName)
+        .key(objectKey)
+        .build();
 
-    // toExternalForm() function converts URL object to a String works similar as toString(). Below is the equivalent lambda function.
+    // toExternalForm() function converts URL object to a String works similar as
+    // toString(). Below is the equivalent lambda function.
     String url = s3Utilities.getUrl(getUrlRequest).toExternalForm();
 
-    //String url = s3Client.utilities()
-    //  .getUrl(b -> b.bucket(bucketName).key(objectKey))
-    //  .toExternalForm();
+    // String url = s3Client.utilities()
+    // .getUrl(b -> b.bucket(bucketName).key(objectKey))
+    // .toExternalForm();
 
     return url;
   }
 
   // for profile image delete (while updating)
   public void deleteFileByUrl(String url) {
+    if (url == null || url.trim().isEmpty()) {
+      System.out.println("Skipping profile image deletion: URL is null or empty");
+      return;
+    }
+
     // example: "https://demobucket-890291224.s3.amazonaws.com/profile_images/1.png"
     String objectKey = url.substring(url.indexOf('/', 8) + 1);
 
@@ -102,23 +109,23 @@ public class FileUtils {
     do {
       // List up to 1000 objects per call
       ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
-        .bucket(bucketName)
-        .prefix(prefix)
-        .continuationToken(continuationToken)
-        .build();
+          .bucket(bucketName)
+          .prefix(prefix)
+          .continuationToken(continuationToken)
+          .build();
 
       ListObjectsV2Response listResponse = s3Client.listObjectsV2(listRequest);
 
       // returns S3 object so need to handle like this
       List<ObjectIdentifier> objectsToDelete = listResponse.contents().stream()
-        .map(s3Obj -> ObjectIdentifier.builder().key(s3Obj.key()).build())
-        .toList();
+          .map(s3Obj -> ObjectIdentifier.builder().key(s3Obj.key()).build())
+          .toList();
 
       if (!objectsToDelete.isEmpty()) {
         DeleteObjectsRequest deleteReq = DeleteObjectsRequest.builder()
-          .bucket(bucketName)
-          .delete(Delete.builder().objects(objectsToDelete).build())
-          .build();
+            .bucket(bucketName)
+            .delete(Delete.builder().objects(objectsToDelete).build())
+            .build();
 
         s3Client.deleteObjects(deleteReq);
         System.out.println("✅ Deleted " + objectsToDelete.size() + " objects.");
@@ -129,25 +136,26 @@ public class FileUtils {
   }
 
   /*
-listResponse (result from S3)
-    {
-      "contents": [
-        { "key": "videos/1/2/master.m3u8", "size": 2048 },
-        { "key": "videos/1/2/thumbnail.jpg", "size": 10240 },
-        { "key": "videos/1/2/manifests/rendition_360p.m3u8", "size": 4096 },
-        { "key": "videos/1/2/manifests/rendition_720p.m3u8", "size": 4096 },
-        ...
-      ],
-      "isTruncated": false,
-      "keyCount": 4,
-      "nextContinuationToken": null
-    }
-
-objectsToDelete can't be obj.contents as listResponse.contents() returns List<S3Object> not List<ObjectIdentifier>
-class S3Object {
-    String key;
-    long size;
-    ...
-}
+   * listResponse (result from S3)
+   * {
+   * "contents": [
+   * { "key": "videos/1/2/master.m3u8", "size": 2048 },
+   * { "key": "videos/1/2/thumbnail.jpg", "size": 10240 },
+   * { "key": "videos/1/2/manifests/rendition_360p.m3u8", "size": 4096 },
+   * { "key": "videos/1/2/manifests/rendition_720p.m3u8", "size": 4096 },
+   * ...
+   * ],
+   * "isTruncated": false,
+   * "keyCount": 4,
+   * "nextContinuationToken": null
+   * }
+   *
+   * objectsToDelete can't be obj.contents as listResponse.contents() returns
+   * List<S3Object> not List<ObjectIdentifier>
+   * class S3Object {
+   * String key;
+   * long size;
+   * ...
+   * }
    */
 }
