@@ -5,6 +5,9 @@ import api from "@/utils/api";
 import SharePopover from "@/components/SharePopover";
 import Skeleton from "react-loading-skeleton";
 import VideoPlayer from "@/components/VideoPlayer";
+import ReactMarkdown from "react-markdown";
+import remarkEmoji from "remark-emoji";
+import rehypeRaw from "rehype-raw";
 
 export default function VideoPage() {
   const { id } = useParams();
@@ -82,7 +85,14 @@ export default function VideoPage() {
         <p className="text-sm text-gray-500">
           {video.category} • {new Date(video.uploadedAt).toLocaleDateString()}
         </p>
-        <p className="mt-4 text-gray-700">{video.description}</p>
+        <div className="mt-4 prose prose-lg max-w-none">
+          <ReactMarkdown
+            remarkPlugins={[remarkEmoji]}
+            rehypePlugins={[rehypeRaw]}
+          >
+            {video.description}
+          </ReactMarkdown>
+        </div>
       </div>
     </div>
   );

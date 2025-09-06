@@ -4,6 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import api from "@/utils/api";
 import { toast } from "react-toastify";
+import MDEditor from "@uiw/react-md-editor";
 import {
   Dialog,
   DialogTrigger,
@@ -15,7 +16,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
 const schema = z.object({
@@ -39,6 +39,7 @@ const schema = z.object({
 
 const UploadVideoDialog = ({ onSuccess, children }) => {
   const [open, setOpen] = useState(false);
+  const [description, setDescription] = useState("");
 
   // Array of popular video categories
   const videoCategories = [
@@ -72,13 +73,15 @@ const UploadVideoDialog = ({ onSuccess, children }) => {
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(schema) });
 
   const onSubmit = async (data) => {
     const formData = new FormData();
+    console.log("data:", data);
     formData.append("title", data.title);
-    formData.append("description", data.description);
+    formData.append("description", data.description); // Use markdown editor value
     formData.append("category", data.category);
     formData.append("videoFile", data.videoFile[0]);
 
@@ -105,7 +108,7 @@ const UploadVideoDialog = ({ onSuccess, children }) => {
         </DialogTrigger>
       )}
 
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             Upload Your Video
@@ -129,15 +132,36 @@ const UploadVideoDialog = ({ onSuccess, children }) => {
             )}
           </div>
 
-          {/* Description */}
+          {/* Description with Markdown Editor */}
           <div className="grid gap-1">
             <Label htmlFor="description">Description</Label>
-            <Textarea id="description" rows={3} {...register("description")} />
+            <div className="border border-gray-300 rounded-md overflow-hidden">
+              <MDEditor
+                value={description}
+                onChange={(val) => {
+                  setDescription(val || "");
+                  setValue("description", val || "");
+                }}
+                preview="edit"
+                hideToolbar={false}
+                visibleDragBar={true}
+                previewOptions={true}
+                height={200}
+                data-color-mode="light"
+                textareaProps={{
+                  placeholder: "Write your video description using markdown...",
+                }}
+              />
+            </div>
             {errors.description && (
               <p className="text-sm text-red-500">
                 {errors.description.message}
               </p>
             )}
+            <p className="text-xs text-gray-500">
+              Supports markdown formatting: **bold**, *italic*, ### headings, -
+              lists, [links](url)
+            </p>
           </div>
 
           {/* Category */}
