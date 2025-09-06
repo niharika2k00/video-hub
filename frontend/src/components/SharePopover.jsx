@@ -34,11 +34,21 @@ function SharePopover({ url }) {
       <PopoverContent align="end" className="w-80">
         <p className="text-sm font-medium mb-2">Share this video</p>
         <div className="flex items-center gap-2 rounded-md border bg-muted px-3 py-2">
-          <span className="truncate text-xs">{url}</span>
+          <span className="truncate text-xs" title={url}>
+            {url}
+
+            {/* Tailwind tooltip */}
+            <span className="absolute bottom-full left-0 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 max-w-xs">
+              {url}
+              {/* Arrow */}
+              <span className="absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-gray-800"></span>
+            </span>
+          </span>
+
           <button
             aria-label="Copy link"
             onClick={copy}
-            className="ml-auto text-muted-foreground hover:text-foreground"
+            className="ml-auto text-muted-foreground hover:text-foreground cursor-pointer focus-visible:outline-none"
           >
             {copied ? (
               <CopyCheck className="h-5 w-5 text-green-500" />

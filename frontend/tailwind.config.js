@@ -3,6 +3,6 @@
 
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"], // Where to scan for Tailwind classes
-  plugins: [], // Tailwind plugins
+  plugins: [require("@tailwindcss/typography")], // Tailwind plugins
   // theme: {}, // Custom colors, spacing, etc.
 };

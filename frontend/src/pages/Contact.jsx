@@ -15,6 +15,10 @@ const Contact = () => {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [touched, setTouched] = useState({
+    subject: false,
+    message: false,
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,6 +35,12 @@ const Contact = () => {
         subject: "",
         message: "",
       });
+
+      // Reset touched state
+      setTouched({
+        subject: false,
+        message: false,
+      });
     } catch (error) {
       console.error("Contact form submission error:", error);
     } finally {
@@ -42,6 +52,21 @@ const Contact = () => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    });
+
+    // Mark field as touched when user starts typing
+    if (!touched[e.target.name] && e.target.value.length > 0) {
+      setTouched({
+        ...touched,
+        [e.target.name]: true,
+      });
+    }
+  };
+
+  const handleBlur = (e) => {
+    setTouched({
+      ...touched,
+      [e.target.name]: true,
     });
   };
 
@@ -173,13 +198,16 @@ const Contact = () => {
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     required
                     placeholder="What's this about ?"
                     maxLength={300}
                   />
                   <div className="flex justify-between items-center mt-1">
                     <span className="text-xs text-gray-500">
-                      {formData.subject.length < 5 ? (
+                      {touched.subject &&
+                      formData.subject.length > 0 &&
+                      formData.subject.length < 5 ? (
                         <span className="text-red-500">
                           Subject must be at least 5 characters
                         </span>
@@ -207,6 +235,7 @@ const Contact = () => {
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     required
                     rows={6}
                     placeholder="Tell us more about your inquiry..."
@@ -214,7 +243,9 @@ const Contact = () => {
                   />
                   <div className="flex justify-between items-center mt-1">
                     <span className="text-xs text-gray-500">
-                      {formData.message.length < 5 ? (
+                      {touched.message &&
+                      formData.message.length > 0 &&
+                      formData.message.length < 5 ? (
                         <span className="text-red-500">
                           Message must be at least 5 characters
                         </span>
