@@ -8,19 +8,19 @@ spring:
     banner-mode: off
   servlet:
     multipart:
-      max-file-size: 50MB
+      max-file-size:    50MB
       max-request-size: 50MB
   datasource:
-    url: "jdbc:mysql://mysql:3306/videohub"
-    username: "root"
-    password: "pwroot"
+    url:               "jdbc:mysql://mysql:3306/videohub"
+    username:          "root"
+    password:          "pwroot"
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
   kafka:
-    bootstrap-servers: 3.128.201.123:9093 # EC2-B's public IP and external kafka port
+    bootstrap-servers: 115.187.34.234:9093
 
 logging:
   level:
@@ -31,19 +31,20 @@ custom:
   storage-type: "AWS_S3"
   endpoints:
     server:
-      local: "http://localhost:4040"
-      staging: "http://18.219.151.181:4040"
-      # production: "http://18.219.151.181:4040"
+      local:   "http://localhost:4040"
+      staging: "http://115.187.34.234:4040"
+      # production: "http://115.187.34.234:4040"
     client:
       local: "http://localhost:5173" # frontend base endpoint
-      # staging: "http://18.219.151.181:5173"
-      # production: "http://18.219.151.181:4040"
+      # staging: "http://115.187.34.234:5173"
+      # production: "http://115.187.34.234:4040"
   path:
     project-root-dir: ${CUSTOM_PATH_PROJECT_ROOT_DIR:/app}
     source-video-dir: ${CUSTOM_PATH_SOURCE_VIDEO_DIR:/app/videos}
 aws:
   credentials:
     profile: "default"
-    region: "us-east-1"
+    region:  "us-east-1"
   s3:
     bucket-name: "demobucket-890291224"
+

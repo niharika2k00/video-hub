@@ -21,7 +21,7 @@ spring:
     livereload:
       enabled: false
   kafka:
-    bootstrap-servers: 3.128.201.123:9093
+    bootstrap-servers: 115.187.34.234:9093
     # consumer:
     #   properties:
     #     session.timeout.ms: 30000 # 30 seconds

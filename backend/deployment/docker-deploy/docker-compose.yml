@@ -1,3 +1,8 @@
+# ------------------------------------------------------------
+# 🛑 Note: variables declared in environment will override env_file if same field exists
+# .env file must be in same directory as docker-compose.yml
+# ------------------------------------------------------------
+
 services:
   main-application:
     container_name: main-application
@@ -6,13 +11,11 @@ services:
       - "4040:4040"
     volumes:
       - ./videos:/app/videos
-      - ./config/main-application/application.yml:/app/config/application.yml:ro # hostpath : containerpath
+      - ./config/main-application/application.yml:/app/config/application.yml:ro # host_path : container_path
+      - ~/.aws:/root/.aws:ro # mount aws credentials
     command: ["--spring.config.location=file:/app/config/application.yml"]
-    environment:
-      - CUSTOM_PATH_PROJECT_ROOT_DIR=/app
-      - CUSTOM_PATH_SOURCE_VIDEO_DIR=/app/videos
-    # env_file:
-    #   - .env # file must exists in same directory as docker-compose.yml
+    env_file:
+      - .env
     networks:
       - videohub-network
 
@@ -23,16 +26,13 @@ services:
     volumes:
       - ./videos:/app/videos
       - ./config/processor-service/application.yml:/app/config/application.yml:ro
+      - ~/.aws:/root/.aws:ro
     environment:
-      - CUSTOM_PATH_PROJECT_ROOT_DIR=/app
-      - CUSTOM_PATH_SOURCE_VIDEO_DIR=/app/videos
       - GROUP_ID=group1
       - RESOLUTION=240p
-      - FFMPEG_PATH=/usr/bin/ffmpeg
-      - FFPROBE_PATH=/usr/bin/ffprobe
-      # AWS Credentials
-      - AWS_DEFAULT_REGION=us-east-1
-      - JAVA_OPTS=-DGROUP_ID=group1 -DRESOLUTION=240p -Dspring.devtools.livereload.enabled=false -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Djdk.util.jar.enableMultiRelease=false -Dcom.sun.management.jmxremote=false -Dkafka.metrics.reporters= -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
+      - JAVA_OPTS=-DGROUP_ID=group1 -DRESOLUTION=240p -Dspring.devtools.livereload.enabled=false -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Djdk.util.jar.enableMultiRelease=false -XX:+DisableAttachMechanism
+    env_file:
+      - .env
     networks:
       - videohub-network
 
@@ -43,16 +43,17 @@ services:
     volumes:
       - ./videos:/app/videos
       - ./config/processor-service/application.yml:/app/config/application.yml:ro
+      - ~/.aws:/root/.aws:ro
     environment:
-      - CUSTOM_PATH_PROJECT_ROOT_DIR=/app
-      - CUSTOM_PATH_SOURCE_VIDEO_DIR=/app/videos
       - GROUP_ID=group2
       - RESOLUTION=360p
-      - FFMPEG_PATH=/usr/bin/ffmpeg
-      - FFPROBE_PATH=/usr/bin/ffprobe
-      # AWS Credentials
-      - AWS_DEFAULT_REGION=us-east-1
-      - JAVA_OPTS=-DGROUP_ID=group2 -DRESOLUTION=360p -Dspring.devtools.livereload.enabled=false -Dcom.sun.management.jmxremote=false -Dkafka.metrics.reporters= -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
+      - JAVA_OPTS=-DGROUP_ID=group2 -DRESOLUTION=360p -Dspring.devtools.livereload.enabled=false -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Djdk.util.jar.enableMultiRelease=false -XX:+DisableAttachMechanism
+      # Kafka connection settings
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+      # - SPRING_KAFKA_CONSUMER_PROPERTIES_SESSION_TIMEOUT_MS=30000
+      # - SPRING_KAFKA_CONSUMER_PROPERTIES_REQUEST_TIMEOUT_MS=60000
+    env_file:
+      - .env
     networks:
       - videohub-network
 
@@ -63,16 +64,13 @@ services:
     volumes:
       - ./videos:/app/videos
       - ./config/processor-service/application.yml:/app/config/application.yml:ro
+      - ~/.aws:/root/.aws:ro
     environment:
-      - CUSTOM_PATH_PROJECT_ROOT_DIR=/app
-      - CUSTOM_PATH_SOURCE_VIDEO_DIR=/app/videos
       - GROUP_ID=group3
       - RESOLUTION=720p
-      - FFMPEG_PATH=/usr/bin/ffmpeg
-      - FFPROBE_PATH=/usr/bin/ffprobe
-      # AWS Credentials
-      - AWS_DEFAULT_REGION=us-east-1
-      - JAVA_OPTS=-DGROUP_ID=group3 -DRESOLUTION=720p -Dspring.devtools.livereload.enabled=false -Dcom.sun.management.jmxremote=false -Dkafka.metrics.reporters= -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
+      - JAVA_OPTS=-DGROUP_ID=group3 -DRESOLUTION=720p -Dspring.devtools.livereload.enabled=false -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Djdk.util.jar.enableMultiRelease=false -XX:+DisableAttachMechanism
+    env_file:
+      - .env
     networks:
       - videohub-network
 
@@ -80,10 +78,10 @@ services:
     container_name: email-service
     image: niharikadutta/email-service:v0.0.1
     environment:
-      - JAVA_OPTS=-Dcom.sun.management.jmxremote=false -Dkafka.metrics.reporters= -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
+      - JAVA_OPTS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Djdk.util.jar.enableMultiRelease=false -XX:+DisableAttachMechanism
     volumes:
       - ./config/email-service/application.yml:/app/config/application.yml:ro
-    # If email-service has an HTTP port too, publish a different host port:
+    # If email-service has an HTTP port too, publish a different host port
     # ports:
     #   - "4041:4040"
 
