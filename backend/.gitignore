@@ -1,5 +1,6 @@
 # Video files and media
 videos/
+**/static/assets/
 
 # Maven build artifacts
 target/
@@ -20,9 +21,9 @@ buildNumber.properties
 application-local.yml
 application-local.properties
 
-# IDE and Editor files
-# IntelliJ IDEA
+# IDE IntelliJ IDEA and Editor files
 .idea/
+**/.idea/
 *.iml
 *.iws
 *.ipr

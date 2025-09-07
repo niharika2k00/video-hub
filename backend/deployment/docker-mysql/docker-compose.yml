@@ -20,18 +20,3 @@ networks:
     name: videohub-network
     driver: bridge
     external: true # the network must exist already
-# https://hub.docker.com/_/mysql
-# https://docs.docker.com/reference/compose-file/networks/
-
-# not mentioning the port in the command as it will use the default port 3306
-# mysql -u root
-# mysql -u root -h localhost -P 3306
-
-# mysql -u niharika -p -h localhost -P 3307 videohub
-# mysql -u root -P 3307
-# mysql -u root -p -h 127.0.0.1 -P 3307
-
-# SELECT User, Host FROM mysql.user;
-# docker exec -it db-mysql-videohub mysql -u root -p
-
-# docker network create videohub-network

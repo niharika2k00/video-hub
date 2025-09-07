@@ -51,7 +51,7 @@ const Dashboard = () => {
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="text-center relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            My <span className="text-yellow-300">Videos</span>
+            Video <span className="text-yellow-300">Library</span>
           </h1>
           <p className="text-lg md:text-lg lg:text-2xl max-w-3xl text-blue-100 mx-auto my-auto">
             Manage and organize your video content with professional tools

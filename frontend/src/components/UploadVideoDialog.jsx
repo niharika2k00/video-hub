@@ -133,6 +133,7 @@ const UploadVideoDialog = ({ onSuccess, children }) => {
           </div>
 
           {/* Description with Markdown Editor */}
+          {/* https://uiwjs.github.io/react-md-editor/ */}
           <div className="grid gap-1">
             <Label htmlFor="description">Description</Label>
             <div className="border border-gray-300 rounded-md overflow-hidden">
