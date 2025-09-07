@@ -41,8 +41,9 @@ public class UserUpdateServiceImpl implements UserUpdateService {
     String newPassword = requestBody.getPassword(); // plaintext
 
     BeanUtils.copyProperties(requestBody, existingUser, "password"); // copy non-null properties from source to target except password
+    MultipartFile profileImage = requestBody.getProfileImage(); // multipart profile image and upload it to cloud storage (S3)
 
-    // handle password update
+    // Check if user update password
     if (newPassword != null && !newPassword.isBlank()) {
       if (BCrypt.checkpw(newPassword, oldPassword)) { // check same hash
         System.out.println("No change in password");
@@ -56,8 +57,6 @@ public class UserUpdateServiceImpl implements UserUpdateService {
       existingUser.setPassword(oldPassword);
     }
 
-    // handle multipart profile image and upload it to cloud storage (S3)
-    MultipartFile profileImage = requestBody.getProfileImage();
     // Check if user uploads a profile image
     if (profileImage != null && !profileImage.isEmpty()) {
       // delete previous profile image if exists

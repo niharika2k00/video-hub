@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,10 +32,10 @@ public class PostProcessingOrchestrator {
 
   @Autowired
   public PostProcessingOrchestrator(MasterManifestGeneratorService masterManifestGeneratorService,
-                                    @Qualifier("S3StorageSyncService") CloudStorageSyncService storageSyncService,
-                                    ThumbnailGeneratorService thumbnailGeneratorService,
-                                    NotificationDispatcherService notificationDispatcherService,
-                                    VideoService videoService) {
+      @Qualifier("S3StorageSyncService") CloudStorageSyncService storageSyncService,
+      ThumbnailGeneratorService thumbnailGeneratorService,
+      NotificationDispatcherService notificationDispatcherService,
+      VideoService videoService) {
     this.masterManifestGeneratorService = masterManifestGeneratorService;
     this.storageSyncService = storageSyncService;
     this.thumbnailGeneratorService = thumbnailGeneratorService;
@@ -48,8 +49,8 @@ public class PostProcessingOrchestrator {
 
     Video video = videoService.findById(videoId);
     String sourceVideoAbsolutePath = getSourceVideoAbsolutePath(videoDirPath); // raw video .../videos/1/40/40.mp4
-    System.out.println("videoDirPath: " + videoDirPath);
-    System.out.println("sourceVideoAbsolutePath: " + sourceVideoAbsolutePath);
+    System.out.println("videoDirPath: " + videoDirPath); // .../videos/5/27
+    System.out.println("sourceVideoAbsolutePath: " + sourceVideoAbsolutePath); // .../videos/5/27/27.mp4
 
     // generate master manifest file
     masterManifestGeneratorService.generate(videoDirPath);
@@ -77,7 +78,6 @@ public class PostProcessingOrchestrator {
 
     // syncing directory from local in cloud AWS S3 (if selected)
     if (video.getStorageType() == StorageType.AWS_S3) {
-      System.out.println("INSIDE SYNCING LOGIC.......");
       storageSyncService.createBucket(bucketName);
 
       // s3://<bucket_name>/videos/1/70
@@ -86,7 +86,9 @@ public class PostProcessingOrchestrator {
       storageSyncService.syncDirectoryFromLocal(videoDirPath, "s3://" + bucketName + "/videos/" + userId + "/" + videoId);
     }
 
+    cleanupLocalVideoDirectory(videoDirPath);
     notificationDispatcherService.dispatch(videoId, userId);
+
     System.out.println("Processing pipeline completed.");
   }
 
@@ -102,5 +104,16 @@ public class PostProcessingOrchestrator {
     } catch (Exception ex) {
       System.out.println("❌ Failed to delete the source video file: " + ex.getMessage());
     }
+  }
+
+  private void cleanupLocalVideoDirectory(String videoDirPath) throws IOException, InterruptedException {
+    ProcessBuilder processBuilder = new ProcessBuilder("rm", "-rf", videoDirPath);
+    Process process = processBuilder.start();
+    int exitCode = process.waitFor();
+
+    if (exitCode == 0)
+      System.out.println("✅ Local video directory deleted successfully: " + videoDirPath);
+    else
+      System.err.println("❌ Failed to delete local video directory: " + videoDirPath);
   }
 }
