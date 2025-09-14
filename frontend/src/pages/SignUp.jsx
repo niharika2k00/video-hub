@@ -6,6 +6,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { Card } from "@/components/ui/card";
 import useAuth from "@/context/AuthContext";
 import { ChevronDown } from "lucide-react";
+import { analytics } from "@/utils/analytics";
 
 export default function SignUp() {
   const GENDER_MAPPING = {
@@ -48,7 +49,14 @@ export default function SignUp() {
 
       await register(requestBody);
       await login(form.email, form.password);
+      analytics.trackSignUp();
       navigate("/");
+    } catch (error) {
+      analytics.trackError(
+        "Sign Up Error",
+        error.message || "Registration failed"
+      );
+      console.error("Registration error:", error);
     } finally {
       setLoading(false);
     }

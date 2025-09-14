@@ -80,6 +80,8 @@ export default function VideoPage() {
           <h1 className="text-2xl font-bold">{video.title}</h1>
           <SharePopover
             url={`${baseUrl}/${storageCode}/video/${video.authorId}/${video.id}/master.m3u8`} // has reverse proxy
+            videoId={video.id}
+            videoTitle={video.title}
           />
         </div>
         <p className="text-sm text-gray-500">

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Card } from "@/components/ui/card";
 import useAuth from "@/context/AuthContext";
+import { analytics } from "@/utils/analytics";
 
 export default function SignIn() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -22,7 +23,11 @@ export default function SignIn() {
     try {
       await login(form.email, form.password);
       console.log("Logged in successfully", form);
+      analytics.trackSignIn();
       navigate("/");
+    } catch (error) {
+      analytics.trackError("Sign In Error", error.message || "Login failed");
+      console.error("Login error:", error);
     } finally {
       setLoading(false);
     }

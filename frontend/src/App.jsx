@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Dashboard from "@/pages/Dashboard";
 import Profile from "@/pages/Profile";
@@ -11,8 +12,33 @@ import SignUp from "@/pages/SignUp";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import ReactGA from "react-ga4";
 
 const App = () => {
+  const location = useLocation();
+
+  // Initialize Google Analytics only once
+  useEffect(() => {
+    try {
+      ReactGA.initialize("G-9E91P66ZVJ", { debug: true });
+    } catch (error) {
+      console.error("Failed to initialize Google Analytics:", error);
+    }
+  }, []);
+
+  // Track page views on route changes
+  useEffect(() => {
+    try {
+      ReactGA.send({
+        hitType: "pageview",
+        page: location.pathname + location.search,
+        title: document.title,
+      });
+    } catch (error) {
+      console.error("Failed to send pageview:", error);
+    }
+  }, [location]);
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />

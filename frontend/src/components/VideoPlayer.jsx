@@ -4,8 +4,15 @@ import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "videojs-contrib-quality-levels";
 import "videojs-hls-quality-selector";
+import { analytics } from "@/utils/analytics";
 
-const VideoPlayer = ({ src, poster, autoplay = false }) => {
+const VideoPlayer = ({
+  src,
+  poster,
+  autoplay = false,
+  videoId,
+  videoTitle,
+}) => {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
 
@@ -37,7 +44,7 @@ const VideoPlayer = ({ src, poster, autoplay = false }) => {
     );
     videoRef.current.appendChild(videoElement); */
 
-    // Init video.js
+    // https://videojs.com/guides/options/#playsinline
     requestAnimationFrame(() => {
       playerRef.current = videojs(
         videoRef.current,
@@ -64,6 +71,19 @@ const VideoPlayer = ({ src, poster, autoplay = false }) => {
           playerRef.current.on("error", () => {
             const err = playerRef.current.error();
             console.error("Video.js error →", err);
+            analytics.trackError(
+              "Video Player Error",
+              err.message || "Unknown error"
+            );
+          });
+
+          // Add video event tracking
+          playerRef.current.on("play", () => {
+            analytics.trackVideoPlay(videoId, videoTitle);
+          });
+
+          playerRef.current.on("ended", () => {
+            analytics.trackVideoComplete(videoId, videoTitle);
           });
 
           // Add ready event handler

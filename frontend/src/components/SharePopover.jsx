@@ -7,19 +7,27 @@ import { Button } from "@/components/ui/button";
 import { Share2, Copy, CopyCheck } from "lucide-react";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { analytics } from "@/utils/analytics";
 
-function SharePopover({ url }) {
+function SharePopover({ url, videoId, videoTitle }) {
   const [copied, setCopied] = useState(false);
 
   const copy = async () => {
     await navigator.clipboard.writeText(url);
     setCopied(true);
+    analytics.trackVideoShare(videoId, "copy_link");
     toast.success("Copied to clipboard");
     setTimeout(() => setCopied(false), 1500); // stop showing the check icon after 1.5 seconds
   };
 
+  const handleOpenChange = (open) => {
+    if (open) {
+      analytics.trackSharePopupOpen(videoId, videoTitle);
+    }
+  };
+
   return (
-    <Popover>
+    <Popover onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <div className="flex items-center gap-2 px-3 py-1 bg-primary/20 rounded-full shadow-sm border border-gray-200 hover:bg-gray-200 transition cursor-pointer w-fit">
           <span className="text-sm font-medium text-gray-700">

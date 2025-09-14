@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Send, ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import api from "@/utils/api";
 import { toast } from "react-toastify";
+import { analytics } from "@/utils/analytics";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +20,11 @@ const Contact = () => {
     subject: false,
     message: false,
   });
+
+  // Track Contact Us page visit
+  useEffect(() => {
+    analytics.trackContactPageVisit();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

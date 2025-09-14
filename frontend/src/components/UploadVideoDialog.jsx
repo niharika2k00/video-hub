@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import api from "@/utils/api";
 import { toast } from "react-toastify";
 import MDEditor from "@uiw/react-md-editor";
+import { analytics } from "@/utils/analytics";
 import {
   Dialog,
   DialogTrigger,
@@ -89,11 +90,16 @@ const UploadVideoDialog = ({ onSuccess, children }) => {
       await api.post("/video/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      analytics.trackVideoUpload(data.title);
       toast.success("Video uploaded ✅");
       reset();
       setOpen(false);
       onSuccess?.();
     } catch (err) {
+      analytics.trackError(
+        "Video Upload Error",
+        err?.response?.data?.message || "Upload failed"
+      );
       toast.error(err?.response?.data?.message || "Upload failed");
     }
   };
