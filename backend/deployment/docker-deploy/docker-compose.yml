@@ -9,7 +9,7 @@ services:
     image: niharikadutta/main-application:v0.0.1
     ports:
       - "4040:4040"
-    volumes:
+    volumes: # bind mount
       - ./videos:/app/videos
       - ./config/main-application/application.yml:/app/config/application.yml:ro # host_path : container_path
       - ~/.aws:/root/.aws:ro # mount aws credentials
@@ -87,4 +87,5 @@ services:
 
 networks:
   videohub-network:
+    driver: bridge
     external: true

@@ -31,6 +31,14 @@ services:
       KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
+      # Retention policies (2 days = 172800000 ms)
+      KAFKA_LOG_RETENTION_HOURS: 48 # 2 days in hours
+      KAFKA_LOG_RETENTION_BYTES: -1 # Disable size-based retention
+      KAFKA_LOG_SEGMENT_MS: 86400000 # 1 day segment size
+      KAFKA_LOG_CLEANUP_POLICY: delete
+
+      # Other configurations
       KAFKA_REPLICA_FETCH_MAX_BYTES: 20000000 # 20 MB
       KAFKA_MESSAGE_MAX_BYTES: 20000000 # 20 MB
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -54,6 +62,22 @@ services:
       done &&
       kafka-topics --create --bootstrap-server kafka:9092 --replication-factor 1 --partitions 2 --topic testtopic &&
       kafka-topics --list --bootstrap-server kafka:9092
+      "
+
+  # Cleanup service - runs daily to clean old data
+  cleanup:
+    image: confluentinc/cp-kafka:7.2.15
+    container_name: kafka-cleanup
+    restart: unless-stopped
+    depends_on:
+      - kafka
+    command: >
+      /bin/bash -c "
+      while true; do
+        echo "Running cleanup at $(date)";
+        kafka-log-dirs --bootstrap-server kafka:9092 --describe --json | jq '.brokers[].logDirs[].partitions[] | select(.size > 0)';
+        sleep 86400;  # Run every 24 hours
+      done
       "
 
   # Producer and consumer containers are temporary - they run once, send/consume messages, then exit.
