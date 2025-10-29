@@ -96,10 +96,7 @@ const AboutComponent = () => {
             </div>
             <div className="relative">
               <div className="bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl p-8">
-                <img
-                  src="img1.jpg"
-                  className="w-full h-auto"
-                />
+                <img src="img1.jpg" className="w-full h-auto" />
               </div>
             </div>
           </div>
@@ -144,10 +141,7 @@ const AboutComponent = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative">
               <div className="bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-100 rounded-2xl p-8">
-                <img
-                  src="img2.jpg"
-                  className="w-full h-auto"
-                />
+                <img src="img2.jpg" className="w-full h-auto" />
               </div>
             </div>
             <div>

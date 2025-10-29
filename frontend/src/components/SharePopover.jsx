@@ -15,7 +15,7 @@ function SharePopover({ url, videoId, videoTitle }) {
   const copy = async () => {
     await navigator.clipboard.writeText(url);
     setCopied(true);
-    analytics.trackVideoShare(videoId, "copy_link");
+    analytics.trackSharePopupOpen(videoId, videoTitle);
     toast.success("Copied to clipboard");
     setTimeout(() => setCopied(false), 1500); // stop showing the check icon after 1.5 seconds
   };

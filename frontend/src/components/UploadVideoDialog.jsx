@@ -57,6 +57,7 @@ const UploadVideoDialog = ({ onSuccess, children }) => {
     "Health",
     "Innovation",
     "Lifestyle",
+    "Motivational",
     "Music",
     "Nature",
     "News",

@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "videojs-contrib-quality-levels";
+import "./VideoPlayer.css";
 import "videojs-hls-quality-selector";
 import { analytics } from "@/utils/analytics";
 
@@ -60,6 +61,23 @@ const VideoPlayer = ({
           poster,
           sources: [{ src, type: "application/x-mpegURL" }], // "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
           playbackRates: [0.5, 1, 1.25, 1.5, 2],
+          // Customize control bar to prevent duplicate buttons
+          controlBar: {
+            children: [
+              "currentTimeDisplay",
+              "durationDisplay",
+              "playToggle",
+              "progressControl",
+              "remainingTimeDisplay",
+              "timeDivider",
+              "audioTrackButton",
+              "playbackRateMenuButton",
+              "playbackSpeedMenuButton",
+              "volumePanel",
+              "pictureInPictureToggle",
+              "fullscreenToggle",
+            ],
+          },
         },
         () => {
           // plugin must be added after player is ready
@@ -121,17 +139,31 @@ const VideoPlayer = ({
   }, []);
 
   return (
-    <div
-      data-vjs-player
-      className="w-full max-w-4xl mx-auto aspect-video rounded-xl overflow-hidden shadow-lg"
-    >
-      <video
-        crossOrigin="anonymous"
-        className="video-js h-full w-full vjs-big-play-centered"
-        ref={videoRef}
-        style={{ height: "100%", width: "100%" }}
-        title="Video Player"
-      />
+    <div className="relative group">
+      {/* Glow effect */}
+      <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-300"></div>
+
+      {/* Main player container */}
+      <div
+        data-vjs-player
+        className="relative w-full max-w-4xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-gray-900/10 to-gray-800/10 backdrop-blur-sm border border-white/10 transition-all duration-300 ease-out"
+        style={{
+          boxShadow:
+            "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+        }}
+      >
+        <video
+          crossOrigin="anonymous"
+          className="video-js h-full w-full vjs-big-play-centered"
+          ref={videoRef}
+          style={{
+            height: "100%",
+            width: "100%",
+            borderRadius: "1rem",
+          }}
+          title="Video Player"
+        />
+      </div>
     </div>
   );
 };

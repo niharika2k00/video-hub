@@ -346,7 +346,7 @@ const Contact = () => {
               <p className="text-gray-600">
                 Simply drag and drop your video file onto the upload area or
                 click to browse. We support MP4, MOV, AVI, and other popular
-                formats up to 10GB.
+                formats up to 2GB.
               </p>
             </div>
 
@@ -355,7 +355,7 @@ const Contact = () => {
                 Can I embed videos on my website?
               </h3>
               <p className="text-gray-600">
-                Yes! Every video gets a unique embed code that you can use on
+                Yes! Every video gets a unique shareable link that you can use on
                 any website that supports HLS streaming. Perfect for content
                 creators and businesses.
               </p>

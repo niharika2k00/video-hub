@@ -1,10 +1,20 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-// Use environment variable, fallback to relative URLs (means the endpoint of the backend server) if not set
-const baseURL = import.meta.env.VITE_BACKEND_SERVER_URL
-  ? `${import.meta.env.VITE_BACKEND_SERVER_URL}/api`
-  : "/api";
+// Environment-based URL configuration
+const getBaseURL = () => {
+  if (import.meta.env.VITE_APP_ENV === "development") {
+    // Development: Use explicit backend server URL
+    return import.meta.env.VITE_BACKEND_SERVER_URL
+      ? `${import.meta.env.VITE_BACKEND_SERVER_URL}/api`
+      : "/api";
+  } else {
+    // Production: Use relative URL (same domain)
+    return "/api";
+  }
+};
+
+const baseURL = getBaseURL();
 
 const api = axios.create({
   baseURL: baseURL,
