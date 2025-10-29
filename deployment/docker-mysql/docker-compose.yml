@@ -1,0 +1,32 @@
+name: videohub-mysql
+
+services:
+  mysql:
+    image: mysql:9.0
+    container_name: db-mysql-videohub
+    restart: always
+    environment:
+      MYSQL_DATABASE: "videohub"
+      MYSQL_USER: "niharika" # NO permission. Need to grant required permissions
+      MYSQL_PASSWORD: "pwniharika"
+      MYSQL_ROOT_PASSWORD: "pwroot" # username: root
+    ports:
+      - "3307:3306" # [host_port : container_port] for tcp protocol
+    volumes:
+      # - ./.mysql-data:/var/lib/mysql # bind mount
+      - mysql-data:/var/lib/mysql # named volume
+    networks:
+      - videohub-network
+
+networks:
+  videohub-network:
+    name: videohub-network
+    driver: bridge
+    external: true # the network must exist already
+
+volumes:
+  mysql-data:
+    name: videohub-mysql-data
+    driver: local
+# volumes: stores all mysql database files and data
+# 18.219.151.181:3307 when accessing from outside EC2 instance (docker running in EC2)

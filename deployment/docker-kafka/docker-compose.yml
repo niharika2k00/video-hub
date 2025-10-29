@@ -1,0 +1,162 @@
+name: videohub-kafka
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.9.4
+    container_name: zookeeper
+    user: root
+    # network_mode: host
+    restart: always
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      # ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    volumes:
+      - ./.zookeeper-data/data:/var/lib/zookeeper/data
+      - ./.zookeeper-data/logs:/var/lib/zookeeper/log
+
+  # kafka broker
+  kafka:
+    image: confluentinc/cp-kafka:7.9.4
+    container_name: kafka
+    user: root
+    # network_mode: host
+    restart: always
+    ports:
+      - "9092:9092" # For internal access
+      - "9093:9093" # For external access
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092 # when access internally from within the docker container
+      # KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      # KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://100.88.115.16:9093
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
+      # Retention policies (2 days = 172800000 ms)
+      KAFKA_LOG_CLEANUP_POLICY: delete
+      KAFKA_LOG_RETENTION_HOURS: 24 # auto cleanup after 1 day
+      KAFKA_LOG_RETENTION_BYTES: -1 # disable size-based retention
+      KAFKA_LOG_SEGMENT_MS: 86400000 # 1 day segment size
+
+      # Other configurations
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1 # setting this 1 as we have only one broker. This controls the number of copies (replicas) of the __consumer_offsets topic are stored across different brokers
+      KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 10 # sets the number of partitions for the __consumer_offsets topic (default 50)
+      KAFKA_NUM_PARTITIONS: 4 # sets the number of partitions for the topics enhances parallelism (default 1)
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 209715200 # 20 MB = 20000000 bytes || 200 MB = 209715200 bytes
+      KAFKA_MESSAGE_MAX_BYTES: 209715200
+    depends_on:
+      - zookeeper
+    volumes:
+      - ./.kafka-data/data:/var/lib/kafka/data
+
+  topic-init:
+    image: confluentinc/cp-kafka:7.9.4
+    container_name: topic-init
+    # network_mode: host
+    depends_on:
+      - kafka
+    command: >
+      /bin/bash -c "
+      echo "Waiting for Kafka to be ready...";
+      for i in {1..20}; do
+        kafka-topics --bootstrap-server kafka:9092 --list && break || sleep 5;
+        echo "Retrying...";
+      done &&
+      kafka-topics --create --bootstrap-server kafka:9092 --replication-factor 1 --partitions 2 --topic testtopic &&
+      kafka-topics --list --bootstrap-server kafka:9092
+      "
+
+  # Cleanup service - runs daily to clean old data
+  # Though kafka has a log cleanup policy via KAFKA_LOG_RETENTION_HOURS
+  # cleanup:
+  #   image: confluentinc/cp-kafka:7.9.4
+  #   container_name: kafka-cleanup
+  #   restart: unless-stopped
+  #   # network_mode: host
+  #   depends_on:
+  #     - kafka
+  #     - zookeeper
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - ./.kafka-data:/kafka-data
+  #     - ./.zookeeper-data:/zookeeper-data
+  #   entrypoint: ["/bin/sh", "-c"]
+  #   command:
+  #     - |
+  #       while true; do
+  #         echo "Cleanup scheduled for" \$(date -d '+24 hours');
+  #         sleep 86400;  # Wait 24 hours
+  #         echo "Starting cleanup at" \$(date);
+
+  #         # Stop containers gracefully
+  #         docker stop kafka zookeeper;
+
+  #         # Clean volumes
+  #         rm -rf /kafka-data/data/*;
+  #         rm -rf /zookeeper-data/data/*;
+  #         rm -rf /zookeeper-data/logs/*;
+
+  #         echo "Volumes cleaned";
+
+  #         # Restart containers
+  #         docker start zookeeper;
+  #         sleep 10;
+  #         docker start kafka;
+
+  #         echo "Cleanup complete at" \$(date);
+  #       done
+
+  # Producer and consumer containers are temporary - they run once, send/consume messages, then exit.
+  # Use official image edenhill/kcat:1.7.1 - lightweight Kafka client but but has support only on AMD64 (x86_64) architecture not Mac.
+  # Use confluentinc/cp-kafkacat:7.1.16 - has support for both AMD64 (x86_64) and ARM64 (Apple M1) architectures.
+  producer:
+    image: confluentinc/cp-kafkacat:7.1.16
+    container_name: kafka-producer
+    restart: unless-stopped
+    # network_mode: host
+    depends_on:
+      - kafka
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Kafka Producer is running...";
+        sleep 10;
+        echo "Message 1: Hello Kafka!" | kafkacat -P -b kafka:9092 -t testtopic &&
+        echo "Message 2: Kafka is awesome!" | kafkacat -P -b kafka:9092 -t testtopic &&
+        echo "Initial messages sent!"
+        echo "Producer is ready for manual messages..."
+        echo "To send messages interactively, run: docker exec -it kafka-producer kafkacat -P -b kafka:9092 -t testtopic"
+        tail -f /dev/null
+
+  consumer:
+    image: confluentinc/cp-kafkacat:7.1.16
+    container_name: kafka-consumer
+    restart: unless-stopped
+    # network_mode: host
+    depends_on:
+      - kafka
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Kafka Consumer is running...";
+        # Retry loop to wait for Kafka
+        until kafkacat -L -b kafka:9092 -t testtopic 2>/dev/null; do
+          echo "Waiting for Kafka broker..."
+          sleep 4
+        done
+        echo "Kafka is ready! Consuming messages..."
+        kafkacat -C -b kafka:9092 -t testtopic -o end -f 'Partition: %p | Offset: %o | Timestamp: %T | Message: %s\n' -q
+
+# Check container logs
+# docker compose down && docker compose up -d
+# docker logs kafka-producer
+# docker logs kafka-consumer
+
+# To connect to producer mode:➡️ docker exec -it kafka-producer kafkacat -P -b kafka:9092 -t testtopic
+# To connect to consumer mode:➡️ docker exec -it kafka-consumer kafkacat -C -b kafka:9092 -t testtopic -o end -f 'Partition: %p | Offset: %o | Timestamp: %T | Message: %s\n' -q
