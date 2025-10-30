@@ -40,7 +40,6 @@ public class Video {
   @Lob
   @Column(columnDefinition = "TEXT")
   private String description;
-  private String duration;
   private String thumbnailUrl;
   private String title;
 
@@ -49,16 +48,16 @@ public class Video {
   //@JoinColumn(name = "id", referencedColumnName = "video_id")
   private Set<VideoVariant> videoVariantList;
 
-  public Video() {}
+  public Video() {
+  }
 
-  public Video(int authorId, String uploadedAt, String videoDirectoryPath, StorageType storageType, String category, String description, String duration, String thumbnailUrl, String title) {
+  public Video(int authorId, String uploadedAt, String videoDirectoryPath, StorageType storageType, String category, String description, String thumbnailUrl, String title) {
     this.authorId = authorId;
     this.uploadedAt = uploadedAt;
     this.videoDirectoryPath = videoDirectoryPath;
     this.storageType = storageType;
     this.category = category;
     this.description = description;
-    this.duration = duration;
     this.thumbnailUrl = thumbnailUrl;
     this.title = title;
   }
