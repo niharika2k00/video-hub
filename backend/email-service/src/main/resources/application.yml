@@ -2,7 +2,7 @@ spring:
   application:
     name: Spring Boot Java Project (Email Service)
   main:
-    banner-mode:          off
+    banner-mode: off
     web-application-type: none # disable web server
   jpa:
     hibernate:

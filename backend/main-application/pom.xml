@@ -19,9 +19,16 @@
     <properties>
         <java.version>17</java.version>
     </properties>
-
+    
+    <!-- CRITICAL: Override kafka-clients version to use 3.7.2 instead of 3.8.1 (which has telementry bug) -->
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>3.7.2</version>
+            </dependency>
+
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
@@ -117,10 +124,11 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka -->
+        <!-- Updated to 3.2.10 - uses Kafka clients 3.7.2 (no bug!) -->
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
-            <version>3.3.1</version>
+            <version>3.2.10</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
