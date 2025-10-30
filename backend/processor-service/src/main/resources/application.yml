@@ -2,14 +2,14 @@ spring:
   application:
     name: Spring Boot Java Project (Consumer)
   main:
-    banner-mode:          off
+    banner-mode: off
     web-application-type: none # disable web server
   servlet:
     multipart:
-      max-file-size:    50MB
+      max-file-size: 50MB
       max-request-size: 50MB
   datasource:
-    url:      "jdbc:mysql://localhost:3307/videohub"
+    url: "jdbc:mysql://localhost:3307/videohub"
     username: "root"
     password: "pwroot"
   jpa:
@@ -17,7 +17,7 @@ spring:
       ddl-auto: update
   devtools:
     livereload:
-      enabled: false
+      enabled: true
   kafka:
     bootstrap-servers: localhost:9093
 
@@ -31,14 +31,13 @@ custom:
   path:
     project-root-dir: "/Users/niharika/Workspace/Personal/projects/video-hub"
   ffmpeg:
-    path:  "/opt/homebrew/bin/ffmpeg"
+    path: "/opt/homebrew/bin/ffmpeg"
     probe: "/opt/homebrew/bin/ffprobe"
 aws:
   credentials:
     profile: "default"
-    region:  "us-east-1"
+    region: "us-east-1"
   s3:
     bucket-name: "demobucket-890291224"
-
 # /opt/homebrew/bin/ffmpeg for macos
 # /usr/bin/ffmpeg for linux

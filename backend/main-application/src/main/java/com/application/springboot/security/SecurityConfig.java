@@ -19,7 +19,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Configuration
 @EnableWebSecurity
@@ -28,8 +27,7 @@ public class SecurityConfig {
   private final CustomAccessDeniedException customAccessDeniedException;
 
   @Autowired
-  public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
-                        CustomAccessDeniedException customAccessDeniedException) {
+  public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CustomAccessDeniedException customAccessDeniedException) {
     this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     this.customAccessDeniedException = customAccessDeniedException;
   }
@@ -40,58 +38,68 @@ public class SecurityConfig {
   @Value("${custom.endpoints.server.staging}")
   private String serverStagingEndpoint;
 
-  // read-only roles
-  String[] readAccessRoles = {
-    "ROLE_VIEWER"
-  };
+  // Role hierarchy constants
+  private static final class Roles {
+    static final String[] READ_ONLY = { "ROLE_VIEWER" };
+    static final String[] WRITE_ACCESS = {
+        "ROLE_USER",
+        "ROLE_DEVELOPER",
+        "ROLE_EDITOR",
+        "ROLE_MANAGER",
+        "ROLE_OPERATOR"
+    };
+    static final String[] ADMIN_ACCESS = {
+        "ROLE_ADMIN",
+        "ROLE_SUPER_ADMIN"
+    };
 
-  // editor roles
-  String[] writeAccessRoles = {
-    "ROLE_USER",
-    "ROLE_DEVELOPER",
-    "ROLE_EDITOR",
-    "ROLE_MANAGER",
-    "ROLE_OPERATOR"
-  };
+    // Combined role arrays
+    static final String[] ALL_ROLES = combineRoles(READ_ONLY, WRITE_ACCESS, ADMIN_ACCESS);
+    static final String[] WRITE_AND_ADMIN = combineRoles(WRITE_ACCESS, ADMIN_ACCESS);
 
-  // admin roles
-  String[] adminControlRoles = {
-    "ROLE_ADMIN",
-    "ROLE_SUPER_ADMIN"
-  };
+    private static String[] combineRoles(String[]... roleArrays) {
+      return Arrays.stream(roleArrays)
+          .flatMap(Arrays::stream)
+          .toArray(String[]::new);
+    }
+  }
 
-  String[] level1 = Stream.of(readAccessRoles, writeAccessRoles, adminControlRoles).flatMap(Arrays::stream).toArray(String[]::new);
-  String[] level2 = Stream.concat(Arrays.stream(writeAccessRoles), Arrays.stream(adminControlRoles)).toArray(String[]::new);
+  // Public endpoints that don't require authentication
+  private static final String[] STATIC_RESOURCES = {"/assets/**", "/*.js", "/*.css", "/*.png", "/*.jpg", "/*.jpeg", "/*.gif", "/*.svg", "/*.ico"};
+
+  // Frontend routes (React Router paths)
+  private static final String[] FRONTEND_ROUTES = {"/signup", "/signin", "/about", "/contact", "/profile", "/dashboard", "/videos"};
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
     http.authorizeHttpRequests(auth -> auth
-      .requestMatchers(HttpMethod.GET, "/", "/api", "/api/test").permitAll()
-      .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login", "/api/users/auth", "/api/upload/video", "/api/contact").permitAll()
-      .requestMatchers(HttpMethod.POST, "/api/users/logout").authenticated()
+        .requestMatchers(HttpMethod.GET, "/", "/api", "/api/test").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login", "/api/contact").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/upload/video", "/api/users/logout").authenticated()
 
-      .requestMatchers(HttpMethod.GET, "/api/users", "/api/users/**", "/api/roles", "/api/roles/**", "/api/videos/**").hasAnyAuthority(level1)
+        .requestMatchers(HttpMethod.GET, "/api/users", "/api/users/**", "/api/roles", "/api/roles/**", "/api/videos", "/api/videos/**").hasAnyAuthority(Roles.ALL_ROLES)
 
-      .requestMatchers(HttpMethod.PUT, "/api/users", "/api/roles").hasAnyAuthority(level2)
-      .requestMatchers(HttpMethod.POST, "/api/roles", "/api/upload/video").hasAnyAuthority(level2)
+        .requestMatchers(HttpMethod.PUT, "/api/users", "/api/roles").hasAnyAuthority(Roles.WRITE_AND_ADMIN) // update
+        .requestMatchers(HttpMethod.POST, "/api/roles", "/api/users/{id}/roles").hasAnyAuthority(Roles.WRITE_AND_ADMIN)
 
-      .requestMatchers(HttpMethod.DELETE, "/api/users/**", "/api/roles/**").hasAnyAuthority(adminControlRoles)
-      .requestMatchers(HttpMethod.DELETE, "/api/video/**", "/api/roles/**").hasAnyAuthority(adminControlRoles)
+        .requestMatchers(HttpMethod.DELETE, "/api/users/**", "/api/roles/**").hasAnyAuthority(Roles.ADMIN_ACCESS)
+        .requestMatchers(HttpMethod.DELETE, "/api/video/**").hasAnyAuthority(Roles.WRITE_AND_ADMIN)
 
-      .requestMatchers(HttpMethod.POST, "/api/users/{id}/roles").hasAnyAuthority(level2)
+        // Allow access to static resources /*.jpg → only top-level files whereas
+        // /**/*.jpg → all jpg files anywhere under the directory tree.
+        // .requestMatchers("/dist/**", "/assets/**", "/**/*.js", "/**/*.css",
+        // "/**/*.png", "/**/*.jpg", "/**/*.jpeg", "/**/*.gif", "/**/*.svg", "/**/*.ico", "/index.html").permitAll()
+        .requestMatchers(HttpMethod.GET, STATIC_RESOURCES).permitAll()
+        .requestMatchers(HttpMethod.GET, "/index.html").permitAll()
 
-      // Allow access to static resources  /*.jpg → only top-level files whereas /**/*.jpg → all jpg files anywhere under the directory tree.
-      // .requestMatchers("/dist/**", "/assets/**", "/**/*.js", "/**/*.css", "/**/*.png", "/**/*.jpg", "/**/*.jpeg", "/**/*.gif", "/**/*.svg", "/**/*.ico", "/index.html").permitAll()
-      .requestMatchers(HttpMethod.GET, "/assets/**", "/*.js", "/*.css", "/*.png", "/*.jpg", "/*.jpeg", "/*.gif", "/*.svg", "/*.ico").permitAll()
-      .requestMatchers(HttpMethod.GET, "/", "/index.html").permitAll()
+        // Frontend routes
+        .requestMatchers(HttpMethod.GET, FRONTEND_ROUTES).permitAll()
 
-      // Frontend routes (React Router paths)
-      .requestMatchers(HttpMethod.GET, "/signup", "/signin", "/about", "/contact", "/profile", "/dashboard", "/videos").permitAll()
-
-      // Catch-all for other GET requests (React Router catch-all) - LAST
-      .requestMatchers(HttpMethod.GET, "/**").permitAll()
-      .anyRequest().authenticated());
+        // Catch-all for other GET requests (React Router catch-all) - LAST
+        .requestMatchers(HttpMethod.GET, "/**").permitAll()
+        .anyRequest().authenticated()
+    );
 
     // http.httpBasic((Customizer.withDefaults())); // enable HTTP basic authentication
     http.httpBasic(e -> e.disable()); // disable HTTP basic authentication
@@ -119,11 +127,10 @@ public class SecurityConfig {
 
     // Allow multiple origins for development and production
     List<String> allowedOrigins = Arrays.asList(
-      clientLocalEndpoint,
-      serverStagingEndpoint);
+        clientLocalEndpoint,
+        serverStagingEndpoint);
 
-    // config.setAllowedOrigins(allowedOrigins);
-    // config.setAllowedOrigins(List.of(baseUrl));
+    // config.setAllowedOrigins(allowedOrigins); // OR config.setAllowedOrigins(List.of(baseUrl));
     config.setAllowedOriginPatterns(List.of("*"));
 
     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

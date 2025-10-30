@@ -19,15 +19,18 @@ public class KafkaProducerConfig {
   public String kafkaServerPort;
 
   @Bean
-  //https://kafka.apache.org/11/javadoc/org/apache/kafka/clients/producer/ProducerConfig.html
-  //https://docs.spring.io/spring-kafka/api/org/springframework/kafka/annotation/KafkaListener.html
+  // https://kafka.apache.org/11/javadoc/org/apache/kafka/clients/producer/ProducerConfig.html
+  // https://docs.spring.io/spring-kafka/api/org/springframework/kafka/annotation/KafkaListener.html
   public ProducerFactory<String, String> producerFactory() {
     Map<String, Object> props = new HashMap<>();
 
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerPort); // kafka broker address
-    props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, "20000000"); // 20 MB = 20000000
+    props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, "209715200"); // 20 MB = 20000000 bytes || 200 MB = 209715200 bytes
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+
+    // Disable telemetry (fixes Raspberry Pi issues)
+    props.put("client.telemetry.enable", false);
 
     return new DefaultKafkaProducerFactory<>(props);
   }

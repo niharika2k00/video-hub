@@ -51,6 +51,7 @@ public class KafkaConsumerService implements MessageBrokerConsumer {
   @KafkaListener(topics = "video-processor", groupId = "${GROUP_ID}")
   @Override
   public void listenToTopic(String payload) throws Exception {
+    System.out.println("Message received by consumer ✨✨");
     // parse JSON string to JSON object
     JSONParser parser = new JSONParser();
     JSONObject jsonObj = (JSONObject) parser.parse(payload);
@@ -69,13 +70,13 @@ public class KafkaConsumerService implements MessageBrokerConsumer {
 
     // using builder method for object initialization
     VideoPayload details = VideoPayload.builder()
-      .videoId(videoId)
-      .videoDirectoryPath(videoDirAbsolutePath)
-      .resolutionProfile(ResolutionFactory.createResolutionProfile(targetResolution))
-      .segmentDuration(10)
-      .authenticatedUserId(userId)
-      .message(message)
-      .build();
+        .videoId(videoId)
+        .videoDirectoryPath(videoDirAbsolutePath)
+        .resolutionProfile(ResolutionFactory.createResolutionProfile(targetResolution))
+        .segmentDuration(10)
+        .authenticatedUserId(userId)
+        .message(message)
+        .build();
 
     try {
       mediaProcessingService.process(details);

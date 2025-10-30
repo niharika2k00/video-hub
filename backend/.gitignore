@@ -39,16 +39,6 @@ out/
 .vscode/
 *.code-workspace
 
-# Docker and containerization
-.dockerignore
-docker-compose.override.yml
-.docker-data/
-
-# Database and data directories
-.mysql-data/
-.kafka-data/
-.zookeeper-data/
-
 # Logs
 logs/
 *.log
@@ -84,6 +74,8 @@ deploy/
 *.tar.gz
 *.zip
 *.rar
+
+static
 
 # Test coverage
 coverage/
