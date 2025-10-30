@@ -62,7 +62,7 @@ public class PostProcessingOrchestrator {
     if (video.getStorageType() == StorageType.AWS_S3) {
       String baseS3Url = String.format("https://%s.s3.%s.amazonaws.com/", bucketName, awsRegion);
 
-      // https://demobucket-890291224.s3.us-east-1.amazonaws.com/videos/1/15/thumbnail.jpg
+      // https://<bucket_name>.s3.us-east-1.amazonaws.com/videos/1/15/thumbnail.jpg
       String objectKey = String.format("videos/%s/%s/thumbnail.jpg", userId, videoId);
       thumbnailUrl = baseS3Url + objectKey;
 

@@ -13,7 +13,7 @@ COPY src/main/resources/email-templates/user-welcome-email.md /app/email-templat
 # Serving the static files(frontend react app)
 COPY src/main/resources/static /app/static
 
-# Copy config from local repository when running in local machine
+# Copy config from local repository when running in local machine 👇🏻, OR pass config directly using mount volume in docker compose
 # COPY src/main/resources/application-docker.yml /app/config/application.yml
 
 # Expose the port app runs on (default port)

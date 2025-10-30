@@ -32,6 +32,9 @@ WORKDIR /app
 COPY target/*.jar app.jar
 COPY src/main/resources/email-templates/video-process-success-email.md /app/email-templates/video-process-success-email.md
 
+# Set JVM options that work on ALL platforms (Raspberry Pi, Linux, Mac, etc.)
+ENV JAVA_TOOL_OPTIONS="-XX:-UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:+DisableAttachMechanism -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Dfile.encoding=UTF-8"
+
 # Run JAR with default config
 ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
 CMD ["--spring.config.location=file:/app/config/application.yml"]

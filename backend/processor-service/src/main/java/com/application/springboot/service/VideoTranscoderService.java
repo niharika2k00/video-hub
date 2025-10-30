@@ -64,7 +64,7 @@ public class VideoTranscoderService {
    * /40/40.mp4
    *
    * videoDirRelativePath for s3 :
-   * s3://demobucket-890291224/videos/1/40/40.mp4
+   * s3://<bucket_name>/videos/1/40/40.mp4
    */
   public void transcodeToHlsVariants(VideoPayload payload) throws IOException, InvalidRequestException {
     int videoId = payload.getVideoId();
@@ -89,11 +89,11 @@ public class VideoTranscoderService {
 
   private void createVideoVariant(VideoVariantId id, Resolution resolutionProfile) {
     VideoVariant item = VideoVariant.builder()
-      .id(id)
-      .height(resolutionProfile.getHeight())
-      .width(resolutionProfile.getWidth())
-      .status(VideoStatus.PROCESSING)
-      .build();
+        .id(id)
+        .height(resolutionProfile.getHeight())
+        .width(resolutionProfile.getWidth())
+        .status(VideoStatus.PROCESSING)
+        .build();
 
     videoVariantService.saveOrUpdate(item);
   }
@@ -136,31 +136,31 @@ public class VideoTranscoderService {
     try {
       // https://github.com/bramp/ffmpeg-cli-wrapper
       FFmpegBuilder builder = new FFmpegBuilder()
-        .setInput(sourceVideoAbsolutePath)
-        .overrideOutputFiles(true)
-        .addOutput(outputManifestFilePath)
-        .setFormat("hls") // hence .ts is generated otherwise .mp4
-        .setAudioBitRate(128_000) // in bps
-        .setVideoBitRate(resolutionProfile.getBitrate())
-        .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
-        .setVideoResolution(resolutionProfile.getWidth(), resolutionProfile.getHeight())
-        .setVideoCodec("libx264")
-        .setAudioCodec("aac") // compression algorithm (codec) to use while video encoding
-        .addExtraArgs(
-          "-profile:v", "high",
-          "-level", "4.1",
-          "-pix_fmt", "yuv420p",
-          "-hls_time", String.valueOf(segmentDuration),
-          "-hls_playlist_type", "vod",
-          "-hls_base_url", baseUrlInRenditions,
-          "-hls_segment_filename", segmentPattern,
-          "-start_number", "1",
-          "-hls_list_size", "0",
-          "-preset", "fast",
-          "-crf", "23"
-        )
-        .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL) // allow FFmpeg to use experimental specs
-        .done();
+          .setInput(sourceVideoAbsolutePath)
+          .overrideOutputFiles(true)
+          .addOutput(outputManifestFilePath)
+          .setFormat("hls") // hence .ts is generated otherwise .mp4
+          .setAudioBitRate(128_000) // in bps
+          .setVideoBitRate(resolutionProfile.getBitrate())
+          .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
+          .setVideoResolution(resolutionProfile.getWidth(), resolutionProfile.getHeight())
+          .setVideoCodec("libx264")
+          .setAudioCodec("aac") // compression algorithm (codec) to use while video encoding
+          .addExtraArgs(
+              "-profile:v", "high",
+              "-level", "4.1",
+              "-pix_fmt", "yuv420p",
+              "-hls_time", String.valueOf(segmentDuration),
+              "-hls_playlist_type", "vod",
+              "-hls_base_url", baseUrlInRenditions,
+              "-hls_segment_filename", segmentPattern,
+              "-start_number", "1",
+              "-hls_list_size", "0",
+              "-preset", "fast",
+            "-crf", "23"
+         )
+          .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL) // allow FFmpeg to use experimental specs
+          .done();
 
       // executor.createJob(builder).run();
       System.out.println("⏳ Starting conversion: " + resolutionProfile.getName());
@@ -175,14 +175,14 @@ public class VideoTranscoderService {
 
         double percentage = (double) progress.out_time_ns / durationNs;
         System.out.printf(
-          "[%s | %.0f%%] status:%s frame:%d time:%s fps:%.0f speed:%.2fx%n",
-          resolutionProfile.getName(),
-          percentage * 100,
-          progress.status,
-          progress.frame,
-          FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
-          progress.fps.doubleValue(),
-          progress.speed);
+            "[%s | %.0f%%] status:%s frame:%d time:%s fps:%.0f speed:%.2fx%n",
+            resolutionProfile.getName(),
+            percentage * 100,
+            progress.status,
+            progress.frame,
+            FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
+            progress.fps.doubleValue(),
+            progress.speed);
       });
 
       job.run();

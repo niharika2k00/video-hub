@@ -2,31 +2,26 @@ spring:
   application:
     name: Spring Boot Java Project (Consumer)
   main:
-    banner-mode:          off
-    web-application-type: none
+    banner-mode: off
+    web-application-type: none # disable web server
   servlet:
     multipart:
-      max-file-size:    50MB
-      max-request-size: 50MB
+      max-file-size: 200MB
+      max-request-size: 200MB
   datasource:
-    url:               "jdbc:mysql://mysql:3306/videohub"
-    username:          "root"
-    password:          "pwroot"
+    url: "jdbc:mysql://mysql:3306/videohub"
+    username: "root"
+    password: "pwroot"
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    database-platform: org.hibernate.dialect.MySQLDialect
   devtools:
     livereload:
       enabled: false
   kafka:
-    bootstrap-servers: 115.187.34.234:9093
-    # consumer:
-    #   properties:
-    #     session.timeout.ms: 30000 # 30 seconds
-    #     request.timeout.ms: 60000 # 60 seconds
-    #     heartbeat.interval.ms: 10000 # 10 seconds
+    bootstrap-servers: 100.88.115.16:9093
+
 logging:
   level:
     root: warn
@@ -37,11 +32,11 @@ custom:
   path:
     project-root-dir: ${CUSTOM_PATH_PROJECT_ROOT_DIR:/app}
   ffmpeg:
-    path:  ${FFMPEG_PATH:/opt/homebrew/bin/ffmpeg}
+    path: ${FFMPEG_PATH:/opt/homebrew/bin/ffmpeg}
     probe: ${FFPROBE_PATH:/opt/homebrew/bin/ffprobe}
 aws:
   credentials:
-    profile: "default"
-    region:  "us-east-1"
+    profile: ${AWS_PROFILE}
+    region: ${AWS_REGION}
   s3:
-    bucket-name: "demobucket-890291224"
+    bucket-name: ${AWS_S3_BUCKET_NAME}

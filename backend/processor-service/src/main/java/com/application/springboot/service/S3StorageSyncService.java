@@ -68,11 +68,11 @@ public class S3StorageSyncService implements CloudStorageSyncService {
       System.out.println("remote path: " + remotePath);
 
       ProcessBuilder processBuilder = new ProcessBuilder(
-        "aws", "s3", "sync",
-        localPath,
-        remotePath,
-        "--region", awsRegion
-        // "--profile", awsProfile,
+          "aws", "s3", "sync",
+          localPath,
+          remotePath,
+          "--region", awsRegion,
+          "--profile", awsProfile
       );
 
       // processBuilder.inheritIO(); // Optional: To print output to console

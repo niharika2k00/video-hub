@@ -23,10 +23,13 @@ public class KafkaProducerConfig {
   public ProducerFactory<String, String> producerFactory() {
     Map<String, Object> props = new HashMap<>();
 
-    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerPort); // kafka broker address
+    // Serializers
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerPort); // kafka broker address
+    // Disable telemetry (fixes Raspberry Pi issues)
+    props.put("client.telemetry.enable", false);
+    
     return new DefaultKafkaProducerFactory<>(props);
   }
 

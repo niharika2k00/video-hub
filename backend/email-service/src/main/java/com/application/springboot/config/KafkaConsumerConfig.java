@@ -23,21 +23,29 @@ public class KafkaConsumerConfig {
   public ConsumerFactory<String, String> consumerFactory() {
     Map<String, Object> config = new HashMap<>();
 
-    config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerPort); // kafka broker address
+    // Offset and commit settings
     config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-    config.put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, "20000000"); // 20 MB
-    config.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, "20000000");
+    config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+
+    // Deserializers
     config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-    config.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, "20000000");
-    config.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "20000000");
-    config.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "20000000");
 
-    config.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
-    config.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "20000000");
-    config.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "20000000");
+    // Message size limits
+    config.put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, "20000000"); // 20 MB = 20000000 bytes
+    config.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, "20000000");
 
-    //config.put(ConsumerConfig.GROUP_ID_CONFIG, "group1");
+    // Timeout settings
+    config.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 60_000); // 60 seconds
+    config.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, 15_000); // 15 seconds (< 60/3)
+    config.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, 90_000); // 90 seconds (> 60)
+    config.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "14400000"); // 4 hours - critical for long video processing
+
+    config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerPort); // kafka broker address
+    // config.put(ConsumerConfig.GROUP_ID_CONFIG, "group1");
+
+    // Disable telemetry (fixes Raspberry Pi issues) and NullPointerException in Kafka client 3.8.1
+    config.put("client.telemetry.enable", false);
 
     return new DefaultKafkaConsumerFactory<>(config);
   }
