@@ -4,6 +4,9 @@ FROM openjdk:17-jdk-slim
 # Set working directory inside the container
 WORKDIR /app
 
+# Set JVM options that work on ALL platforms (Raspberry Pi, Linux, Mac, etc.)
+ENV JAVA_TOOL_OPTIONS="-XX:-UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:+DisableAttachMechanism -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Dfile.encoding=UTF-8"
+
 # Copy the built JAR file into the container
 COPY target/*.jar app.jar
 COPY src/main/resources/email-templates/contact-form-acknowledgement-email.md /app/email-templates/contact-form-acknowledgement-email.md

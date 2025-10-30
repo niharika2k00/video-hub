@@ -29,8 +29,8 @@ public class KafkaProducerConfig {
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
-    // Disable telemetry (fixes Raspberry Pi issues)
-    props.put("client.telemetry.enable", false);
+    props.put("client.telemetry.enable", false); // Disable telemetry (fixes Raspberry Pi issues)
+    props.put("metrics.jmx.reporting.enabled", "false"); // Disable JMX reporting
 
     return new DefaultKafkaProducerFactory<>(props);
   }

@@ -157,8 +157,8 @@ public class VideoTranscoderService {
               "-start_number", "1",
               "-hls_list_size", "0",
               "-preset", "fast",
-            "-crf", "23"
-         )
+              "-crf", "23"
+          )
           .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL) // allow FFmpeg to use experimental specs
           .done();
 
@@ -166,23 +166,32 @@ public class VideoTranscoderService {
       System.out.println("⏳ Starting conversion: " + resolutionProfile.getName());
 
       // Probe to get video duration (needed for percentage calculation)
+      // Create the job with a ProgressListener
       double durationNs = ffprobe.probe(sourceVideoAbsolutePath).getFormat().duration * TimeUnit.SECONDS.toNanos(1);
+      final int step = Math.max(1, 20); // e.g., 20 → 20%, 40%, 60%, 80%, 100%
+      final java.util.concurrent.atomic.AtomicInteger lastBucket = new java.util.concurrent.atomic.AtomicInteger(-1);
 
       // Create the job with a ProgressListener
       FFmpegJob job = executor.createJob(builder, progress -> {
-        if (progress.out_time_ns <= 0 || durationNs <= 0) // Avoid N/A invalid time issue
-          return;
+        if (progress.out_time_ns <= 0 || durationNs <= 0) return;
 
-        double percentage = (double) progress.out_time_ns / durationNs;
-        System.out.printf(
-            "[%s | %.0f%%] status:%s frame:%d time:%s fps:%.0f speed:%.2fx%n",
-            resolutionProfile.getName(),
-            percentage * 100,
-            progress.status,
-            progress.frame,
-            FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
-            progress.fps.doubleValue(),
-            progress.speed);
+        int percent = (int) ((progress.out_time_ns * 100.0) / durationNs);
+        int bucket = percent / step;
+
+        if (bucket > lastBucket.get()) {
+          lastBucket.set(bucket);
+          int displayPercent = Math.min(100, bucket * step);
+
+          System.out.printf(
+              "[%s | %d%%] status:%s frame:%d time:%s fps:%.0f speed:%.2fx%n",
+              resolutionProfile.getName(),
+              displayPercent,
+              progress.status,
+              progress.frame,
+              FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
+              progress.fps.doubleValue(),
+              progress.speed);
+        }
       });
 
       job.run();

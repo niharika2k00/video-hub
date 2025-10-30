@@ -71,24 +71,6 @@ services:
     networks:
       - videohub-network
 
-  processor-service-720p:
-    container_name: processor-service-720p
-    image: niharikadutta/processor-service:v0.0.1
-    restart: always
-    # profiles: ["720p"]
-    volumes:
-      - ./videos:/app/videos
-      - ./config/processor-service/application.yml:/app/config/application.yml:ro
-      - ~/.aws:/root/.aws:ro
-    environment:
-      - GROUP_ID=group3
-      - RESOLUTION=720p
-      - JAVA_OPTS=-DGROUP_ID=group3 -DRESOLUTION=720p -Dspring.devtools.livereload.enabled=false
-    env_file:
-      - .env
-    networks:
-      - videohub-network
-
   processor-service-480p:
     container_name: processor-service-480p
     image: niharikadutta/processor-service:v0.0.1
@@ -102,6 +84,24 @@ services:
       - GROUP_ID=group3
       - RESOLUTION=480p
       - JAVA_OPTS=-DGROUP_ID=group3 -DRESOLUTION=480p -Dspring.devtools.livereload.enabled=false
+    env_file:
+      - .env
+    networks:
+      - videohub-network
+
+  processor-service-720p:
+    container_name: processor-service-720p
+    image: niharikadutta/processor-service:v0.0.1
+    restart: always
+    # profiles: ["720p"]
+    volumes:
+      - ./videos:/app/videos
+      - ./config/processor-service/application.yml:/app/config/application.yml:ro
+      - ~/.aws:/root/.aws:ro
+    environment:
+      - GROUP_ID=group3
+      - RESOLUTION=720p
+      - JAVA_OPTS=-DGROUP_ID=group3 -DRESOLUTION=720p -Dspring.devtools.livereload.enabled=false
     env_file:
       - .env
     networks:

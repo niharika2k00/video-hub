@@ -64,15 +64,17 @@ public class S3StorageSyncService implements CloudStorageSyncService {
   @Override
   public void syncDirectoryFromLocal(String localPath, String remotePath) throws Exception {
     try {
-      System.out.println("local path: " + localPath);
-      System.out.println("remote path: " + remotePath);
+      System.out.println("Local path: " + localPath);
+      System.out.println("Remote path: " + remotePath);
+      System.out.println("AWS Region: " + awsRegion + " and AWS Profile: " + awsProfile);
 
+      // Note: If get error here check the aws credential in ~/.aws/credential and ~/.aws/config
       ProcessBuilder processBuilder = new ProcessBuilder(
           "aws", "s3", "sync",
           localPath,
           remotePath,
-          "--region", awsRegion,
-          "--profile", awsProfile
+          "--region", awsRegion
+        //  "--profile", awsProfile
       );
 
       // processBuilder.inheritIO(); // Optional: To print output to console
