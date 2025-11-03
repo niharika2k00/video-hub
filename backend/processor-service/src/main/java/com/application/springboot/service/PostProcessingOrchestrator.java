@@ -32,10 +32,10 @@ public class PostProcessingOrchestrator {
 
   @Autowired
   public PostProcessingOrchestrator(MasterManifestGeneratorService masterManifestGeneratorService,
-      @Qualifier("S3StorageSyncService") CloudStorageSyncService storageSyncService,
-      ThumbnailGeneratorService thumbnailGeneratorService,
-      NotificationDispatcherService notificationDispatcherService,
-      VideoService videoService) {
+                                    @Qualifier("S3StorageSyncService") CloudStorageSyncService storageSyncService,
+                                    ThumbnailGeneratorService thumbnailGeneratorService,
+                                    NotificationDispatcherService notificationDispatcherService,
+                                    VideoService videoService) {
     this.masterManifestGeneratorService = masterManifestGeneratorService;
     this.storageSyncService = storageSyncService;
     this.thumbnailGeneratorService = thumbnailGeneratorService;

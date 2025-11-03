@@ -9,6 +9,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import com.application.springboot.config.DotEnvConfig;
 
 @SpringBootApplication
 @ComponentScan("com.application")
@@ -24,9 +25,14 @@ public class SpringbootApplication {
   }
 
   public static void main(String[] args) {
-
     System.out.println("Project started 👀...");
-    ConfigurableApplicationContext context = SpringApplication.run(SpringbootApplication.class, args);
+
+    // Create SpringApplication instance
+    // Initialize DotEnvConfig BEFORE running the application (app)
+    SpringApplication app = new SpringApplication(SpringbootApplication.class);
+    app.addInitializers(new DotEnvConfig());
+
+    ConfigurableApplicationContext context = app.run(args);
 
     // values from env assigned at runtime once the springboot application starts.
     // Need to use @PostConstruct annotation.
@@ -39,7 +45,6 @@ public class SpringbootApplication {
     // String port = env.getProperty("local.server.port");
     // System.out.println("Running in port:" + port);
 
-    // 1. Initialise default roles from RoleInitializer Class annotated with
-    // @EventListener()
+    // 1. Initialise default roles from RoleInitializer Class annotated with @EventListener()
   }
 }

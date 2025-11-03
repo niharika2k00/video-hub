@@ -14,21 +14,24 @@ spring:
       enabled: false
   servlet:
     multipart:
-      max-file-size: 50MB
-      max-request-size: 50MB
+      max-file-size: 200MB
+      max-request-size: 200MB
   datasource:
-    url: "jdbc:mysql://localhost:3307/videohub" # "3.140.188.132:3306" JDBC URL of the database
-    username: "root" # creds for database connection
-    password: "pwroot"
+    url: ${SPRING_DATASOURCE_URL} # "3.140.188.132:3306" JDBC URL of the database
+    username: ${DATABASE_USERNAME} # creds for database connection
+    password: ${DATABASE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
+  devtools:
+    livereload:
+      enabled: true
   # security:
   #   user: # for endpoint security
   #     name: Harry
   #     password: hello123
   kafka:
-    bootstrap-servers: localhost:9093
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
   #   producer:
   #     bootstrap-servers: localhost:9093
   #     key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -62,15 +65,13 @@ custom:
       # staging: "http://18.219.151.181:5173"
       # production: "http://18.219.151.181:4040"
   path:
-    project-root-dir: "/Users/niharika/Workspace/Personal/projects/video-hub"
-    source-video-dir: "/Users/niharika/Workspace/Personal/projects/video-hub/videos"
+    project-root-dir: ${CUSTOM_PATH_PROJECT_ROOT_DIR}
+    source-video-dir: ${CUSTOM_PATH_SOURCE_VIDEO_DIR}
 aws:
   credentials:
-    profile: "default"
-    region: "us-east-1"
-    # profile: "${AWS_PROFILE}"
-    # region: "${AWS_REGION}"
-    # access-key: "${AWS_ACCESS_KEY_ID}"
-    # secret-key: "${AWS_SECRET_ACCESS_KEY}"
+    profile: ${AWS_PROFILE:default}
+    region: ${AWS_DEFAULT_REGION:us-east-1}
+    access-key: ${AWS_ACCESS_KEY_ID}
+    secret-key: ${AWS_SECRET_ACCESS_KEY}
   s3:
-    bucket-name: "demobucket-890291224"
+    bucket-name: ${AWS_S3_BUCKET_NAME}

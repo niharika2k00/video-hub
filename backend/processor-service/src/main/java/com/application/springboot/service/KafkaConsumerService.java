@@ -64,7 +64,7 @@ public class KafkaConsumerService implements MessageBrokerConsumer {
 
     String videoDirAbsolutePath = projectRootPath + videoDirRelativePath;
     System.out.println("relative source video folder path: " + videoDirRelativePath);
-    System.out.println("videoDirAbsolutePath: " + videoDirAbsolutePath);
+    System.out.println("video directory absolute path: " + videoDirAbsolutePath);
 
     System.out.println(message + ". A consumer in the group " + kafkaConsumerGroupId + " is now listening to the topic for processing tasks.");
 

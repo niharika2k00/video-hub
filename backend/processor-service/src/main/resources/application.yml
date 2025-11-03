@@ -6,12 +6,13 @@ spring:
     web-application-type: none # disable web server
   servlet:
     multipart:
-      max-file-size: 50MB
-      max-request-size: 50MB
+      max-file-size: 200MB
+      max-request-size: 200MB
   datasource:
-    url: "jdbc:mysql://localhost:3307/videohub"
-    username: "root"
-    password: "pwroot"
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -19,7 +20,7 @@ spring:
     livereload:
       enabled: true
   kafka:
-    bootstrap-servers: localhost:9093
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
 
 logging:
   level:
@@ -29,15 +30,15 @@ logging:
 custom:
   target-resolution-count: 6
   path:
-    project-root-dir: "/Users/niharika/Workspace/Personal/projects/video-hub"
+    project-root-dir: ${CUSTOM_PATH_PROJECT_ROOT_DIR}
   ffmpeg:
-    path: "/opt/homebrew/bin/ffmpeg"
-    probe: "/opt/homebrew/bin/ffprobe"
+    path: ${FFMPEG_PATH}
+    probe: ${FFPROBE_PATH}
 aws:
   credentials:
-    profile: "default"
-    region: "us-east-1"
+    profile: ${AWS_PROFILE:default}
+    region: ${AWS_DEFAULT_REGION:us-east-1}
   s3:
-    bucket-name: "demobucket-890291224"
+    bucket-name: ${AWS_S3_BUCKET_NAME}
 # /opt/homebrew/bin/ffmpeg for macos
 # /usr/bin/ffmpeg for linux

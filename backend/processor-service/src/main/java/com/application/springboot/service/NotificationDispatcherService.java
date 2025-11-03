@@ -19,15 +19,13 @@ public class NotificationDispatcherService {
   private final KafkaTemplate<String, String> kafkaTemplate;
   private final ResourceLoaderService resourceLoaderService;
   private final UserService userService;
-  private final VideoVariantService videoVariantService;
 
   @Autowired
-  public NotificationDispatcherService(EmailTemplateProcessor emailTemplateProcessor, KafkaTemplate<String, String> kafkaTemplate, ResourceLoaderService resourceLoaderService, UserService userService, VideoVariantService videoVariantService) {
+  public NotificationDispatcherService(EmailTemplateProcessor emailTemplateProcessor, KafkaTemplate<String, String> kafkaTemplate, ResourceLoaderService resourceLoaderService, UserService userService) {
     this.emailTemplateProcessor = emailTemplateProcessor;
     this.kafkaTemplate = kafkaTemplate;
     this.resourceLoaderService = resourceLoaderService;
     this.userService = userService;
-    this.videoVariantService = videoVariantService;
   }
 
   public void dispatch(int videoId, int userId) throws Exception {

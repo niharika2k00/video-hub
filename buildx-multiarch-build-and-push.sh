@@ -24,7 +24,8 @@ docker build -f dev.dockerfile -t main-application:v0.0.1 .
 docker buildx build --platform linux/amd64,linux/arm64 -f dev.dockerfile -t niharikadutta/main-application:v0.0.1 --push .
 
 # Build processor-service
-cd ../processor-service
+# cd ../processor-service
+cd ./backend/processor-service
 mvn clean install && mvn clean package
 docker build -f dev.dockerfile -t processor-service:v0.0.1 .
 docker buildx build --platform linux/amd64,linux/arm64 -f dev.dockerfile -t niharikadutta/processor-service:v0.0.1 --push .
@@ -43,9 +44,6 @@ echo "\n Deployment complete!"
 # docker build -f dev.dockerfile -t processor-service:v0.0.1 .
 # docker build -f dev.dockerfile -t email-service:v0.0.1 .
 
-# build for both architectures (without pushing)
-# docker buildx build --platform linux/amd64,linux/arm64 -f dev.dockerfile -t niharikadutta/main-application:v0.0.1 --push .
-
 # docker run -p 4040:4040 main-application:v0.0.1
 
 # Push to Docker Hub:
@@ -57,3 +55,21 @@ echo "\n Deployment complete!"
 # docker pull niharikadutta/main-application:v0.0.1
 # docker pull niharikadutta/processor-service:v0.0.1
 # docker pull niharikadutta/email-service:v0.0.1
+
+
+
+# Steps to deploy the application using Docker (For Production)
+
+# 1. Update all environment variables in .env files
+# 2. Run build script ./script.sh
+# 3. Upload the deployment setup (./deployment) in the server(VM) using scp
+#       scp -r ./deployment niharika@bihan-prod:/home/niharika/
+# 4. SSH into the server and Pull the latest image from the docker hub
+#       docker pull <username>/<image_name>:<tag>
+#       docker pull niharikadutta/chocolatey-backend:v0.0.1
+# 5. Run the docker compose file in the remote server
+#       docker compose up -d
+# 6. Check docker logs to verify the deployment
+#       docker logs <container_name> -f
+#       docker logs chocolatey-backend -f
+

@@ -8,7 +8,7 @@ spring:
     hibernate:
       ddl-auto: update
   kafka:
-    bootstrap-servers: localhost:9093
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
 
 logging:
   level:
@@ -16,4 +16,4 @@ logging:
 
 # Custom environment variables
 custom:
-  email: "dniharika16@gmail.com"
+  email: ${EMAIL_SENDER_EMAIL}

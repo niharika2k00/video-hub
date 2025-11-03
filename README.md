@@ -1,6 +1,6 @@
 # <div align="center"> 🎥 Video Hub </div>
 
-A robust microservices-based video processing and management platform built with Spring Boot, featuring video upload, processing and streaming with email notification capabilities.
+A modern full-stack video streaming platform built with React.js frontend and Spring Boot microservices backend, featuring HLS (HTTP Live Streaming), adaptive bitrate streaming that supports multiple resolutions, external sharing links, and seamless embeddable video players for any website.
 
 ## 🧱 Project Structure
 
@@ -17,70 +17,38 @@ A robust microservices-based video processing and management platform built with
 
 ## 🌟 Features
 
-- **Video Upload & Processing**
+- **Advanced Video Streaming**: HLS (HTTP Live Streaming) with adaptive bitrate streaming for optimal playback
+- **External Sharing & Embedding**: Generate shareable links and embeddable video players for seamless integration into any website
+- **Multi-Resolution Processing**: Dynamic video transcoding to 240p, 360p, 480p, 720p, and 1080p for smooth streaming across devices
+- **Modern Web Interface**: Responsive React.js frontend with Tailwind CSS for intuitive video management
+- **Real-time Processing**: Asynchronous video processing pipeline using Apache Kafka
+- **Secure Authentication**: JWT-based security with role-based access control (Admin, Developer, Editor, User)
+- **Smart Notifications**: Automated email alerts for processing status and user management
+- **Microservices Architecture**: Scalable, containerized services for processing and notifications
+- **Production-Ready Infrastructure**: Complete Docker Compose setup with MySQL, Kafka, and Nginx
 
-  - Support for large video file uploads (up to 50MB)
-  - Asynchronous video processing using Kafka
-  - Multiple resolution processing (360p, 720p, 1024p)
-  - FFmpeg integration for video manipulation
+## 🛠️ Tech Stack
 
-- **Security**
+**Frontend**: <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original.svg" alt="React" width="20" height="20"/> React.js, <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/tailwindcss/tailwindcss-original.svg" alt="Tailwind" width="20" height="20"/> Tailwind CSS, Vite, Axios
 
-  - JWT-based authentication
-  - Role-based access control (RBAC)
-  - Multiple user roles (Admin, Developer, Editor, User, etc.)
-  - Secure file handling
+**Backend**: <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="Java" width="20" height="20"/> Java 17, <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/spring/spring-original.svg" alt="Spring" width="20" height="20"/> Spring Boot 3.4.1, Spring Security, Spring Data JPA
 
-- **Email Notifications**
+**Database**: <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original.svg" alt="MySQL" width="20" height="20"/> MySQL
 
-  - Handles email notifications via SMTP configuration
-  - Welcome emails for new users
-  - Processing status notifications
-  - Customizable email templates
+**Message Broker**: <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/apachekafka/apachekafka-original.svg" alt="Kafka" width="20" height="20"/> Apache Kafka
 
-- **Microservices Architecture**
-  - Main Application Service
-  - Processor Service
-  - Email Service
-  - Core Utilities
+**Video Processing**: 🎬 FFmpeg, HLS Streaming, Adaptive Bitrate
 
-## 🛠️ Technology Stack
+**Infrastructure**: <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nginx/nginx-original.svg" alt="Nginx" width="20" height="20"/> Nginx, <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" alt="Docker" width="20" height="20"/> Docker Compose
 
-- **Backend**
-
-  - <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="Java" width="20" height="20"/> Java 17
-  - <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/spring/spring-original.svg" alt="Spring" width="20" height="20"/> Spring Boot 3.4.1
-  - 🛡️ Spring Security
-  - 📊 Spring Data JPA
-  - 📨 Spring Kafka
-
-- **Database**
-
-  - <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original.svg" alt="MySQL" width="20" height="20"/> MySQL
-
-- **Message Broker**
-
-  - <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/apachekafka/apachekafka-original.svg" alt="Kafka" width="20" height="20"/> Apache Kafka
-
-- **Video Processing**
-
-  - 🎬 FFmpeg
-
-- **Email Service**
-
-  - 📧 JavaMailSender
-  - 📨 SMTP (Gmail)
-
-- **Containerization**
-  - <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" alt="Docker" width="20" height="20"/> Docker
+**Containerization**: <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" alt="Docker" width="20" height="20"/> Docker
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Java 17 or higher
-- MySQL 8.0
-- Apache Kafka
+- Java 17+
+- Node.js 16+
 - FFmpeg
 - Maven
 
@@ -93,66 +61,150 @@ A robust microservices-based video processing and management platform built with
    cd video-hub
    ```
 
-2. **Database Setup**
-
-   - Create a MySQL database named `videohub`
-   - Update database credentials in `application.yml`
-
-3. **Kafka Setup**
-
-   - Start Kafka server on port 9093
-   - Configure Kafka bootstrap servers in `application.yml`
-
-4. **Build the Project**
+2. **Infrastructure Setup**
 
    ```bash
+   # Option 1: Using Docker (Recommended)
+   cd deployment/docker-mysql
+   docker compose up -d
+
+   cd deployment/docker-kafka
+   docker compose up -d
+
+   cd deployment/docker-nginx
+   docker compose up -d
+
+   # Option 2: Manual Setup
+   # - Create MySQL database named `videohub`
+   # - Start MySQL server on port 3306
+   # - Start Kafka server on port 9093
+   # - Configure bootstrap servers in `application.yml`
+   ```
+
+3. **Build & Run**
+
+   Choose one of the following methods:
+
+   #### Method A: Using JAR Files (Production-like)
+
+   ```bash
+   # Build backend services
    mvn clean install
+
+   # Run backend services (in separate terminals)
+   java -jar main-application/target/main-application-1.0.0.jar
+   java -jar processor-service/target/processor-service-1.0.0.jar
+   java -jar email-service/target/email-service-1.0.0.jar
+
+   # Run frontend
+   cd frontend
+   npm install
+   npm run dev
    ```
 
-5. **Run Services**
+   #### Method B: Manual Development Mode (IDE/IntelliJ)
 
    ```bash
-   # Main Application
-   java -jar main-application/target/main-application-1.0.0.jar
+   # Run each service directly from IDE or command line
+   # Terminal 1: Main Application
+   cd backend/main-application
+   mvn spring-boot:run
 
-   # Processor Service
-   java -jar processor-service/target/processor-service-1.0.0.jar
+   # Terminal 2: Processor Service
+   cd backend/processor-service
+   mvn spring-boot:run
 
-   # Email Service
-   java -jar email-service/target/email-service-1.0.0.jar
+   # Terminal 3: Email Service
+   cd backend/email-service
+   mvn spring-boot:run
+
+   # Terminal 4: Frontend
+   cd frontend
+   npm install
+   npm run dev
    ```
 
-## 🔒 Security
+### Service URLs
 
-The application implements a comprehensive security system with:
+The application will be available at:
 
-- JWT-based authentication
-- Role-based access control
-- Secure file handling
-- Protected endpoints
+- **Backend API**: http://localhost:4040
+- **Frontend**: http://localhost:5173
+- **MySQL**: localhost:3306
+- **Kafka**: localhost:9093
+- **Nginx**: localhost:80
+
+## 🐳 Docker Deployment
+
+The project includes comprehensive Docker Compose configurations in the `deployment/` directory. Follow these steps for proper infrastructure setup:
+
+### Method A: One-Command Deployment (Recommended)
+
+```bash
+# Build, create Docker images, and push to Docker Hub
+./script1.sh
+
+# Deploy all services using Docker Compose
+cd deployment/docker-deploy
+docker compose up -d
+```
+
+### Method B: Individual Docker Steps
+
+```bash
+# 1. Build frontend and copy to static resources
+cd frontend
+npm run build
+cd ..
+cp -r ./frontend/dist/* ./backend/main-application/src/main/resources/static/
+
+# 2. Build and create Docker images for each service
+cd backend/main-application
+mvn clean install && mvn clean package
+docker build -f dev.dockerfile -t main-application:v0.0.1 .
+
+cd ../processor-service
+mvn clean install && mvn clean package
+docker build -f dev.dockerfile -t processor-service:v0.0.1 .
+
+cd ../email-service
+mvn clean install && mvn clean package
+docker build -f dev.dockerfile -t email-service:v0.0.1 .
+
+# 3. Run individual containers
+docker run -p 4040:4040 main-application:v0.0.1
+docker run -p 4041:4041 processor-service:v0.0.1
+docker run -p 4042:4042 email-service:v0.0.1
+
+# 4. Or use Docker Compose for orchestrated deployment
+cd ../../deployment/docker-deploy
+docker compose up -d
+```
+
+### What `script1.sh` Does
+
+The `script1.sh` script automates the complete build and deployment process:
+
+1. **Builds frontend** and copies dist files to static resources
+2. **Builds JAR files** for all microservices using Maven
+3. **Creates Docker images** for each service
+4. **Pushes images** to Docker Hub (niharikadutta/\*)
+5. **Supports multi-platform** builds (linux/amd64, linux/arm64)
 
 ## 📧 Email Configuration
 
-To configure email notifications:
+Configure SMTP settings in `EmailSenderConfig.java` for email notifications.
 
-<!-- TODO -->
+## 🌐 Live Demo
 
-<!-- 1. Enable 2-Step Verification in your Google Account
-2. Generate an App Password
-3. Update the email configuration in `EmailSenderConfig.java` -->
+- **Website**: [https://videohub.raspberryip.com/](https://videohub.raspberryip.com/)
+- **Embeddable Player**: Upload videos and get instant external sharing links for seamless embedding
 
-## 🤝 Contributing
+## 👨‍💻 Author
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+**Niharika Dutta** - [GitHub](https://github.com/niharika2k00)
 
-## 👥 Author
+⭐ If you found this project helpful, please give it a star!
 
-- **Niharika Dutta** - [GitHub Profile](https://github.com/niharika2k00)
+<img width="381" height="514" alt="image" src="https://github.com/user-attachments/assets/321adfa2-cc64-46ab-93c7-f71cbb598fab" />
 
-References :
-
-- https://vite.dev/config/
-- https://ffmpeg.org/ffmpeg-all.html#Video-Options
-- https://tailwindcss.com/docs/installation/using-vite
-- https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/services/s3/model/package-summary.html
--

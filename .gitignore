@@ -17,10 +17,8 @@ videos/
 
 # Docker and containerization
 .dockerignore
-docker-compose.override.yml
-.docker-data/
 
 # Database and data directories
-**/.mysql-data/
-**/.kafka-data/
-**/.zookeeper-data/
+**/.kafka-data/**
+**/.mysql-data/**
+**/.zookeeper-data/**
