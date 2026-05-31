@@ -65,12 +65,12 @@ public class UserRestController {
   @GetMapping("/test")
   public Map<String, String> test() {
     return Map.of(
-      "endpoint", "http://localhost:4040/api",
-      "description", "This service is ready to transcode, stream, and serve your video content.",
-      "message", "🎥✨ Welcome to VideoHub API ✨🎥",
-      "next", "Ready to transcode, stream, and serve your video content.",
-      "status", "✅ Backend is up and running",
-      "tip", "Use Swagger or Postman to explore available endpoints");
+        "endpoint", "http://localhost:4040/api",
+        "description", "This service is ready to transcode, stream, and serve your video content.",
+        "message", "🎥✨ Welcome to VideoHub API ✨🎥",
+        "next", "Ready to transcode, stream, and serve your video content.",
+        "status", "✅ Backend is up and running",
+        "tip", "Use Swagger or Postman to explore available endpoints");
   }
 
   // GET all /users
@@ -131,7 +131,7 @@ public class UserRestController {
 
     // Mapping placeholders for replacement
     Map<String, String> replacements = Map.of(
-      "{{username}}", newUserObject.getName().toUpperCase());
+        "{{username}}", newUserObject.getName().toUpperCase());
 
     // Sending email - picking email template from resources folder
     String mailBodyMd = resourceLoaderService.readFileFromResources("email-templates/user-welcome-email.md");
@@ -167,7 +167,7 @@ public class UserRestController {
       String jwtToken = jwtService.buildToken(userInfo.getId()); // embedding userid(not email) as subject in the JWT
       // token as best practice
       userLoginResponse = new UserLoginResponseDto(Optional.of(jwtToken), Optional.of(jwtService.getExpirationDate()),
-        "Token generated successfully!");
+          "Token generated successfully!");
     } else {
       System.out.println("Incorrect email or password");
       userLoginResponse = new UserLoginResponseDto(Optional.empty(), Optional.empty(), "Incorrect email or password");

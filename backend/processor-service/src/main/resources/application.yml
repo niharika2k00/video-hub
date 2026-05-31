@@ -1,9 +1,9 @@
 spring:
   application:
-    name: Spring Boot Java Project (Consumer)
+    name: processor-service
   main:
     banner-mode: off
-    web-application-type: none # disable web server
+    web-application-type: none # disable web server  No port = no HTTP exposed = nothing to call synchronously
   servlet:
     multipart:
       max-file-size: 200MB

@@ -63,3 +63,11 @@ CREATE TABLE `image_variant` (
 INSERT INTO `user` VALUES
 	(1,'Leslie','Andrews','leslie@luv2code.com'...),
 	(...);
+
+-- reload the grant tables from the mysql database into memory
+FLUSH PRIVILEGES;
+
+CREATE USER 'niharika'@'%' IDENTIFIED BY 'pwniharika';
+GRANT ALL ON `videohub`.* TO 'niharika'@'%';
+
+GRANT ALL PRIVILEGES ON *.* TO 'niharika'@'%';

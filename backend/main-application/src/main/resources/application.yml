@@ -5,7 +5,7 @@ server:
 
 spring:
   application:
-    name: Spring Boot Java Project
+    name: main-service # this is what other services use to call it
   main:
     banner-mode: off
     # web-application-type: none # disable web server
@@ -60,6 +60,11 @@ logging:
   level:
     root: warn
 
+# Add this for talking to other services (No Eureka needed)
+#services:
+#  payment-url: http://payment-service:8082
+#  order-url: http://order-service:8081
+
 # Custom environment variables
 custom:
   storage-type: "AWS_S3"
@@ -84,4 +89,7 @@ aws:
   s3:
     bucket-name: ${AWS_S3_BUCKET_NAME}
 
-# MySQL closes idle connections after wait_timeout (default 8h). If the app/container stays idle, the DB connection is silently closed. HikariCP may still hold that stale connection, so the next request fails when it tries to use it.
+  # MySQL closes idle connections after wait_timeout (default 8h). If the app/container stays idle, the DB connection is silently closed. HikariCP may still hold that stale connection, so the next request fails when it tries to use it.
+
+
+  # No one outside Docker can reach email-service:8082 directly — only containers inside the same Docker network can.

@@ -496,7 +496,6 @@ Niharika Dutta
 
 If you found this project helpful, please consider giving it a star ⭐️ !
 
-
 ## 📚 References
 
 - [How Video Works — Playback](https://howvideo.works/#playback)

@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
+//@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -84,15 +85,15 @@ public class User {
   @Override
   public String toString() {
     return "User{" +
-      "id=" + id +
-      ", name='" + (name != null ? name : "null") + '\'' +
-      ", profileImage='" + (profileImage != null ? profileImage : "null") + '\'' +
-      ", email='" + (email != null ? email : "null") + '\'' +
-      ", age='" + (age != null ? age : "null") + '\'' +
-      ", gender=" + (gender != null ? gender : "null") +
-      ", location='" + (location != null ? location : "null") + '\'' +
-      ", bio='" + (bio != null ? bio : "null") + '\'' +
-      ", phoneNumber='" + (phoneNumber != null ? phoneNumber : "null") + '\'' +
-      '}';
+        "id=" + id +
+        ", name='" + (name != null ? name : "null") + '\'' +
+        ", profileImage='" + (profileImage != null ? profileImage : "null") + '\'' +
+        ", email='" + (email != null ? email : "null") + '\'' +
+        ", age='" + (age != null ? age : "null") + '\'' +
+        ", gender=" + (gender != null ? gender : "null") +
+        ", location='" + (location != null ? location : "null") + '\'' +
+        ", bio='" + (bio != null ? bio : "null") + '\'' +
+        ", phoneNumber='" + (phoneNumber != null ? phoneNumber : "null") + '\'' +
+        '}';
   }
 }
